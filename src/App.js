@@ -1,24 +1,39 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useRef } from "react";
+import { useAsync } from "react-use";
+import { db } from "./storage/firebase";
+import "./App.css";
 
 function App() {
+  const textInput = useRef(null);
+  const [products, setProducts] = useState([]);
+  useAsync(async () => {
+    const query = db.collection("products").limit(50);
+
+    query.onSnapshot((snapshot) => {
+      const loadedProducts = snapshot.docs.map((doc) => doc.data());
+      setProducts(loadedProducts);
+      // snapshot.forEach((doc) => {
+      //   console.log("🛎 ", "doc", doc.data());
+      // });
+    });
+  }, []);
+
+  const write = async () => {
+    const value = textInput.current.value;
+    await db.collection("products").add({
+      name: value,
+    });
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <ul>
+        {products.map((product) => (
+          <li key={product.name}>{product.name}</li>
+        ))}
+      </ul>
+      <input ref={textInput} />
+      <button onClick={write}>Save</button>
     </div>
   );
 }
