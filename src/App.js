@@ -6,7 +6,6 @@ import {
   Redirect,
 } from "react-router-dom";
 import { Products } from "./product/Products";
-import { Homepage } from "./homepage/Homepage";
 import "./App.css";
 import { Header } from "./header/Header";
 import { Navigation } from "./bottomNavigation/BottomNavigation";
@@ -17,9 +16,6 @@ function App() {
       <Header />
       <Switch>
         <Route exact path="/">
-          <Homepage />
-        </Route>
-        <Route exact path="/products">
           <Products />
         </Route>
         <Redirect to="/" />
