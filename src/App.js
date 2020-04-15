@@ -1,40 +1,31 @@
 import React, { useState, useRef } from "react";
-import { useAsync } from "react-use";
-import { db } from "./storage/firebase";
+import {
+  Switch,
+  Route,
+  BrowserRouter as Router,
+  Redirect,
+} from "react-router-dom";
+import { Products } from "./product/Products";
+import { Homepage } from "./homepage/Homepage";
 import "./App.css";
+import { Header } from "./header/Header";
+import { Navigation } from "./bottomNavigation/BottomNavigation";
 
 function App() {
-  const textInput = useRef(null);
-  const [products, setProducts] = useState([]);
-  useAsync(async () => {
-    const query = db.collection("products").limit(50);
-
-    query.onSnapshot((snapshot) => {
-      const loadedProducts = snapshot.docs.map((doc) => doc.data());
-      setProducts(loadedProducts);
-      // snapshot.forEach((doc) => {
-      //   console.log("🛎 ", "doc", doc.data());
-      // });
-    });
-  }, []);
-
-  const write = async () => {
-    const value = textInput.current.value;
-    await db.collection("products").add({
-      name: value,
-    });
-  };
-
   return (
-    <div className="App">
-      <ul>
-        {products.map((product) => (
-          <li key={product.name}>{product.name}</li>
-        ))}
-      </ul>
-      <input ref={textInput} />
-      <button onClick={write}>Save</button>
-    </div>
+    <Router basename={process.env.PUBLIC_URL}>
+      <Header />
+      <Switch>
+        <Route exact path="/">
+          <Homepage />
+        </Route>
+        <Route exact path="/products">
+          <Products />
+        </Route>
+        <Redirect to="/" />
+      </Switch>
+      <Navigation />
+    </Router>
   );
 }
 
