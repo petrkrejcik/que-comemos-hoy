@@ -1,11 +1,16 @@
 import React, { useEffect } from 'react';
-import { Button } from '@material-ui/core';
+import { useAsyncFn } from 'react-use';
 import { db, firebase } from 'storage/firebase';
 import { globalStateContext } from 'app/GlobalStateContext';
 
-export const Login = () => {
+export const useLogin = () => {
   const { userState } = React.useContext(globalStateContext);
-  const [user, setUser] = userState;
+  const [, setUser] = userState;
+  const login = useAsyncFn(async () => {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    await firebase.auth().signInWithPopup(provider);
+  }, []);
+
   useEffect(() => {
     firebase.auth().onAuthStateChanged((loggedUser) => {
       const convertedUser = loggedUser
@@ -21,15 +26,13 @@ export const Login = () => {
       db.collection('users').add(convertedUser);
     });
   }, [setUser]);
-  if (user) {
-    return null;
-  }
-  return <Button onClick={handleLogin}>Login</Button>;
+
+  return login;
 };
 
-const handleLogin = async () => {
-  const provider = new firebase.auth.GoogleAuthProvider();
-  try {
-    await firebase.auth().signInWithPopup(provider);
-  } catch (error) {}
+export const useLogout = () => {
+  const logout = () => {
+    firebase.auth().signOut();
+  };
+  return logout;
 };

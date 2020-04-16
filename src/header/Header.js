@@ -1,6 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { AppBar } from '@material-ui/core';
+import { AppBar, Button } from '@material-ui/core';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
@@ -8,9 +8,9 @@ import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-import { Login } from 'login/Login';
-import { useLogout } from 'login/Logout';
+import { useLogin, useLogout } from 'auth/Auth';
 import { globalStateContext } from 'app/GlobalStateContext';
+import { Dialog } from 'dialog/Dialog';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,10 +26,12 @@ const useStyles = makeStyles((theme) => ({
 
 export const Header = () => {
   const logout = useLogout();
+  const [loginState, login] = useLogin();
   const { userState } = React.useContext(globalStateContext);
   const [user] = userState;
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [isErrorOpen, setErrorOpen] = React.useState(true);
   const open = Boolean(anchorEl);
 
   const handleMenu = (event) => {
@@ -40,8 +42,15 @@ export const Header = () => {
     setAnchorEl(null);
   };
 
+  const handleCloseError = () => setErrorOpen(false);
+
   return (
     <div className={classes.root}>
+      {loginState.error && (
+        <Dialog handleClose={handleCloseError} open={isErrorOpen} title="Login error">
+          {loginState.error.message}
+        </Dialog>
+      )}
       <AppBar position="static">
         <Toolbar>
           <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
@@ -78,7 +87,8 @@ export const Header = () => {
               </Menu>
             </div>
           ) : (
-            <Login />
+            <Button onClick={login}>Login</Button>
+            // <Login />
           )}
         </Toolbar>
       </AppBar>
