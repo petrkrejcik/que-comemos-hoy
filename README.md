@@ -9,3 +9,7 @@
 
 `Products`
 `Recipes`
+
+## Icons
+
+https://material-ui.com/components/material-icons/

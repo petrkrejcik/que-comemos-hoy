@@ -1,16 +1,16 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import AppBar from "@material-ui/core/AppBar";
+import { AppBar } from "@material-ui/core";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import AccountCircle from "@material-ui/icons/AccountCircle";
-import Switch from "@material-ui/core/Switch";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormGroup from "@material-ui/core/FormGroup";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
+import { Login } from "login/Login";
+import { useLogout } from "login/Logout";
+import { globalStateContext } from "app/GlobalStateContext";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -25,14 +25,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const Header = () => {
+  const logout = useLogout();
+  const { userState } = React.useContext(globalStateContext);
+  const [user] = userState;
   const classes = useStyles();
-  const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-
-  const handleChange = (event) => {
-    setAuth(event.target.checked);
-  };
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -54,10 +52,8 @@ export const Header = () => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" className={classes.title}>
-            Page title
-          </Typography>
-          {auth ? (
+          <Typography variant="h6" className={classes.title}></Typography>
+          {user ? (
             <div>
               <IconButton
                 aria-label="account of current user"
@@ -83,12 +79,11 @@ export const Header = () => {
                 open={open}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={handleClose}>My account</MenuItem>
+                <MenuItem onClick={logout}>Logout</MenuItem>
               </Menu>
             </div>
           ) : (
-            "Login"
+            <Login />
           )}
         </Toolbar>
       </AppBar>
