@@ -50,6 +50,12 @@ export const Products = () => {
   return (
     <div>
       <List>
+        {products.map((product) => (
+          <div key={product.id}>
+            <Checkbox checked={false} onChange={update(product.id)} />
+            {product.name}
+          </div>
+        ))}
         <IconButton>
           <Add />
         </IconButton>
@@ -62,12 +68,6 @@ export const Products = () => {
         >
           Save
         </Button>
-        {products.map((product) => (
-          <div key={product.id}>
-            <Checkbox checked={false} onChange={update(product.id)} />
-            {product.name}
-          </div>
-        ))}
       </List>
     </div>
   );
