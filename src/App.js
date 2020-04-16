@@ -1,15 +1,10 @@
-import React, { useState, useRef } from "react";
-import {
-  Switch,
-  Route,
-  BrowserRouter as Router,
-  Redirect,
-} from "react-router-dom";
-import { Products } from "./product/Products";
-import "./App.css";
-import { Header } from "./header/Header";
-import { Navigation } from "./bottomNavigation/BottomNavigation";
-import { GlobalStateProvider } from "app/GlobalStateContext";
+import React, { useState, useRef } from 'react';
+import { Switch, Route, BrowserRouter as Router, Redirect } from 'react-router-dom';
+import { Products } from './product/Products';
+import './App.css';
+import { Header } from './header/Header';
+import { Navigation } from './bottomNavigation/BottomNavigation';
+import { GlobalStateProvider } from 'app/GlobalStateContext';
 
 function App() {
   return (
@@ -19,6 +14,9 @@ function App() {
         <Switch>
           <Route exact path="/">
             <Products />
+          </Route>
+          <Route exact path="/recipes">
+            recipes
           </Route>
           <Redirect to="/" />
         </Switch>

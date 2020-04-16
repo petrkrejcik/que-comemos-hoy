@@ -1,27 +1,21 @@
-import React, { useState } from "react";
-import { useAsync } from "react-use";
-import {
-  Button,
-  Checkbox,
-  TextField,
-  List,
-  IconButton,
-} from "@material-ui/core";
-import { Add } from "@material-ui/icons";
-import { db } from "storage/firebase";
-import { globalStateContext } from "app/GlobalStateContext";
+import React, { useState } from 'react';
+import { useAsync } from 'react-use';
+import { Button, Checkbox, TextField, List, IconButton } from '@material-ui/core';
+import { Add } from '@material-ui/icons';
+import { db } from 'storage/firebase';
+import { globalStateContext } from 'app/GlobalStateContext';
 
 export const Products = () => {
   const { userState } = React.useContext(globalStateContext);
   const [user] = userState;
   const [products, setProducts] = useState([]);
-  const [addValue, setAddValue] = useState("");
+  const [newProduct, setNewProduct] = useState('');
   useAsync(async () => {
     if (!user) return;
     const query = db
-      .collection("products")
-      .where("available", "==", false)
-      .where("userId", "==", user.id)
+      .collection('products')
+      .where('available', '==', false)
+      .where('userId', '==', user.id)
       .limit(50);
 
     query.onSnapshot((snapshot) => {
@@ -39,16 +33,16 @@ export const Products = () => {
   }, [user]);
 
   const add = async () => {
-    await db.collection("products").add({
-      name: addValue,
+    await db.collection('products').add({
+      name: newProduct,
       available: false,
       userId: user.id,
     });
-    setAddValue("");
+    setNewProduct('');
   };
 
   const update = (id) => async () => {
-    await db.collection("products").doc(id).update({
+    await db.collection('products').doc(id).update({
       available: true,
     });
   };
@@ -59,16 +53,12 @@ export const Products = () => {
         <IconButton>
           <Add />
         </IconButton>
-        <TextField
-          label="Add"
-          value={addValue}
-          onChange={(e) => setAddValue(e.target.value)}
-        />
+        <TextField label="Add" value={newProduct} onChange={(e) => setNewProduct(e.target.value)} />
         <Button
           onClick={add}
           color="primary"
           variant="outlined"
-          disabled={addValue.trim() === ""}
+          disabled={newProduct.trim() === ''}
         >
           Save
         </Button>

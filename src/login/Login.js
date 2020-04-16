@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
-import { Button } from "@material-ui/core";
-import { db, firebase } from "storage/firebase";
-import { globalStateContext } from "app/GlobalStateContext";
+import React, { useEffect } from 'react';
+import { Button } from '@material-ui/core';
+import { db, firebase } from 'storage/firebase';
+import { globalStateContext } from 'app/GlobalStateContext';
 
 export const Login = () => {
   const { userState } = React.useContext(globalStateContext);
@@ -18,7 +18,7 @@ export const Login = () => {
         : null;
       setUser(convertedUser);
       if (!convertedUser) return;
-      db.collection("users").add(convertedUser);
+      db.collection('users').add(convertedUser);
     });
   }, [setUser]);
   if (user) {
