@@ -34,7 +34,7 @@ export const Products = () => {
 
   const add = async () => {
     await db.collection('products').add({
-      name: newProduct,
+      title: newProduct,
       available: false,
       userId: user.id,
     });
@@ -53,7 +53,7 @@ export const Products = () => {
         {products.map((product) => (
           <div key={product.id}>
             <Checkbox checked={false} onChange={update(product.id)} />
-            {product.name}
+            {product.title}
           </div>
         ))}
         <IconButton>

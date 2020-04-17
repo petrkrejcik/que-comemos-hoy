@@ -2,6 +2,7 @@
 
 - [] Store products
 - [] Store recipes
+- [] secure rules
 
 ## Firestore
 

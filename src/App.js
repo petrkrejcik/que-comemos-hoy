@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Switch, Route, BrowserRouter as Router, Redirect } from 'react-router-dom';
 import { Products } from './product/Products';
+import { Recipes } from './recipe/Recipes';
 import './App.css';
 import { Header } from './header/Header';
 import { Navigation } from './bottomNavigation/BottomNavigation';
@@ -15,8 +16,8 @@ function App() {
           <Route exact path="/">
             <Products />
           </Route>
-          <Route exact path="/recipes">
-            recipes
+          <Route path="/recipes">
+            <Recipes />
           </Route>
           <Redirect to="/" />
         </Switch>
