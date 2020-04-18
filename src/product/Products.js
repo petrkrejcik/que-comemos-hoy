@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useAsync } from 'react-use';
 import { Button, Checkbox, TextField, List, IconButton } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
-import { db } from 'storage/firebase';
+import { db, firebase } from 'storage/firebase';
 import { globalStateContext } from 'app/GlobalStateContext';
 
 export const Products = () => {
@@ -26,9 +26,6 @@ export const Products = () => {
         };
       });
       setProducts(loadedProducts);
-      // snapshot.forEach((doc) => {
-      //   console.log("🛎 ", "doc", doc.data());
-      // });
     });
   }, [user]);
 
@@ -41,10 +38,21 @@ export const Products = () => {
     setNewProduct('');
   };
 
-  const update = (id) => async () => {
-    await db.collection('products').doc(id).update({
-      available: true,
+  //   const update = (product) => async () => {
+  //     await db.collection('products').doc(product.id).update({
+  //       available: true,
+  //     });
+  //   };
+
+  const update = (product) => () => {
+    const batch = db.batch();
+    batch.update(db.doc(`products/${product.id}`), { available: true });
+    Object.keys(product.recipes).forEach((recipeId) => {
+      batch.update(db.doc(`recipes/${recipeId}`), {
+        [`ingredients.${product.id}.available`]: true,
+      });
     });
+    batch.commit();
   };
 
   return (
@@ -52,7 +60,7 @@ export const Products = () => {
       <List>
         {products.map((product) => (
           <div key={product.id}>
-            <Checkbox checked={false} onChange={update(product.id)} />
+            <Checkbox checked={false} onChange={update(product)} />
             {product.title}
           </div>
         ))}

@@ -30,10 +30,10 @@ export const Recipes = () => {
     const query = db.collection('recipes').where('userId', '==', user.id).limit(50);
 
     query.onSnapshot((snapshot) => {
-      const loadedRecipes = snapshot.docs.map((doc) => {
+      const loadedRecipes = snapshot.docs.map((recipe) => {
         return {
-          id: doc.id,
-          ...doc.data(),
+          id: recipe.id,
+          ...recipe.data(),
         };
       });
       setRecipes(loadedRecipes);
@@ -89,6 +89,7 @@ const RecipeItem = ({ recipe }) => {
   const history = useHistory();
 
   const handleRecipeClick = (id) => () => {
+    console.log('🛎 ', 'recipe', recipe);
     history.push(`/recipes/${id}`, { recipe });
   };
   return (

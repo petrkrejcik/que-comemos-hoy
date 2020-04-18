@@ -27,6 +27,7 @@ export const Recipe = (props) => {
   const [user] = userState;
   const [ingredientSearch, setIngredientSearch] = React.useState('');
   const [allIngredients, setAllIngredients] = React.useState([]);
+  const recipeIngredients = Object.values(recipe.ingredients || {});
   //   const ingredients = [{ title: 'Masa', id: 'avxdsdafea' }];
 
   //   const recipe = useAsync(async () => {
@@ -39,9 +40,7 @@ export const Recipe = (props) => {
     //   console.log('🛎 ', 'neexistuje');
     //   throw new Error('Recipe not found');
     // }
-    console.log('🛎 ', 'jedu');
     doc.onSnapshot((snapshot) => {
-      console.log('🛎 ', 'snap');
       setRecipe({
         id: snapshot.id,
         ...snapshot.data(),
@@ -57,19 +56,28 @@ export const Recipe = (props) => {
 
   const addIngredient = async (ingredient) => {
     if (!ingredient) return;
-    console.log('🛎 ', 'add', ingredient, recipe.id);
-    const exists = recipe.ingredients.find((ing) => ing.id === ingredient.id);
+    const exists = recipeIngredients.find((ing) => ing.id === ingredient.id);
     if (exists) return;
 
-    await db
-      .collection(`recipes`)
+    // TODO: batch
+    db.collection(`recipes`)
       .doc(recipe.id)
       .update({
-        ingredients: firebase.firestore.FieldValue.arrayUnion({
+        [`ingredients.${ingredient.id}`]: {
           id: ingredient.id,
           available: ingredient.available,
           title: ingredient.title,
-        }),
+        },
+        // ingredients: firebase.firestore.FieldValue.arrayUnion({
+        //   id: ingredient.id,
+        //   available: ingredient.available,
+        //   title: ingredient.title,
+        // }),
+      });
+    db.collection(`products`)
+      .doc(ingredient.id)
+      .update({
+        [`recipes.${recipe.id}`]: true,
       });
   };
 
@@ -90,12 +98,14 @@ export const Recipe = (props) => {
         <Add />
       </IconButton> */}
       <List>
-        {recipe.ingredients.map((ingredient) => (
-          <div key={ingredient.id}>{ingredient.title}</div>
+        {recipeIngredients.map((ingredient) => (
+          <div key={ingredient.id}>
+            {ingredient.title} {ingredient.available ? '✅' : '❌'}
+          </div>
         ))}
       </List>
       <Autocomplete
-        options={allIngredients.filter((ing) => !recipe.ingredients.find((i) => i.id === ing.id))}
+        options={allIngredients.filter((ing) => !recipeIngredients.find((i) => i.id === ing.id))}
         getOptionLabel={(option) => option.title}
         // style={{ width: 300 }}
         freeSolo
