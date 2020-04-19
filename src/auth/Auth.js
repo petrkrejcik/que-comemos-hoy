@@ -23,7 +23,7 @@ export const useLogin = () => {
         : null;
       setUser(convertedUser);
       if (!convertedUser) return;
-      db.collection('users').add(convertedUser);
+      db.collection('users').doc(convertedUser.id).set(convertedUser);
     });
   }, [setUser]);
 
