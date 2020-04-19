@@ -5,12 +5,18 @@ import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import RestoreIcon from '@material-ui/icons/Restore';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 export const Navigation = () => {
   const classes = useStyles();
-  const [value, setValue] = React.useState(0);
+  const location = useLocation();
   const history = useHistory();
+  const value = pages.findIndex(({ route }) => {
+    if (route === '/') {
+      return location.pathname === '/';
+    }
+    return location.pathname.indexOf(route) >= 0;
+  });
 
   return (
     <BottomNavigation
@@ -18,7 +24,6 @@ export const Navigation = () => {
       onChange={(event, newValue) => {
         const route = pages[newValue].route;
         history.push(route);
-        setValue(newValue);
       }}
       showLabels
       className={classes.root}
@@ -40,8 +45,8 @@ const useStyles = makeStyles({
 
 const pages = [
   {
-    label: 'Products',
-    route: '/products',
+    label: 'Ingredients',
+    route: '/',
     icon: RestoreIcon,
   },
   {

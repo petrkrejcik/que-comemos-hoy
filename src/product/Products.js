@@ -1,22 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAsync } from 'react-use';
-import { Button, Checkbox, TextField, List, IconButton } from '@material-ui/core';
+import { Button, TextField, List, IconButton } from '@material-ui/core';
+import { Autocomplete } from '@material-ui/lab';
 import { Add } from '@material-ui/icons';
 import { db, firebase } from 'storage/firebase';
 import { globalStateContext } from 'app/GlobalStateContext';
+import { ProductList } from './ProductList';
 
 export const Products = () => {
   const { userState } = React.useContext(globalStateContext);
   const [user] = userState;
-  const [products, setProducts] = useState([]);
+  const [ingredientsAll, setAllProducts] = useState([]);
   const [newProduct, setNewProduct] = useState('');
+
   useAsync(async () => {
     if (!user) return;
-    const query = db
-      .collection('products')
-      .where('available', '==', false)
-      .where('userId', '==', user.id)
-      .limit(50);
+    const query = db.collection('products').where('userId', '==', user.id).limit(50);
 
     query.onSnapshot((snapshot) => {
       const loadedProducts = snapshot.docs.map((doc) => {
@@ -25,7 +24,7 @@ export const Products = () => {
           ...doc.data(),
         };
       });
-      setProducts(loadedProducts);
+      setAllProducts(loadedProducts);
     });
   }, [user]);
 
@@ -38,36 +37,63 @@ export const Products = () => {
     setNewProduct('');
   };
 
-  //   const update = (product) => async () => {
-  //     await db.collection('products').doc(product.id).update({
-  //       available: true,
-  //     });
-  //   };
-
-  const update = (product) => () => {
+  const updateIngredient = (ingredient, data) => {
+    if (!ingredient) return;
     const batch = db.batch();
-    batch.update(db.doc(`products/${product.id}`), { available: true });
-    Object.keys(product.recipes).forEach((recipeId) => {
-      batch.update(db.doc(`recipes/${recipeId}`), {
-        [`ingredients.${product.id}.available`]: true,
+    const ingredientRef = db.doc(`products/${ingredient.id}`);
+    if (data === 'delete') {
+      batch.delete(ingredientRef);
+    } else {
+      batch.update(ingredientRef, data);
+    }
+    if (ingredient.recipes) {
+      Object.keys(ingredient.recipes).forEach((recipeId) => {
+        if (data === 'delete') {
+          batch.set(
+            db.doc(`recipes/${recipeId}`),
+            { ingredients: { [ingredient.id]: firebase.firestore.FieldValue.delete() } },
+            { merge: true }
+          );
+        } else {
+          const values = Object.keys(data).reduce((acc, key) => {
+            acc[`ingredients.${ingredient.id}.${key}`] = data[key];
+            return acc;
+          }, {});
+          batch.update(db.doc(`recipes/${recipeId}`), values);
+        }
       });
-    });
+    }
     batch.commit();
   };
 
+  //   const deleteIngredient = (ingredient) => {
+  //     updateIngredient(ingredient, 'delete');
+  //     handleIngredientEdit(null);
+  //   };
+
   return (
     <div>
+      Buy
       <List>
-        {products.map((product) => (
-          <div key={product.id}>
-            <Checkbox checked={false} onChange={update(product)} />
-            {product.title}
-          </div>
-        ))}
-        <IconButton>
+        <ProductList
+          ingredients={ingredientsAll.filter(({ available }) => !available)}
+          onUpdate={updateIngredient}
+        />
+
+        {/* <IconButton>
           <Add />
-        </IconButton>
-        <TextField label="Add" value={newProduct} onChange={(e) => setNewProduct(e.target.value)} />
+        </IconButton> */}
+        <Autocomplete
+          options={ingredientsAll}
+          getOptionLabel={(option) => option.title}
+          freeSolo
+          inputValue={newProduct}
+          renderInput={(params) => <TextField {...params} label="Add" />}
+          onInputChange={(e, newIngredient) => setNewProduct(newIngredient)}
+          onChange={(event, ingredient) => {
+            updateIngredient(ingredient, { available: false });
+          }}
+        />
         <Button
           onClick={add}
           color="primary"
@@ -76,6 +102,13 @@ export const Products = () => {
         >
           Save
         </Button>
+      </List>
+      Have
+      <List>
+        <ProductList
+          ingredients={ingredientsAll.filter(({ available }) => available)}
+          onUpdate={updateIngredient}
+        />
       </List>
     </div>
   );

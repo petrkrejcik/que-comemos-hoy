@@ -28,7 +28,6 @@ export const Recipe = (props) => {
   const [ingredientSearch, setIngredientSearch] = React.useState('');
   const [allIngredients, setAllIngredients] = React.useState([]);
   const recipeIngredients = Object.values(recipe.ingredients || {});
-  //   const ingredients = [{ title: 'Masa', id: 'avxdsdafea' }];
 
   //   const recipe = useAsync(async () => {
   //     return await getRecipeById(recipeId);
@@ -36,10 +35,6 @@ export const Recipe = (props) => {
 
   useAsync(async () => {
     const doc = await db.collection('recipes').doc(recipe.id);
-    // if (!doc.exists) {
-    //   console.log('🛎 ', 'neexistuje');
-    //   throw new Error('Recipe not found');
-    // }
     doc.onSnapshot((snapshot) => {
       setRecipe({
         id: snapshot.id,
@@ -68,11 +63,6 @@ export const Recipe = (props) => {
           available: ingredient.available,
           title: ingredient.title,
         },
-        // ingredients: firebase.firestore.FieldValue.arrayUnion({
-        //   id: ingredient.id,
-        //   available: ingredient.available,
-        //   title: ingredient.title,
-        // }),
       });
     db.collection(`products`)
       .doc(ingredient.id)
@@ -80,14 +70,6 @@ export const Recipe = (props) => {
         [`recipes.${recipe.id}`]: true,
       });
   };
-
-  //   if (recipe.loading) {
-  //     return 'loading...';
-  //   }
-
-  //   if (recipe.error) {
-  //     return recipe.error;
-  //   }
 
   return (
     <>
@@ -107,7 +89,6 @@ export const Recipe = (props) => {
       <Autocomplete
         options={allIngredients.filter((ing) => !recipeIngredients.find((i) => i.id === ing.id))}
         getOptionLabel={(option) => option.title}
-        // style={{ width: 300 }}
         freeSolo
         renderInput={(params) => <TextField {...params} label="Search" />}
         onChange={(event, value) => {

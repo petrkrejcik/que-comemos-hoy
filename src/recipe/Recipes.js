@@ -23,7 +23,7 @@ export const Recipes = () => {
   const { userState } = React.useContext(globalStateContext);
   const [user] = userState;
   const [recipes, setRecipes] = useState([]);
-  const [newProduct, setNewProduct] = useState('');
+  // const [newProduct, setNewProduct] = useState('');
 
   useAsync(async () => {
     if (!user) return;
@@ -89,7 +89,6 @@ const RecipeItem = ({ recipe }) => {
   const history = useHistory();
 
   const handleRecipeClick = (id) => () => {
-    console.log('🛎 ', 'recipe', recipe);
     history.push(`/recipes/${id}`, { recipe });
   };
   return (
