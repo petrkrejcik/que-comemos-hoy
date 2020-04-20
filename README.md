@@ -1,13 +1,31 @@
 # TODO
 
-- [x] pridat recept id k ingredienci
-- [x] add ingredient
-- [x] set availability after check/uncheck ingredient
-- [] update ingredient
-- [] delete ingredient
-- [] odebrat recept id z ingredience
+v1.0
 
-- ingredients
+- [x] taby pro ingredience - buy/have/all
+- [] delete ingredient (kam?)
+- [] homepage bude login screena
+- [] presunout profil do draweru, protoze misto nej chci mit Add/Edit
+- [] sdileni s jinym uzivatelem
+
+v1.1
+
+- [] namastit recepty + ingredience
+- [] odebrat recept id z ingredience
+- [] pocitadlo dostupnych ingredienci k receptu
+- [] fotka receptu
+
+v1.2
+
+Wishlist
+
+- kde koupit
+- cena (per ke koupeno)
+- mrazak
+- hodnoceni ingredienci
+- schedule
+
+* ingredients
   - masa
     - Masa
     - available: true
@@ -20,7 +38,7 @@
   - carne
     - Carne
     - available: true
-- recipes
+* recipes
   - bizcocho
     - Bizcocho
     - Horno 40 min
