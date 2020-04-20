@@ -6,6 +6,7 @@ import './App.css';
 import { Header } from './header/Header';
 import { Navigation } from './bottomNavigation/BottomNavigation';
 import { GlobalStateProvider } from 'app/GlobalStateContext';
+import { PrivateRoute } from 'app/PrivateRoute';
 
 function App() {
   return (
@@ -13,12 +14,13 @@ function App() {
       <Router basename={process.env.PUBLIC_URL}>
         <Header />
         <Switch>
-          <Route exact path="/">
+          <PrivateRoute exact path="/">
             <Products />
-          </Route>
-          <Route path="/recipes">
+          </PrivateRoute>
+          <PrivateRoute path="/recipes">
             <Recipes />
-          </Route>
+          </PrivateRoute>
+          <Route path="/login">Login page</Route>
           <Redirect to="/" />
         </Switch>
         <Navigation />

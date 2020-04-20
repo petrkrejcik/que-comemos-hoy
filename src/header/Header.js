@@ -6,6 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import { Drawer } from 'drawer/Drawer';
+import { globalStateContext } from 'app/GlobalStateContext';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -21,21 +22,15 @@ const useStyles = makeStyles((theme) => ({
 
 export const Header = () => {
   const classes = useStyles();
-  const [drawerOpened, openDrawer] = React.useState(false);
-
-  const toggleDrawer = (event) => {
-    if (event && event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
-      return;
-    }
-    openDrawer(!drawerOpened);
-  };
+  const { drawerState } = React.useContext(globalStateContext);
+  const [, openDrawer] = drawerState;
 
   return (
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
           <IconButton
-            onClick={toggleDrawer}
+            onClick={openDrawer(true)}
             edge="start"
             className={classes.menuButton}
             color="inherit"
@@ -46,7 +41,7 @@ export const Header = () => {
           <Typography variant="h6" className={classes.title}></Typography>
         </Toolbar>
       </AppBar>
-      <Drawer open={drawerOpened} toggle={toggleDrawer} />
+      <Drawer />
     </div>
   );
 };
