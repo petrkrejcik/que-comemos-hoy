@@ -5,6 +5,7 @@ v1.0
 - [x] taby pro ingredience - buy/have/all
 - [] delete ingredient (kam?)
 - [] homepage bude login screena
+- [] homepage bude / ne /login
 - [] presunout profil do draweru, protoze misto nej chci mit Add/Edit
 - [] sdileni s jinym uzivatelem
 
@@ -14,6 +15,7 @@ v1.1
 - [] odebrat recept id z ingredience
 - [] pocitadlo dostupnych ingredienci k receptu
 - [] fotka receptu
+- [] ingredients lazy load
 
 v1.2
 
@@ -51,6 +53,12 @@ Wishlist
           - harina
             - Harina
             - available: true
+
+- users
+  - abcdef
+    - members
+      asdqw34: true
+      micxvoj: true
 
 ## Firestore
 

@@ -1,9 +1,9 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { List, ListItem, ListItemText, Divider, SwipeableDrawer } from '@material-ui/core';
-import { useLogin, useLogout } from 'auth/Auth';
+import { useLogout } from 'auth/Auth';
 import { globalStateContext } from 'app/GlobalStateContext';
-import { Dialog } from 'dialog/Dialog';
 
 const useStyles = makeStyles({
   root: {
@@ -14,13 +14,9 @@ const useStyles = makeStyles({
 export const Drawer = (props) => {
   const classes = useStyles();
   const logout = useLogout();
-  const [loginState, login] = useLogin();
   const { userState, drawerState } = React.useContext(globalStateContext);
   const [user] = userState;
   const [drawerOpened, openDrawer] = drawerState;
-  const [isErrorOpen, setErrorOpen] = React.useState(true);
-
-  const handleCloseError = () => setErrorOpen(false);
 
   return (
     <SwipeableDrawer
@@ -30,19 +26,16 @@ export const Drawer = (props) => {
       className={classes.root}
     >
       <List>
-        {loginState.error && (
-          <Dialog handleClose={handleCloseError} open={isErrorOpen} title="Login error">
-            {loginState.error.message}
-          </Dialog>
-        )}
+        <ListItem>{user && <ListItemText>{user.email}</ListItemText>}</ListItem>
+        <ListItem button>{user && <ListItemText primary="Logout" onClick={logout} />}</ListItem>
+        <Divider />
         <ListItem button>
-          {user ? (
-            <ListItemText primary="Logout" onClick={logout} />
-          ) : (
-            <ListItemText primary="Login" onClick={login} />
+          {user && (
+            <ListItemText>
+              <Link to="/add-member">Add member</Link>
+            </ListItemText>
           )}
         </ListItem>
-        <Divider />
       </List>
     </SwipeableDrawer>
   );

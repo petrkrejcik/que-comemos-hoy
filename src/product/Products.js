@@ -17,7 +17,11 @@ export const Products = () => {
 
   useAsync(async () => {
     if (!user) return;
-    const query = db.collection('products').where('userId', '==', user.id).limit(50);
+    const members = Object.keys(user.members || {});
+    const query = db
+      .collection('products')
+      .where('userId', 'in', [user.id, ...members])
+      .limit(50);
 
     query.onSnapshot((snapshot) => {
       const loadedProducts = snapshot.docs.map((doc) => {

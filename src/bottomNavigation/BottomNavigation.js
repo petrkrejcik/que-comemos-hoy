@@ -54,9 +54,9 @@ const pages = [
     route: '/recipes',
     icon: FavoriteIcon,
   },
-  {
-    label: 'Schedule',
-    route: '/schedule',
-    icon: LocationOnIcon,
-  },
+  // {
+  //   label: 'Schedule',
+  //   route: '/schedule',
+  //   icon: LocationOnIcon,
+  // },
 ];

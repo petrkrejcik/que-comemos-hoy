@@ -15,19 +15,27 @@ export const useLogin = () => {
   }, []);
 
   useEffect(() => {
-    firebase.auth().onAuthStateChanged((loggedUser) => {
+    firebase.auth().onAuthStateChanged(async (loggedUser) => {
       if (!loggedUser) {
         setUser(null);
         return;
       }
-      const convertedUser = {
-        id: loggedUser.uid,
-        displayName: loggedUser.displayName,
-        email: loggedUser.email,
-        photoURL: loggedUser.photoURL,
-      };
+      const query = await db.collection('users').doc(loggedUser.uid).get();
+      let convertedUser;
+      if (query.exists) {
+        convertedUser = query.data();
+      } else {
+        convertedUser = {
+          id: loggedUser.uid,
+          displayName: loggedUser.displayName,
+          email: loggedUser.email,
+          photoURL: loggedUser.photoURL,
+          members: {},
+        };
+        // TODO: await
+        db.collection('users').doc(convertedUser.id).set(convertedUser);
+      }
       setUser(convertedUser);
-      db.collection('users').doc(convertedUser.id).set(convertedUser);
       openDrawer(false)();
       history.push('/');
     });
@@ -37,10 +45,12 @@ export const useLogin = () => {
 };
 
 export const useLogout = () => {
-  const { drawerState } = React.useContext(globalStateContext);
+  const { userState, drawerState } = React.useContext(globalStateContext);
   const [, openDrawer] = drawerState;
+  const [, setUser] = userState;
   const logout = () => {
     openDrawer(false)();
+    setUser(null);
     firebase.auth().signOut();
   };
   return logout;

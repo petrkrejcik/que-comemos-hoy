@@ -7,6 +7,8 @@ import { Header } from './header/Header';
 import { Navigation } from './bottomNavigation/BottomNavigation';
 import { GlobalStateProvider } from 'app/GlobalStateContext';
 import { PrivateRoute } from 'app/PrivateRoute';
+import { Login } from 'login/Login';
+import { AddMember } from 'addMember/AddMember';
 
 function App() {
   return (
@@ -20,7 +22,12 @@ function App() {
           <PrivateRoute path="/recipes">
             <Recipes />
           </PrivateRoute>
-          <Route path="/login">Login page</Route>
+          <PrivateRoute path="/add-member">
+            <AddMember />
+          </PrivateRoute>
+          <Route path="/login">
+            <Login />
+          </Route>
           <Redirect to="/" />
         </Switch>
         <Navigation />
