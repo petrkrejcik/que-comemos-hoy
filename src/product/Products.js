@@ -1,6 +1,8 @@
 import React from 'react';
 import { useAsync } from 'react-use';
-import { List, Tabs, Tab, Typography, Box } from '@material-ui/core';
+import { useCollectionData } from 'react-firebase-hooks/firestore';
+import { List, Tabs, Tab, Typography, Box, Grid } from '@material-ui/core';
+import Skeleton from '@material-ui/lab/Skeleton';
 import { makeStyles } from '@material-ui/core/styles';
 import SwipeableViews from 'react-swipeable-views';
 import { updateIngredient } from './ingredientUtils';
@@ -13,28 +15,37 @@ import { AddIngredient } from './AddIngredient';
 export const Products = () => {
   const { userState } = React.useContext(globalStateContext);
   const [user] = userState;
-  const [ingredientsAll, setAllProducts] = React.useState([]);
+  // const [ingredientsAll, setAllProducts] = React.useState([]);
   const [tab, setTab] = React.useState(0);
   const classes = useStyles();
 
-  useAsync(async () => {
-    if (!user) return;
-    const members = Object.keys(user.members || {});
-    const query = db
+  const members = Object.keys(user.members || {});
+  const [ingredientsAll, ingredientsLoading, ingredientsError] = useCollectionData(
+    db
       .collection('products')
       .where('userId', 'in', [user.id, ...members])
-      .limit(50);
+      .limit(50)
+  );
 
-    query.onSnapshot((snapshot) => {
-      const loadedProducts = snapshot.docs.map((doc) => {
-        return {
-          id: doc.id,
-          ...doc.data(),
-        };
-      });
-      setAllProducts(loadedProducts);
-    });
-  }, [user]);
+  // const ingredients = useAsync(async () => {
+  //   if (!user) return;
+  //   const members = Object.keys(user.members || {});
+  //   return new Promise((resolve) => {
+  //     db.collection('products')
+  //       .where('userId', 'in', [user.id, ...members])
+  //       .limit(50)
+  //       .onSnapshot((snapshot) => {
+  //         const loadedProducts = snapshot.docs.map((doc) => {
+  //           return {
+  //             id: doc.id,
+  //             ...doc.data(),
+  //           };
+  //         });
+  //         resolve(loadedProducts);
+  //         setAllProducts(loadedProducts);
+  //       });
+  //   });
+  // }, [user]);
 
   //   const deleteIngredient = (ingredient) => {
   //     updateIngredient(ingredient, 'delete');
@@ -71,28 +82,45 @@ export const Products = () => {
         onChangeIndex={(e, value) => handleTabChange(value)}
         className={classes.content}
       >
-        <TabPanel value={tab} index={0}>
-          <List>
-            <ProductList
-              ingredients={ingredientsAll.filter(({ available }) => !available)}
-              onUpdate={updateIngredient}
-            />
-            <AddIngredient ingredients={ingredientsAll} />
-          </List>
-        </TabPanel>
-        <TabPanel value={tab} index={1}>
-          <List>
-            <ProductList
-              ingredients={ingredientsAll.filter(({ available }) => available)}
-              onUpdate={updateIngredient}
-            />
-          </List>
-        </TabPanel>
-        <TabPanel value={tab} index={2}>
-          <List>
-            <ProductList ingredients={ingredientsAll} onUpdate={updateIngredient} />
-          </List>
-        </TabPanel>
+        {ingredientsLoading ? (
+          'Loading'
+        ) : (
+          // <Grid container justify="center" wrap="nowrap">
+          //   <Grid item xs={11}>
+          //     {/* <Skeleton variant="text" /> */}
+          //     <Skeleton variant="rect" width={25} />
+          //     <Skeleton variant="rect" width={140} />
+          //   </Grid>
+          //   <Grid item xs={11}>
+          //     <Skeleton variant="text" />
+          //     {/* <Skeleton variant="text" width={40} /> */}
+          //   </Grid>
+          // </Grid>
+          <>
+            <TabPanel value={tab} index={0}>
+              <List>
+                <ProductList
+                  ingredients={ingredientsAll.filter(({ available }) => !available)}
+                  onUpdate={updateIngredient}
+                />
+                <AddIngredient ingredients={ingredientsAll} />
+              </List>
+            </TabPanel>
+            <TabPanel value={tab} index={1}>
+              <List>
+                <ProductList
+                  ingredients={ingredientsAll.filter(({ available }) => available)}
+                  onUpdate={updateIngredient}
+                />
+              </List>
+            </TabPanel>
+            <TabPanel value={tab} index={2}>
+              <List>
+                <ProductList ingredients={ingredientsAll} onUpdate={updateIngredient} />
+              </List>
+            </TabPanel>
+          </>
+        )}
       </SwipeableViews>
     </div>
   );
