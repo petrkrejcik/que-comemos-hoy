@@ -4,7 +4,6 @@ import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import RestoreIcon from '@material-ui/icons/Restore';
 import FavoriteIcon from '@material-ui/icons/Favorite';
-import LocationOnIcon from '@material-ui/icons/LocationOn';
 import { useHistory, useLocation } from 'react-router-dom';
 
 export const Navigation = () => {
@@ -46,7 +45,7 @@ const useStyles = makeStyles({
 const pages = [
   {
     label: 'Ingredients',
-    route: '/',
+    route: '/products',
     icon: RestoreIcon,
   },
   {

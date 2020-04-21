@@ -6,7 +6,7 @@ import { globalStateContext } from 'app/GlobalStateContext';
 
 export const useLogin = () => {
   const { userState, drawerState } = React.useContext(globalStateContext);
-  const [, setUser] = userState;
+  const [user, setUser] = userState;
   const [, openDrawer] = drawerState;
   const history = useHistory();
   const login = useAsyncFn(async () => {
@@ -20,6 +20,7 @@ export const useLogin = () => {
         setUser(null);
         return;
       }
+      if (loggedUser.uid === user.id) return;
       const query = await db.collection('users').doc(loggedUser.uid).get();
       let convertedUser;
       if (query.exists) {
@@ -39,7 +40,7 @@ export const useLogin = () => {
       openDrawer(false)();
       history.push('/');
     });
-  }, [setUser, history, openDrawer]);
+  }, [setUser, history, openDrawer, user]);
 
   return login;
 };

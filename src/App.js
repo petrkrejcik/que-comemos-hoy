@@ -14,23 +14,27 @@ function App() {
   return (
     <GlobalStateProvider>
       <Router basename={process.env.PUBLIC_URL}>
-        <Header />
         <Switch>
-          <PrivateRoute exact path="/">
-            <Products />
-          </PrivateRoute>
-          <PrivateRoute path="/recipes">
-            <Recipes />
-          </PrivateRoute>
-          <PrivateRoute path="/add-member">
-            <AddMember />
-          </PrivateRoute>
-          <Route path="/login">
+          <Route exact path="/">
             <Login />
           </Route>
-          <Redirect to="/" />
+          <>
+            <Header />
+            <Switch>
+              <PrivateRoute exact path="/products">
+                <Products />
+              </PrivateRoute>
+              <PrivateRoute path="/recipes">
+                <Recipes />
+              </PrivateRoute>
+              <PrivateRoute path="/add-member">
+                <AddMember />
+              </PrivateRoute>
+              <Redirect to="/products" />
+            </Switch>
+            <Navigation />
+          </>
         </Switch>
-        <Navigation />
       </Router>
     </GlobalStateProvider>
   );

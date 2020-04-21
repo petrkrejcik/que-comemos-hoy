@@ -1,13 +1,23 @@
 import React from 'react';
-import { Button } from '@material-ui/core';
+import { Redirect } from 'react-router-dom';
+import { Button, Grid } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 import { Dialog } from 'dialog/Dialog';
 import { useLogin } from 'auth/Auth';
+import { globalStateContext } from 'app/GlobalStateContext';
 
 export const Login = () => {
+  const classes = useStyles();
   const [loginState, login] = useLogin();
+  const { userState } = React.useContext(globalStateContext);
+  const [user] = userState;
   const [isErrorOpen, setErrorOpen] = React.useState(true);
 
   const handleCloseError = () => setErrorOpen(false);
+
+  if (user) {
+    return <Redirect to="/products" />;
+  }
 
   return (
     <>
@@ -16,9 +26,25 @@ export const Login = () => {
           {loginState.error.message}
         </Dialog>
       )}
-      <Button onClick={login} color="primary" variant="outlined">
-        Login via Google
-      </Button>
+      <Grid
+        container
+        direction="row"
+        justify="center"
+        alignItems="center"
+        className={classes.container}
+      >
+        <Grid item>
+          <Button onClick={login} color="primary" variant="outlined">
+            Login via Google
+          </Button>
+        </Grid>
+      </Grid>
     </>
   );
 };
+
+const useStyles = makeStyles({
+  container: {
+    minHeight: 'calc(100vh - 56px - 56px)',
+  },
+});
