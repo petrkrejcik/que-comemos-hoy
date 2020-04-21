@@ -20,7 +20,7 @@ export const useLogin = () => {
         setUser(null);
         return;
       }
-      if (loggedUser.uid === user.id) return;
+      if (loggedUser.uid === user?.id) return;
       const query = await db.collection('users').doc(loggedUser.uid).get();
       let convertedUser;
       if (query.exists) {
