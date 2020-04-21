@@ -27,7 +27,7 @@ export const Header = () => {
 
   return (
     <div className={classes.root}>
-      <AppBar position="static">
+      <AppBar position="fixed">
         <Toolbar>
           <IconButton
             onClick={openDrawer(true)}
@@ -41,6 +41,7 @@ export const Header = () => {
           <Typography variant="h6" className={classes.title}></Typography>
         </Toolbar>
       </AppBar>
+      <Toolbar />
       <Drawer />
     </div>
   );
