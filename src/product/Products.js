@@ -35,6 +35,7 @@ export const Products = () => {
   }, [user]);
 
   const add = async () => {
+    if (newProduct.trim() === '') return;
     await db.collection('products').add({
       title: newProduct,
       available: false,
@@ -113,14 +114,19 @@ export const Products = () => {
           <Add />
         </IconButton> */}
             <Autocomplete
-              options={ingredientsAll}
-              getOptionLabel={(option) => option.title}
+              options={ingredientsAll.filter(({ available }) => available)}
+              getOptionLabel={(option) => option.title || option}
               freeSolo
               inputValue={newProduct}
               renderInput={(params) => <TextField {...params} label="Add" />}
               onInputChange={(e, newIngredient) => setNewProduct(newIngredient)}
-              onChange={(event, ingredient) => {
+              onChange={(event, ingredient, reason) => {
+                if (reason !== 'select-option') return;
                 updateIngredient(ingredient, { available: false });
+              }}
+              onClose={(event, reason) => {
+                if (reason === 'select-option') return;
+                add();
               }}
             />
             <Button

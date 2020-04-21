@@ -4,10 +4,11 @@ v1.0
 
 - [x] taby pro ingredience - buy/have/all
 - [] delete ingredient (kam?)
-- [] homepage bude login screena
-- [] homepage bude / ne /login
-- [] presunout profil do draweru, protoze misto nej chci mit Add/Edit
-- [] sdileni s jinym uzivatelem
+- [x] homepage bude login screena
+- [x] homepage bude / ne /login
+- [x] presunout profil do draweru, protoze misto nej chci mit Add/Edit
+- [x] sdileni s jinym uzivatelem
+- fix add ingredient
 
 v1.1
 
