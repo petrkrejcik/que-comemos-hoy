@@ -9,9 +9,17 @@ export const useLogin = () => {
   const [user, setUser] = userState;
   const [, openDrawer] = drawerState;
   const history = useHistory();
-  const login = useAsyncFn(async () => {
+  const login = useAsyncFn(() => {
     const provider = new firebase.auth.GoogleAuthProvider();
-    await firebase.auth().signInWithPopup(provider);
+    return new Promise(async (resolve, reject) => {
+      try {
+        await firebase.auth().signInWithPopup(provider);
+        // Do not call resolve, because we want the loader to be displayed.
+        // Loader will be hidden by onAuthStateChanged.
+      } catch (e) {
+        reject(e);
+      }
+    });
   }, []);
 
   useEffect(() => {

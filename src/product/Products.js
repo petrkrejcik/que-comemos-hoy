@@ -15,12 +15,11 @@ import { AddIngredient } from './AddIngredient';
 export const Products = () => {
   const { userState } = React.useContext(globalStateContext);
   const [user] = userState;
-  // const [ingredientsAll, setAllProducts] = React.useState([]);
   const [tab, setTab] = React.useState(0);
   const classes = useStyles();
 
   const members = Object.keys(user.members || {});
-  const [ingredientsAll, ingredientsLoading, ingredientsError] = useCollectionData(
+  const [ingredients, loading] = useCollectionData(
     db
       .collection('products')
       .where('userId', 'in', [user.id, ...members])
@@ -28,34 +27,11 @@ export const Products = () => {
     { idField: 'id' }
   );
 
-  // const ingredients = useAsync(async () => {
-  //   if (!user) return;
-  //   const members = Object.keys(user.members || {});
-  //   return new Promise((resolve) => {
-  //     db.collection('products')
-  //       .where('userId', 'in', [user.id, ...members])
-  //       .limit(50)
-  //       .onSnapshot((snapshot) => {
-  //         const loadedProducts = snapshot.docs.map((doc) => {
-  //           return {
-  //             id: doc.id,
-  //             ...doc.data(),
-  //           };
-  //         });
-  //         resolve(loadedProducts);
-  //         setAllProducts(loadedProducts);
-  //       });
-  //   });
-  // }, [user]);
-
   //   const deleteIngredient = (ingredient) => {
   //     updateIngredient(ingredient, 'delete');
   //     handleIngredientEdit(null);
   //   };
 
-  const handleTabChange = (index) => {
-    setTab(index);
-  };
   const a11yProps = (index) => {
     return {
       id: `full-width-tab-${index}`,
@@ -67,7 +43,7 @@ export const Products = () => {
     <div>
       <Tabs
         value={tab}
-        onChange={(e, value) => handleTabChange(value)}
+        onChange={(e, value) => setTab(value)}
         indicatorColor="primary"
         textColor="primary"
         variant="fullWidth"
@@ -80,10 +56,10 @@ export const Products = () => {
       <SwipeableViews
         axis="x"
         index={tab}
-        onChangeIndex={(e, value) => handleTabChange(value)}
+        onChangeIndex={(e, value) => setTab(value)}
         className={classes.content}
       >
-        {ingredientsLoading ? (
+        {loading ? (
           <div>Loading</div>
         ) : (
           // <Grid container justify="center" wrap="nowrap">
@@ -101,23 +77,23 @@ export const Products = () => {
             <TabPanel value={tab} index={0}>
               <List>
                 <ProductList
-                  ingredients={ingredientsAll.filter(({ available }) => !available)}
+                  ingredients={ingredients.filter(({ available }) => !available)}
                   onUpdate={updateIngredient}
                 />
-                <AddIngredient ingredients={ingredientsAll} />
+                <AddIngredient ingredients={ingredients} />
               </List>
             </TabPanel>
             <TabPanel value={tab} index={1}>
               <List>
                 <ProductList
-                  ingredients={ingredientsAll.filter(({ available }) => available)}
+                  ingredients={ingredients.filter(({ available }) => available)}
                   onUpdate={updateIngredient}
                 />
               </List>
             </TabPanel>
             <TabPanel value={tab} index={2}>
               <List>
-                <ProductList ingredients={ingredientsAll} onUpdate={updateIngredient} />
+                <ProductList ingredients={ingredients} onUpdate={updateIngredient} />
               </List>
             </TabPanel>
           </>

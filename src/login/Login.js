@@ -1,6 +1,6 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
-import { Button, Grid } from '@material-ui/core';
+import { Button, Grid, Backdrop, CircularProgress } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Dialog } from 'dialog/Dialog';
 import { useLogin } from 'auth/Auth';
@@ -26,17 +26,17 @@ export const Login = () => {
           {loginState.error.message}
         </Dialog>
       )}
-      <Grid
-        container
-        direction="row"
-        justify="center"
-        alignItems="center"
-        className={classes.container}
-      >
+      <Grid container justify="center" alignItems="center" className={classes.container}>
         <Grid item>
-          <Button onClick={login} color="primary" variant="outlined">
-            Login via Google
-          </Button>
+          {loginState.loading ? (
+            <Backdrop className={classes.backdrop} open>
+              <CircularProgress color="inherit" />
+            </Backdrop>
+          ) : (
+            <Button onClick={login} color="primary" variant="outlined">
+              Login via Google
+            </Button>
+          )}
         </Grid>
       </Grid>
     </>
@@ -45,6 +45,9 @@ export const Login = () => {
 
 const useStyles = makeStyles({
   container: {
-    minHeight: 'calc(100vh - 56px - 56px)',
+    minHeight: 'calc(100vh - 56px)',
+  },
+  backdrop: {
+    color: '#fff',
   },
 });
