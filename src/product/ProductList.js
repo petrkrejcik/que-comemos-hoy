@@ -1,9 +1,16 @@
 import React from 'react';
 import { Checkbox } from '@material-ui/core';
 import { AddIngredient } from './AddIngredient';
+import { useSnackbar } from 'snackbar/Snackbar';
 
 export const ProductList = (props) => {
   const [editing, setEditing] = React.useState(null);
+  const showSnackbar = useSnackbar();
+
+  const handleChecked = (ingredient) => () => {
+    props.onUpdate(ingredient, { available: !ingredient.available });
+    showSnackbar({ message: 'Saved' });
+  };
 
   return props.ingredients.map((product) => (
     <div key={product.id}>
@@ -15,10 +22,7 @@ export const ProductList = (props) => {
         />
       ) : (
         <>
-          <Checkbox
-            checked={product.available}
-            onChange={() => props.onUpdate(product, { available: !product.available })}
-          />
+          <Checkbox checked={product.available} onChange={handleChecked(product)} />
           <span onClick={() => setEditing(product)}>{product.title}</span>
         </>
       )}

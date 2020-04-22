@@ -8,8 +8,8 @@ v1.0
 - [x] homepage bude / ne /login
 - [x] presunout profil do draweru, protoze misto nej chci mit Add/Edit
 - [x] sdileni s jinym uzivatelem
-- [] persistent login
-- [] loader after login
+- [] persistent login?
+- [x] loader after login
 
 v1.1
 

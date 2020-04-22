@@ -9,6 +9,7 @@ import { GlobalStateProvider } from 'app/GlobalStateContext';
 import { PrivateRoute } from 'app/PrivateRoute';
 import { Login } from 'login/Login';
 import { AddMember } from 'addMember/AddMember';
+import { Snackbar } from 'snackbar/Snackbar';
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
           </>
         </Switch>
       </Router>
+      <Snackbar />
     </GlobalStateProvider>
   );
 }

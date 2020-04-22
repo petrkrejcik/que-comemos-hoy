@@ -9,6 +9,7 @@ export const GlobalStateProvider = ({ children, initialState }) => {
   const [drawerOpened, openDrawer] = React.useState(false);
   const [inputFocused, setInputFocused] = React.useState(false);
   const [bottomNavigationVisible, setBottonNavigationVisible] = React.useState(true);
+  const snackbar = React.useState(null);
   const { Provider } = globalStateContext;
 
   const setUserMemo = React.useCallback(
@@ -40,7 +41,7 @@ export const GlobalStateProvider = ({ children, initialState }) => {
   const bottomNavigationState = [bottomNavigationVisible, setBottonNavigationVisible];
 
   return (
-    <Provider value={{ userState, drawerState, inputState, bottomNavigationState }}>
+    <Provider value={{ userState, drawerState, inputState, bottomNavigationState, snackbar }}>
       {children}
     </Provider>
   );

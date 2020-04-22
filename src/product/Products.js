@@ -6,7 +6,6 @@ import Skeleton from '@material-ui/lab/Skeleton';
 import { makeStyles } from '@material-ui/core/styles';
 import SwipeableViews from 'react-swipeable-views';
 import { updateIngredient } from './ingredientUtils';
-
 import { db } from 'storage/firebase';
 import { globalStateContext } from 'app/GlobalStateContext';
 import { ProductList } from './ProductList';
