@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAsync } from 'react-use';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
-import { List, Tabs, Tab, Typography, Box, Grid } from '@material-ui/core';
+import { List, ListItem, Tabs, Tab, Typography, Box, Grid } from '@material-ui/core';
 import Skeleton from '@material-ui/lab/Skeleton';
 import { makeStyles } from '@material-ui/core/styles';
 import SwipeableViews from 'react-swipeable-views';
@@ -52,54 +52,62 @@ export const Products = () => {
         <Tab label="Have" {...a11yProps(1)} />
         <Tab label="All" {...a11yProps(2)} />
       </Tabs>
-      <SwipeableViews
-        axis="x"
-        index={tab}
-        onChangeIndex={(e, value) => setTab(value)}
-        className={classes.content}
-      >
-        {loading ? (
-          <div>Loading</div>
-        ) : (
-          // <Grid container justify="center" wrap="nowrap">
-          //   <Grid item xs={11}>
-          //     {/* <Skeleton variant="text" /> */}
-          //     <Skeleton variant="rect" width={25} />
-          //     <Skeleton variant="rect" width={140} />
-          //   </Grid>
-          //   <Grid item xs={11}>
-          //     <Skeleton variant="text" />
-          //     {/* <Skeleton variant="text" width={40} /> */}
-          //   </Grid>
-          // </Grid>
-          <>
-            <TabPanel value={tab} index={0}>
-              <List>
-                <ProductList
-                  ingredients={ingredients.filter(({ available }) => !available)}
-                  onUpdate={updateIngredient}
-                />
-                <AddIngredient ingredients={ingredients} />
-              </List>
-            </TabPanel>
-            <TabPanel value={tab} index={1}>
-              <List>
-                <ProductList
-                  ingredients={ingredients.filter(({ available }) => available)}
-                  onUpdate={updateIngredient}
-                />
-              </List>
-            </TabPanel>
-            <TabPanel value={tab} index={2}>
-              <List>
-                <ProductList ingredients={ingredients} onUpdate={updateIngredient} />
-              </List>
-            </TabPanel>
-          </>
-        )}
-      </SwipeableViews>
+      {loading ? (
+        <Grid container justify="center">
+          <Grid item xs={11}>
+            <List>
+              {[...Array(10)].map((i) => (
+                <ListItem key={i}>
+                  <SkeletonCheckbox />
+                  <SkeletonText />
+                </ListItem>
+              ))}
+            </List>
+          </Grid>
+        </Grid>
+      ) : (
+        <SwipeableViews
+          axis="x"
+          index={tab}
+          onChangeIndex={(e, value) => setTab(value)}
+          className={classes.content}
+        >
+          <TabPanel value={tab} index={0}>
+            <List>
+              <ProductList
+                ingredients={ingredients.filter(({ available }) => !available)}
+                onUpdate={updateIngredient}
+              />
+              <AddIngredient ingredients={ingredients} />
+            </List>
+          </TabPanel>
+          <TabPanel value={tab} index={1}>
+            <List>
+              <ProductList
+                ingredients={ingredients.filter(({ available }) => available)}
+                onUpdate={updateIngredient}
+              />
+            </List>
+          </TabPanel>
+          <TabPanel value={tab} index={2}>
+            <List>
+              <ProductList ingredients={ingredients} onUpdate={updateIngredient} />
+            </List>
+          </TabPanel>
+        </SwipeableViews>
+      )}
     </div>
   );
+};
+
+const SkeletonCheckbox = () => {
+  const classes = useStyles();
+  return <Skeleton variant="rect" width={20} height={20} className={classes.rect} />;
+};
+
+const SkeletonText = () => {
+  const width = Math.ceil(Math.random() * 200) + 80;
+  return <Skeleton variant="text" width={width} />;
 };
 
 const TabPanel = (props) => {
@@ -125,5 +133,8 @@ const useStyles = makeStyles({
   },
   content: {
     height: 'calc(100vh - 2 * 56px)',
+  },
+  rect: {
+    marginRight: 8,
   },
 });
