@@ -8,21 +8,26 @@ import { globalStateContext } from 'app/GlobalStateContext';
 
 export const AddIngredient = (props) => {
   const classes = useStyles();
-  const [newIngredient, setNewIngredient] = React.useState('');
-  const [isTypingNew, setIsTypingNew] = React.useState(false);
+  const [title, setTitle] = React.useState(props.edit?.title || '');
+  const [isTypingNew, setIsTypingNew] = React.useState(!!props.edit);
   const { userState, inputState } = React.useContext(globalStateContext);
   const [user] = userState;
   const [, focusInput] = inputState;
 
   const clearInput = () => {
-    setNewIngredient('');
+    setTitle('');
     setIsTypingNew(false);
     focusInput(false);
+    props.onAfterEdit && props.onAfterEdit();
   };
 
   const handleConfirmNew = async () => {
-    if (!validateIngredient(newIngredient, props.ingredients)) return;
-    addIngredient(newIngredient, user);
+    if (!validateIngredient(title, props.ingredients)) return;
+    if (props.edit) {
+      updateIngredient(props.edit, { title });
+    } else {
+      addIngredient(title, user);
+    }
     clearInput();
   };
 
@@ -33,16 +38,18 @@ export const AddIngredient = (props) => {
     clearInput();
   };
 
-  const handleType = (e, newIngredient, reason) => {
+  const handleType = (e, text, reason) => {
+    if (reason === 'reset') return; // initial reset
     if (reason === 'clear') {
       clearInput();
       return;
     }
-    setNewIngredient(newIngredient);
+    setTitle(text);
   };
 
   const handleBlur = () => {
-    if (newIngredient) return;
+    const isTitleEdited = props.edit && props.edit.title !== title;
+    if (title && isTitleEdited) return;
     clearInput();
   };
 
@@ -58,30 +65,29 @@ export const AddIngredient = (props) => {
             </Grid>
             <Grid item xs={9}>
               <Autocomplete
+                freeSolo
+                clearOnEscape
+                inputValue={title}
+                classes={classes}
                 options={props.ingredients.filter(({ available }) => available)}
                 getOptionLabel={(option) => option.title || option}
-                freeSolo
-                autoFocus
-                inputValue={newIngredient}
+                onInputChange={handleType}
+                onChange={handleAutocompleteSelect}
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    label="Add"
                     autoFocus
                     onFocus={() => focusInput(true)}
                     onBlur={handleBlur}
                   />
                 )}
-                onInputChange={handleType}
-                onChange={handleAutocompleteSelect}
                 onClose={(event, reason) => {
                   if (reason === 'select-option') return;
                   handleConfirmNew();
                 }}
-                classes={classes}
               />
             </Grid>
-            {/* {newIngredient && <AddRow onClick={() => setIsTypingNew(true)} />} */}
+            {/* {title && <AddRow onClick={() => setIsTypingNew(true)} />} */}
           </>
         ) : (
           <AddRow onClick={() => setIsTypingNew(true)} />
