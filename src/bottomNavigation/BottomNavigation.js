@@ -5,17 +5,23 @@ import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import RestoreIcon from '@material-ui/icons/Restore';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import { useHistory, useLocation } from 'react-router-dom';
+import { globalStateContext } from 'app/GlobalStateContext';
 
 export const Navigation = () => {
   const classes = useStyles();
   const location = useLocation();
   const history = useHistory();
+  const { bottomNavigationState } = React.useContext(globalStateContext);
+  const [isVisible] = bottomNavigationState;
+
   const value = pages.findIndex(({ route }) => {
     if (route === '/') {
       return location.pathname === '/';
     }
     return location.pathname.indexOf(route) >= 0;
   });
+
+  if (!isVisible) return null;
 
   return (
     <BottomNavigation

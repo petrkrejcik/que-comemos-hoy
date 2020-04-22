@@ -24,7 +24,8 @@ export const Products = () => {
     db
       .collection('products')
       .where('userId', 'in', [user.id, ...members])
-      .limit(50)
+      .limit(50),
+    { idField: 'id' }
   );
 
   // const ingredients = useAsync(async () => {
@@ -83,7 +84,7 @@ export const Products = () => {
         className={classes.content}
       >
         {ingredientsLoading ? (
-          'Loading'
+          <div>Loading</div>
         ) : (
           // <Grid container justify="center" wrap="nowrap">
           //   <Grid item xs={11}>

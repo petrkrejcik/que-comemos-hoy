@@ -8,12 +8,14 @@ import { globalStateContext } from 'app/GlobalStateContext';
 export const AddIngredient = (props) => {
   const [newIngredient, setNewIngredient] = React.useState('');
   const [isTypingNew, setIsTypingNew] = React.useState(false);
-  const { userState } = React.useContext(globalStateContext);
+  const { userState, inputState } = React.useContext(globalStateContext);
   const [user] = userState;
+  const [, focusInput] = inputState;
 
   const clearInput = () => {
     setNewIngredient('');
     setIsTypingNew(false);
+    focusInput(false);
   };
 
   const handleConfirmNew = async () => {
@@ -53,7 +55,15 @@ export const AddIngredient = (props) => {
               freeSolo
               autoFocus
               inputValue={newIngredient}
-              renderInput={(params) => <TextField {...params} label="Add" autoFocus />}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Add"
+                  autoFocus
+                  onFocus={() => focusInput(true)}
+                  onBlur={() => focusInput(false)}
+                />
+              )}
               onInputChange={handleType}
               onChange={handleAutocompleteSelect}
               onClose={(event, reason) => {
