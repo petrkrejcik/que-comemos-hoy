@@ -1,9 +1,9 @@
 import { db, firebase } from 'storage/firebase';
 
-export const updateIngredient = (ingredient, data) => {
+export const updateIngredient = (ingredient, user, data) => {
   if (!ingredient) return;
   const batch = db.batch();
-  const ingredientRef = db.doc(`products/${ingredient.id}`);
+  const ingredientRef = db.doc(`userGroups/${user.groupId}/ingredients/${ingredient.id}`);
   if (data === 'delete') {
     batch.delete(ingredientRef);
   } else {
@@ -13,7 +13,7 @@ export const updateIngredient = (ingredient, data) => {
     Object.keys(ingredient.recipes).forEach((recipeId) => {
       if (data === 'delete') {
         batch.set(
-          db.doc(`recipes/${recipeId}`),
+          db.doc(`userGroups/${user.groupId}/recipes/${recipeId}`),
           { ingredients: { [ingredient.id]: firebase.firestore.FieldValue.delete() } },
           { merge: true }
         );
@@ -22,7 +22,7 @@ export const updateIngredient = (ingredient, data) => {
           acc[`ingredients.${ingredient.id}.${key}`] = data[key];
           return acc;
         }, {});
-        batch.update(db.doc(`recipes/${recipeId}`), values);
+        batch.update(db.doc(`userGroups/${user.groupId}/recipes/${recipeId}`), values);
       }
     });
   }

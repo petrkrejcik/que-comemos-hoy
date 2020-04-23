@@ -24,7 +24,7 @@ export const AddIngredient = (props) => {
   const handleConfirmNew = async () => {
     if (!validateIngredient(title, props.ingredients)) return;
     if (props.edit) {
-      updateIngredient(props.edit, { title });
+      updateIngredient(props.edit, user, { title });
     } else {
       addIngredient(title, user);
     }
@@ -34,7 +34,7 @@ export const AddIngredient = (props) => {
   const handleAutocompleteSelect = (event, ingredient, reason) => {
     if (reason !== 'select-option') return;
     if (!validateIngredient(ingredient, props.ingredients)) return;
-    updateIngredient(ingredient, { available: false });
+    updateIngredient(ingredient, user, { available: false });
     clearInput();
   };
 

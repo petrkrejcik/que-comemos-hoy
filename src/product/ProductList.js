@@ -2,13 +2,17 @@ import React from 'react';
 import { Checkbox, Grid } from '@material-ui/core';
 import { AddIngredient } from './AddIngredient';
 import { useSnackbar } from 'snackbar/Snackbar';
+import { updateIngredient } from './ingredientUtils';
+import { globalStateContext } from 'app/GlobalStateContext';
 
 export const ProductList = (props) => {
   const [editing, setEditing] = React.useState(null);
   const showSnackbar = useSnackbar();
+  const { userState } = React.useContext(globalStateContext);
+  const [user] = userState;
 
   const handleChecked = (ingredient) => () => {
-    props.onUpdate(ingredient, { available: !ingredient.available });
+    updateIngredient(ingredient, user, { available: !ingredient.available });
     showSnackbar({ message: 'Saved' });
   };
 

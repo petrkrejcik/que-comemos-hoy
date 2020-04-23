@@ -23,6 +23,7 @@ v1.1
 ## Bugs
 
 - input ingred se trochu chybe
+- update ingr neupdatne recept - mozna udelat subdotaz, abych nemusel ukladat recipes u ingr
 
 Wishlist
 
@@ -36,9 +37,9 @@ Wishlist
 
 ```json
 {
-  "groupIngredients": {
-    "userGroup1": {
-      "products": {
+  "userGroups": {
+    "group-user1": {
+      "ingredients": {
         "product1": {
           "title": "Product 1"
         },
@@ -46,22 +47,31 @@ Wishlist
           "title": "Product 2"
         }
       },
-      "order": ["product2", "product1"]
+      "order": ["product2", "product1"],
+      "recipes": {
+        "recipe1": {
+          "title": "Recipe 1",
+          "ingredients": {
+            "product1": {
+              "title": "Product 1"
+            }
+          }
+        }
+      }
     }
   },
   "users": {
     "user1": {
-      "displayName": "User 1",
-      "groupId": "userGroup1"
+      "groupId": "group-user1",
+      "originalGroupId": "group-user1"
     },
     "user2": {
-      "displayName": "User 2",
-      "groupId": "userGroup1",
-      "originalGroupId": "userGroup2"
+      "groupId": "group-user1",
+      "originalGroupId": "group-user2"
     }
   },
-  "userGroups": {
-    "userGroup1": {
+  "userGroups_tmp": {
+    "group-user1": {
       "members": {
         "user1": true,
         "user2": true
@@ -70,46 +80,6 @@ Wishlist
   }
 }
 ```
-
-- ingredients
-  - masa
-    - Masa
-    - available: true
-    - recipes
-      - bizcocho
-      - pizza
-  - azucar
-    - Azucar
-    - available: false
-  - carne
-    - Carne
-    - available: true
-- recipes
-  - bizcocho
-    - Bizcocho
-    - Horno 40 min
-    - ingredients
-      - masa
-        - Masa
-        - available: true
-        - optional: false
-        - alternative
-          - harina
-            - Harina
-            - available: true
-
-* users
-  - abcdef
-    - members
-      asdqw34: true
-      micxvoj: true
-
-## Firestore
-
-### Collections
-
-`Products`
-`Recipes`
 
 ## Icons
 

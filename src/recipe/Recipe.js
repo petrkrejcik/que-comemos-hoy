@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAsync } from 'react-use';
-import { Switch, Route, useLocation } from 'react-router-dom';
+import { useCollectionData, useDocumentData } from 'react-firebase-hooks/firestore';
+import { Switch, Route, useLocation, useParams } from 'react-router-dom';
 import {
   Button,
   Checkbox,
@@ -21,33 +22,20 @@ import { globalStateContext } from 'app/GlobalStateContext';
 // import { getRecipeById } from './recipeUtils';
 
 export const Recipe = (props) => {
-  const location = useLocation();
-  const [recipe, setRecipe] = React.useState(location.state?.recipe);
+  const { recipeId } = useParams();
   const { userState } = React.useContext(globalStateContext);
   const [user] = userState;
   const [ingredientSearch, setIngredientSearch] = React.useState('');
-  const [allIngredients, setAllIngredients] = React.useState([]);
-  const recipeIngredients = Object.values(recipe.ingredients || {});
 
-  //   const recipe = useAsync(async () => {
-  //     return await getRecipeById(recipeId);
-  //   }, [recipeId]);
+  const [recipe, loading, error] = useDocumentData(
+    db.doc(`userGroups/${user.groupId}/recipes/${recipeId}`),
+    { idField: 'id' }
+  );
 
-  useAsync(async () => {
-    const doc = await db.collection('recipes').doc(recipe.id);
-    doc.onSnapshot((snapshot) => {
-      setRecipe({
-        id: snapshot.id,
-        ...snapshot.data(),
-      });
-    });
-  }, []);
-
-  useAsync(async () => {
-    if (!user) return;
-    const ingredients = await getAllIngredients(user);
-    setAllIngredients(ingredients);
-  }, [user]);
+  const [ingredients, ingredientsLoading, ingredientsError] = useCollectionData(
+    db.collection(`userGroups/${user.groupId}/ingredients`),
+    { idField: 'id' }
+  );
 
   const addIngredient = async (ingredient) => {
     if (!ingredient) return;
@@ -71,6 +59,18 @@ export const Recipe = (props) => {
       });
   };
 
+  if (loading || ingredientsLoading) {
+    return 'loading';
+  }
+
+  if (error) {
+    console.log('🛎 ', 'error', error);
+    return null;
+  }
+  const recipeIngredients = Object.keys(recipe.ingredients).reduce((acc, key) => {
+    return [...acc, { ...recipe.ingredients[key], id: key }];
+  }, []);
+
   return (
     <>
       <div>{recipe.title}</div>
@@ -87,7 +87,7 @@ export const Recipe = (props) => {
         ))}
       </List>
       <Autocomplete
-        options={allIngredients.filter((ing) => !recipeIngredients.find((i) => i.id === ing.id))}
+        options={ingredients.filter((ing) => !recipeIngredients.find((i) => i.id === ing.id))}
         getOptionLabel={(option) => option.title}
         freeSolo
         renderInput={(params) => <TextField {...params} label="Search" />}

@@ -1,11 +1,9 @@
 import React from 'react';
-import { useAsync } from 'react-use';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { List, ListItem, Tabs, Tab, Typography, Box, Grid } from '@material-ui/core';
 import Skeleton from '@material-ui/lab/Skeleton';
 import { makeStyles } from '@material-ui/core/styles';
 import SwipeableViews from 'react-swipeable-views';
-import { updateIngredient } from './ingredientUtils';
 import { db } from 'storage/firebase';
 import { globalStateContext } from 'app/GlobalStateContext';
 import { ProductList } from './ProductList';
@@ -17,12 +15,12 @@ export const Products = () => {
   const [tab, setTab] = React.useState(0);
   const classes = useStyles();
 
-  const members = Object.keys(user.members || {});
   const [ingredients, loading, error] = useCollectionData(
     db
-      .collection('products')
-      .where('userId', 'in', [user.id, ...members])
-      .orderBy('insertDate')
+      .collection('userGroups')
+      .doc(user.groupId)
+      .collection('ingredients')
+      // .orderBy('insertDate')
       .limit(50),
     { idField: 'id' }
   );
@@ -80,24 +78,18 @@ export const Products = () => {
         >
           <TabPanel value={tab} index={0}>
             <List>
-              <ProductList
-                ingredients={ingredients.filter(({ available }) => !available)}
-                onUpdate={updateIngredient}
-              />
+              <ProductList ingredients={ingredients.filter(({ available }) => !available)} />
               <AddIngredient ingredients={ingredients} />
             </List>
           </TabPanel>
           <TabPanel value={tab} index={1}>
             <List>
-              <ProductList
-                ingredients={ingredients.filter(({ available }) => available)}
-                onUpdate={updateIngredient}
-              />
+              <ProductList ingredients={ingredients.filter(({ available }) => available)} />
             </List>
           </TabPanel>
           <TabPanel value={tab} index={2}>
             <List>
-              <ProductList ingredients={ingredients} onUpdate={updateIngredient} />
+              <ProductList ingredients={ingredients} />
             </List>
           </TabPanel>
         </SwipeableViews>

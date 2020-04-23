@@ -30,21 +30,23 @@ export const useLogin = () => {
       }
       if (loggedUser.uid === user?.id) return;
       const query = await db.collection('users').doc(loggedUser.uid).get();
-      let convertedUser;
+      let storedUser;
       if (query.exists) {
-        convertedUser = query.data();
+        storedUser = query.data();
       } else {
-        convertedUser = {
-          id: loggedUser.uid,
-          displayName: loggedUser.displayName,
-          email: loggedUser.email,
-          photoURL: loggedUser.photoURL,
-          members: {},
+        storedUser = {
+          groupId: `group-${loggedUser.uid}`,
+          originalGroupId: `group-${loggedUser.uid}`,
         };
-        // TODO: await
-        db.collection('users').doc(convertedUser.id).set(convertedUser);
+        await db.collection('users').doc(loggedUser.uid).set(storedUser);
       }
-      setUser(convertedUser);
+      setUser({
+        ...storedUser,
+        id: loggedUser.uid,
+        displayName: loggedUser.displayName,
+        email: loggedUser.email,
+        photoURL: loggedUser.photoURL,
+      });
       openDrawer(false)();
       history.push('/');
     });

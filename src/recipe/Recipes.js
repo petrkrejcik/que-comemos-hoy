@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useAsync } from 'react-use';
+import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { Switch, Route, useHistory, Redirect } from 'react-router-dom';
 import {
   Button,
@@ -22,41 +23,20 @@ import { Recipe } from './Recipe';
 export const Recipes = () => {
   const { userState } = React.useContext(globalStateContext);
   const [user] = userState;
-  const [recipes, setRecipes] = useState([]);
-  // const [newProduct, setNewProduct] = useState('');
 
-  useAsync(async () => {
-    if (!user) return;
-    const query = db.collection('recipes').where('userId', '==', user.id).limit(50);
+  const [recipes, loading, error] = useCollectionData(
+    db
+      .collection('userGroups')
+      .doc(user.groupId)
+      .collection('recipes')
+      // .orderBy('insertDate')
+      .limit(50),
+    { idField: 'id' }
+  );
 
-    query.onSnapshot((snapshot) => {
-      const loadedRecipes = snapshot.docs.map((recipe) => {
-        return {
-          id: recipe.id,
-          ...recipe.data(),
-        };
-      });
-      setRecipes(loadedRecipes);
-      // snapshot.forEach((doc) => {
-      //   console.log("🛎 ", "doc", doc.data());
-      // });
-    });
-  }, [user]);
-
-  // const add = async () => {
-  //   await db.collection('recipes').add({
-  //     name: newProduct,
-  //     available: false,
-  //     userId: user.id,
-  //   });
-  //   setNewProduct('');
-  // };
-
-  // const update = (id) => async () => {
-  //   await db.collection('recipes').doc(id).update({
-  //     available: true,
-  //   });
-  // };
+  if (loading) {
+    return 'loading';
+  }
 
   return (
     <Switch>
