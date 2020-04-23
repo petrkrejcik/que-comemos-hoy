@@ -35,6 +35,8 @@ Wishlist
 
 ## DB
 
+Hooks doc: https://github.com/csfrequency/react-firebase-hooks/tree/7eb49f1624d7c1bfb5ad8083a8702b19bf0e6929/firestore
+
 ```json
 {
   "userGroups": {

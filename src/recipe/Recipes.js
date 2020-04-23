@@ -25,12 +25,8 @@ export const Recipes = () => {
   const [user] = userState;
 
   const [recipes, loading, error] = useCollectionData(
-    db
-      .collection('userGroups')
-      .doc(user.groupId)
-      .collection('recipes')
-      // .orderBy('insertDate')
-      .limit(50),
+    db.collection(`userGroups/${user.groupId}/recipes`),
+    // .orderBy('insertDate')
     { idField: 'id' }
   );
 

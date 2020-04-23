@@ -31,10 +31,9 @@ export const updateIngredient = (ingredient, user, data) => {
 
 export const addIngredient = async (title, user) => {
   if (title.trim() === '') return;
-  await db.collection('products').add({
+  await db.collection(`userGroups/${user.groupId}/ingredients`).add({
     title: title,
     available: false,
-    userId: user.id,
     insertDate: new Date(),
   });
 };

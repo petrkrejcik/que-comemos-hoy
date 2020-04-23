@@ -27,8 +27,6 @@ export const Drawer = (props) => {
     >
       <List>
         <ListItem>{user && <ListItemText>{user.email}</ListItemText>}</ListItem>
-        <ListItem button>{user && <ListItemText primary="Logout" onClick={logout} />}</ListItem>
-        <Divider />
         <ListItem button>
           {user && (
             <ListItemText>
@@ -36,6 +34,8 @@ export const Drawer = (props) => {
             </ListItemText>
           )}
         </ListItem>
+        <Divider />
+        <ListItem button>{user && <ListItemText primary="Logout" onClick={logout} />}</ListItem>
       </List>
     </SwipeableDrawer>
   );

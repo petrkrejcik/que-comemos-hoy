@@ -16,12 +16,8 @@ export const Products = () => {
   const classes = useStyles();
 
   const [ingredients, loading, error] = useCollectionData(
-    db
-      .collection('userGroups')
-      .doc(user.groupId)
-      .collection('ingredients')
-      // .orderBy('insertDate')
-      .limit(50),
+    db.collection(`userGroups/${user.groupId}/ingredients`),
+    // .orderBy('insertDate')
     { idField: 'id' }
   );
 
