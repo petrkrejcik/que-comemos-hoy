@@ -77,6 +77,7 @@ export const AddIngredient = (props) => {
                   <TextField
                     {...params}
                     autoFocus
+                    InputProps={{ ...params.InputProps, disableUnderline: true }}
                     onFocus={() => focusInput(true)}
                     onBlur={handleBlur}
                   />
@@ -116,4 +117,5 @@ const useStyles = makeStyles({
   clearIndicator: {
     visibility: 'visible',
   },
+  root: {},
 });

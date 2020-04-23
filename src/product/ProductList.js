@@ -1,5 +1,5 @@
 import React from 'react';
-import { Checkbox } from '@material-ui/core';
+import { Checkbox, Grid } from '@material-ui/core';
 import { AddIngredient } from './AddIngredient';
 import { useSnackbar } from 'snackbar/Snackbar';
 
@@ -12,20 +12,24 @@ export const ProductList = (props) => {
     showSnackbar({ message: 'Saved' });
   };
 
-  return props.ingredients.map((product) => (
-    <div key={product.id}>
-      {editing && editing.id === product.id ? (
-        <AddIngredient
-          ingredients={props.ingredients}
-          edit={editing}
-          onAfterEdit={() => setEditing(false)}
-        />
-      ) : (
-        <>
-          <Checkbox checked={product.available} onChange={handleChecked(product)} />
-          <span onClick={() => setEditing(product)}>{product.title}</span>
-        </>
-      )}
-    </div>
-  ));
+  return (
+    <Grid container>
+      {props.ingredients.map((product) => (
+        <Grid item key={product.id} xs={12}>
+          {editing && editing.id === product.id ? (
+            <AddIngredient
+              ingredients={props.ingredients}
+              edit={editing}
+              onAfterEdit={() => setEditing(false)}
+            />
+          ) : (
+            <>
+              <Checkbox checked={product.available} onChange={handleChecked(product)} />
+              <span onClick={() => setEditing(product)}>{product.title}</span>
+            </>
+          )}
+        </Grid>
+      ))}
+    </Grid>
+  );
 };
