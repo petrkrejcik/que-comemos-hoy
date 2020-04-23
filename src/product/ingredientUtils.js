@@ -35,6 +35,7 @@ export const addIngredient = async (title, user) => {
     title: title,
     available: false,
     userId: user.id,
+    insertDate: new Date(),
   });
 };
 

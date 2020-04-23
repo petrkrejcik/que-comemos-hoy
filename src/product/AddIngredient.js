@@ -63,7 +63,7 @@ export const AddIngredient = (props) => {
                 <CheckBoxOutlineBlank />
               </IconButton>
             </Grid>
-            <Grid item xs={9}>
+            <Grid item xs={10}>
               <Autocomplete
                 freeSolo
                 clearOnEscape

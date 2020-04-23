@@ -14,22 +14,26 @@ export const ProductList = (props) => {
 
   return (
     <Grid container>
-      {props.ingredients.map((product) => (
-        <Grid item key={product.id} xs={12}>
-          {editing && editing.id === product.id ? (
+      {props.ingredients.map((product) =>
+        editing && editing.id === product.id ? (
+          <Grid item key={product.id} xs={12}>
             <AddIngredient
               ingredients={props.ingredients}
               edit={editing}
               onAfterEdit={() => setEditing(false)}
             />
-          ) : (
-            <>
+          </Grid>
+        ) : (
+          <Grid container item key={product.id} xs={12} alignItems="center">
+            <Grid item>
               <Checkbox checked={product.available} onChange={handleChecked(product)} />
-              <span onClick={() => setEditing(product)}>{product.title}</span>
-            </>
-          )}
-        </Grid>
-      ))}
+            </Grid>
+            <Grid item onClick={() => setEditing(product)} xs={10}>
+              {product.title}
+            </Grid>
+          </Grid>
+        )
+      )}
     </Grid>
   );
 };

@@ -1,7 +1,7 @@
 {
   "name": "que-comemos-hoy",
   "version": "0.1.0",
-  "homepage": "https://petrkrejcik.github.io/que-comemos-hoy/",
+  "homepage": ".",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.9.10",
@@ -24,7 +24,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
+    "deploy": "yarn build && firebase deploy",
+    "deploy-github": "gh-pages -d build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "format-fix": "npx prettier --write \"{*,src/**/*}.{js,json}\""

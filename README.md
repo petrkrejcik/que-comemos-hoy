@@ -10,6 +10,7 @@ v1.0
 - [x] sdileni s jinym uzivatelem
 - [] persistent login?
 - [x] loader after login
+- [] ingr date added
 
 v1.1
 
@@ -19,7 +20,9 @@ v1.1
 - [] fotka receptu
 - [] ingredients lazy load
 
-v1.2
+## Bugs
+
+- input ingred se trochu chybe
 
 Wishlist
 
@@ -29,7 +32,46 @@ Wishlist
 - hodnoceni ingredienci
 - schedule
 
-* ingredients
+## DB
+
+```json
+{
+  "groupIngredients": {
+    "userGroup1": {
+      "products": {
+        "product1": {
+          "title": "Product 1"
+        },
+        "product2": {
+          "title": "Product 2"
+        }
+      },
+      "order": ["product2", "product1"]
+    }
+  },
+  "users": {
+    "user1": {
+      "displayName": "User 1",
+      "groupId": "userGroup1"
+    },
+    "user2": {
+      "displayName": "User 2",
+      "groupId": "userGroup1",
+      "originalGroupId": "userGroup2"
+    }
+  },
+  "userGroups": {
+    "userGroup1": {
+      "members": {
+        "user1": true,
+        "user2": true
+      }
+    }
+  }
+}
+```
+
+- ingredients
   - masa
     - Masa
     - available: true
@@ -42,7 +84,7 @@ Wishlist
   - carne
     - Carne
     - available: true
-* recipes
+- recipes
   - bizcocho
     - Bizcocho
     - Horno 40 min
@@ -56,7 +98,7 @@ Wishlist
             - Harina
             - available: true
 
-- users
+* users
   - abcdef
     - members
       asdqw34: true

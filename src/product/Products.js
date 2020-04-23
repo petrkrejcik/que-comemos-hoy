@@ -18,10 +18,11 @@ export const Products = () => {
   const classes = useStyles();
 
   const members = Object.keys(user.members || {});
-  const [ingredients, loading] = useCollectionData(
+  const [ingredients, loading, error] = useCollectionData(
     db
       .collection('products')
       .where('userId', 'in', [user.id, ...members])
+      .orderBy('insertDate')
       .limit(50),
     { idField: 'id' }
   );
@@ -37,6 +38,11 @@ export const Products = () => {
       'aria-controls': `full-width-tabpanel-${index}`,
     };
   };
+
+  if (error) {
+    console.log('🛎 ', 'errorrr', error);
+    return null;
+  }
 
   return (
     <div>
