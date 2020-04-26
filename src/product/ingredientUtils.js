@@ -1,6 +1,6 @@
 import { db, firebase } from 'storage/firebase';
 
-export const updateIngredient = (ingredient, user, data) => {
+export const updateIngredient = async (ingredient, user, data) => {
   if (!ingredient) return;
   const batch = db.batch();
   const ingredientRef = db.doc(`userGroups/${user.groupId}/ingredients/${ingredient.id}`);
@@ -26,7 +26,7 @@ export const updateIngredient = (ingredient, user, data) => {
       }
     });
   }
-  batch.commit();
+  await batch.commit();
 };
 
 export const addIngredient = async (title, user) => {

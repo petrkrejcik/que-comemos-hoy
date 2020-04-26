@@ -1,4 +1,6 @@
 import React, { useEffect } from 'react';
+import { useAsyncFn } from 'react-use';
+import { useHistory } from 'react-router-dom';
 import {
   Button,
   TextField,
@@ -12,7 +14,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Add, CheckBoxOutlineBlank } from '@material-ui/icons';
 import { updateIngredient, addIngredient, validateIngredient } from './ingredientUtils';
 import { globalStateContext } from 'app/GlobalStateContext';
-import { AddIngredient } from './ProductAutocomplete';
+import { Loading } from 'app/Loading';
 
 export const Product = (props) => {
   const { productId, products } = props;
@@ -23,15 +25,17 @@ export const Product = (props) => {
   const { userState, globalActions } = React.useContext(globalStateContext);
   const [user] = userState;
   const [shop, setShop] = React.useState(20);
+  const history = useHistory();
 
   useEffect(() => {
     if (!product) return;
     setTitle(product.title);
   }, [product]);
 
-  const handleSave = React.useCallback(() => {
-    updateIngredient(product, user, { title });
-  }, [product, user, title]);
+  const [{ loading }, handleSave] = useAsyncFn(async () => {
+    await updateIngredient(product, user, { title });
+    history.goBack();
+  }, [product, user, title, history]);
 
   useEffect(() => {
     const doneIcon = {
@@ -49,6 +53,8 @@ export const Product = (props) => {
     exists && setTitleError('Already exists');
     newTitle.trim() === '' && setTitleError('Cannot be empty');
   };
+
+  if (loading) return <Loading />;
 
   return (
     <>
