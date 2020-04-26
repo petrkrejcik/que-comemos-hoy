@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAsync } from 'react-use';
-import { useCollectionData, useDocumentData } from 'react-firebase-hooks/firestore';
+import { useDocumentData } from 'react-firebase-hooks/firestore';
 import { Switch, Route, useLocation, useParams } from 'react-router-dom';
 import {
   Button,
@@ -17,7 +17,7 @@ import {
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { Add } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
-import { db, firebase } from 'storage/firebase';
+import { db, firebase, useColData } from 'storage/firebase';
 import { globalStateContext } from 'app/GlobalStateContext';
 // import { getRecipeById } from './recipeUtils';
 
@@ -32,7 +32,7 @@ export const Recipe = (props) => {
     { idField: 'id' }
   );
 
-  const [ingredients, ingredientsLoading, ingredientsError] = useCollectionData(
+  const [ingredients, ingredientsLoading, ingredientsError] = useColData(
     db.collection(`userGroups/${user.groupId}/ingredients`),
     { idField: 'id' }
   );

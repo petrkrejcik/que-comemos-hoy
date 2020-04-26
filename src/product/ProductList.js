@@ -1,43 +1,35 @@
 import React from 'react';
-import { Checkbox, Grid } from '@material-ui/core';
-import { AddIngredient } from './AddIngredient';
+import { useHistory } from 'react-router-dom';
+import { useLongPress } from 'react-use';
+import { Checkbox, Grid, Box } from '@material-ui/core';
 import { useSnackbar } from 'snackbar/Snackbar';
 import { updateIngredient } from './ingredientUtils';
 import { globalStateContext } from 'app/GlobalStateContext';
 
 export const ProductList = (props) => {
-  const [editing, setEditing] = React.useState(null);
+  const history = useHistory();
   const showSnackbar = useSnackbar();
   const { userState } = React.useContext(globalStateContext);
   const [user] = userState;
+  // const [hoveredId, setHoveredId] = React.useState(null);
+  // const longPress = useLongPress((e) => {
+  //   console.log('🛎 ', 'e', e.target);
+  //   // setHoveredId()
+  // });
 
   const handleChecked = (ingredient) => () => {
     updateIngredient(ingredient, user, { available: !ingredient.available });
     showSnackbar({ message: 'Saved' });
   };
 
-  return (
-    <Grid container>
-      {props.ingredients.map((product) =>
-        editing && editing.id === product.id ? (
-          <Grid item key={product.id} xs={12}>
-            <AddIngredient
-              ingredients={props.ingredients}
-              edit={editing}
-              onAfterEdit={() => setEditing(false)}
-            />
-          </Grid>
-        ) : (
-          <Grid container item key={product.id} xs={12} alignItems="center">
-            <Grid item>
-              <Checkbox checked={product.available} onChange={handleChecked(product)} />
-            </Grid>
-            <Grid item onClick={() => setEditing(product)} xs={10}>
-              {product.title}
-            </Grid>
-          </Grid>
-        )
-      )}
-    </Grid>
-  );
+  const handleProductClick = (product) => () => {
+    history.push(`/products/${product.id}`);
+  };
+
+  return props.ingredients.map((product) => (
+    <Box key={product.id}>
+      <Checkbox checked={product.available} onChange={handleChecked(product)} />
+      <span onClick={handleProductClick(product)}>{product.title}</span>
+    </Box>
+  ));
 };

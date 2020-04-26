@@ -1,21 +1,32 @@
 import React from 'react';
-import { useCollectionData } from 'react-firebase-hooks/firestore';
-import { List, ListItem, Tabs, Tab, Typography, Box, Grid } from '@material-ui/core';
+import { useHistory, useParams } from 'react-router-dom';
+import {
+  Container,
+  List,
+  ListItem,
+  Grid,
+  ExpansionPanel,
+  ExpansionPanelSummary,
+  ExpansionPanelDetails,
+} from '@material-ui/core';
+
 import Skeleton from '@material-ui/lab/Skeleton';
 import { makeStyles } from '@material-ui/core/styles';
 import SwipeableViews from 'react-swipeable-views';
-import { db } from 'storage/firebase';
+import { db, useColData } from 'storage/firebase';
 import { globalStateContext } from 'app/GlobalStateContext';
 import { ProductList } from './ProductList';
-import { AddIngredient } from './AddIngredient';
+import { AddNew } from './ProductListAddNew';
+import { Product } from './Product';
 
 export const Products = () => {
+  const history = useHistory();
+  const { productId } = useParams();
   const { userState } = React.useContext(globalStateContext);
   const [user] = userState;
-  const [tab, setTab] = React.useState(0);
   const classes = useStyles();
 
-  const [ingredients, loading, error] = useCollectionData(
+  const [ingredients, loading, error] = useColData(
     db.collection(`userGroups/${user.groupId}/ingredients`),
     // .orderBy('insertDate')
     { idField: 'id' }
@@ -26,71 +37,37 @@ export const Products = () => {
   //     handleIngredientEdit(null);
   //   };
 
-  const a11yProps = (index) => {
-    return {
-      id: `full-width-tab-${index}`,
-      'aria-controls': `full-width-tabpanel-${index}`,
-    };
-  };
-
   if (error) {
     console.log('🛎 ', 'errorrr', error);
     return null;
   }
 
+  if (loading) return LoadingComponent;
+
+  const available = ingredients && ingredients.filter(({ available }) => available);
+
   return (
-    <div>
-      <Tabs
-        value={tab}
-        onChange={(e, value) => setTab(value)}
-        indicatorColor="primary"
-        textColor="primary"
-        variant="fullWidth"
-        aria-label="tabs"
-      >
-        <Tab label="Buy" {...a11yProps(0)} />
-        <Tab label="Have" {...a11yProps(1)} />
-        <Tab label="All" {...a11yProps(2)} />
-      </Tabs>
-      {loading ? (
-        <Grid container justify="center">
-          <Grid item xs={11}>
-            <List>
-              {[...Array(10)].map((i) => (
-                <ListItem key={i}>
-                  <SkeletonCheckbox />
-                  <SkeletonText />
-                </ListItem>
-              ))}
-            </List>
-          </Grid>
-        </Grid>
-      ) : (
-        <SwipeableViews
-          axis="x"
-          index={tab}
-          onChangeIndex={(e, value) => setTab(value)}
-          className={classes.content}
-        >
-          <TabPanel value={tab} index={0}>
-            <List>
-              <ProductList ingredients={ingredients.filter(({ available }) => !available)} />
-              <AddIngredient ingredients={ingredients} />
-            </List>
-          </TabPanel>
-          <TabPanel value={tab} index={1}>
-            <List>
-              <ProductList ingredients={ingredients.filter(({ available }) => available)} />
-            </List>
-          </TabPanel>
-          <TabPanel value={tab} index={2}>
-            <List>
-              <ProductList ingredients={ingredients} />
-            </List>
-          </TabPanel>
-        </SwipeableViews>
-      )}
-    </div>
+    <SwipeableViews axis="x" index={productId ? 1 : 0} onChangeIndex={(from, to) => history.push}>
+      <Container index={0}>
+        <List>
+          <ProductList ingredients={ingredients.filter(({ available }) => !available)} />
+          <AddNew ingredients={ingredients} />
+        </List>
+        {available.length > 0 && (
+          <ExpansionPanel>
+            <ExpansionPanelSummary>{available.length} products stocked</ExpansionPanelSummary>
+            <ExpansionPanelDetails className={classes.expansionPanelDetails}>
+              <List>
+                <ProductList ingredients={available} />
+              </List>
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
+        )}
+      </Container>
+      <Container index={1}>
+        <Product products={ingredients} productId={productId} />
+      </Container>
+    </SwipeableViews>
   );
 };
 
@@ -104,31 +81,31 @@ const SkeletonText = () => {
   return <Skeleton variant="text" width={width} />;
 };
 
-const TabPanel = (props) => {
-  const { children, value, index, ...other } = props;
+const Loading = () => (
+  <Grid container justify="center">
+    <Grid item xs={11}>
+      <List>
+        {[...Array(10)].map((i) => (
+          <ListItem key={i}>
+            <SkeletonCheckbox />
+            <SkeletonText />
+          </ListItem>
+        ))}
+      </List>
+    </Grid>
+  </Grid>
+);
 
-  return (
-    <Typography
-      component="div"
-      role="tabpanel"
-      hidden={value !== index}
-      id={`full-width-tabpanel-${index}`}
-      aria-labelledby={`full-width-tab-${index}`}
-      {...other}
-    >
-      {value === index && <Box p={3}>{children}</Box>}
-    </Typography>
-  );
-};
+const LoadingComponent = <Loading />;
 
 const useStyles = makeStyles({
   root: {
     position: 'fixed',
   },
-  content: {
-    height: 'calc(100vh - 2 * 56px)',
-  },
   rect: {
     marginRight: 8,
+  },
+  expansionPanelDetails: {
+    padding: 0,
   },
 });

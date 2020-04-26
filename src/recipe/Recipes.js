@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useAsync } from 'react-use';
-import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { Switch, Route, useHistory, Redirect } from 'react-router-dom';
 import {
   Button,
@@ -16,7 +15,7 @@ import {
 } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
-import { db } from 'storage/firebase';
+import { db, useColData } from 'storage/firebase';
 import { globalStateContext } from 'app/GlobalStateContext';
 import { Recipe } from './Recipe';
 
@@ -24,7 +23,7 @@ export const Recipes = () => {
   const { userState } = React.useContext(globalStateContext);
   const [user] = userState;
 
-  const [recipes, loading, error] = useCollectionData(
+  const [recipes, loading, error] = useColData(
     db.collection(`userGroups/${user.groupId}/recipes`),
     // .orderBy('insertDate')
     { idField: 'id' }

@@ -3,22 +3,22 @@
 v1.0
 
 - [x] taby pro ingredience - buy/have/all
-- [] delete ingredient (kam?)
+- [ ] delete ingredient (kam?)
 - [x] homepage bude login screena
 - [x] homepage bude / ne /login
 - [x] presunout profil do draweru, protoze misto nej chci mit Add/Edit
 - [x] sdileni s jinym uzivatelem
-- [] persistent login?
+- [ ] persistent login?
 - [x] loader after login
-- [] ingr date added
+- [x] ingr date added
 
 v1.1
 
-- [] namastit recepty + ingredience
-- [] odebrat recept id z ingredience
-- [] pocitadlo dostupnych ingredienci k receptu
-- [] fotka receptu
-- [] ingredients lazy load
+- [ ] namastit recepty + ingredience
+- [ ] odebrat recept id z ingredience
+- [ ] pocitadlo dostupnych ingredienci k receptu
+- [ ] fotka receptu
+- [ ] ingredients lazy load
 
 ## Bugs
 

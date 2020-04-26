@@ -1,6 +1,8 @@
+import React from 'react';
 import * as firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
+import { useCollection } from 'react-firebase-hooks/firestore';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyBfTjSCoH4xl6UFa31Eyj8h-Tf2ZxwPbmU',
@@ -16,3 +18,22 @@ firebase.initializeApp(firebaseConfig);
 
 const db = firebase.firestore();
 export { db, firebase };
+
+export const useColData = (query, options) => {
+  const [data, setData] = React.useState([]);
+  const [value, loading, error] = useCollection(query, options);
+  React.useEffect(() => {
+    if (!value) return;
+    setData(
+      value.docs.map((doc) => {
+        const docData = { ...doc.data() };
+        if (options.idField) {
+          docData[options.idField] = doc.id;
+        }
+        return docData;
+      })
+    );
+  }, [value, options.idField]);
+
+  return [data, loading, error];
+};

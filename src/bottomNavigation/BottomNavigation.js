@@ -50,7 +50,7 @@ const useStyles = makeStyles({
 
 const pages = [
   {
-    label: 'Ingredients',
+    label: 'Shopping list',
     route: '/products',
     icon: RestoreIcon,
   },
