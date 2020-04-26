@@ -8,13 +8,12 @@ import { globalStateContext } from 'app/GlobalStateContext';
 export const ProductAutocomplete = (props) => {
   const classes = useStyles();
   const [title, setTitle] = React.useState(props.edit?.title || '');
-  const { userState, inputState } = React.useContext(globalStateContext);
+  const { userState, globalActions } = React.useContext(globalStateContext);
   const [user] = userState;
-  const [, focusInput] = inputState;
 
   const clearInput = () => {
     setTitle('');
-    focusInput(false);
+    globalActions.focusInput(false);
     props.onAfterEdit && props.onAfterEdit();
   };
 
@@ -65,7 +64,7 @@ export const ProductAutocomplete = (props) => {
           {...params}
           autoFocus
           InputProps={{ ...params.InputProps, disableUnderline: true }}
-          onFocus={() => focusInput(true)}
+          onFocus={() => globalActions.focusInput(true)}
           onBlur={handleBlur}
         />
       )}

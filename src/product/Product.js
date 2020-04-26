@@ -20,15 +20,26 @@ export const Product = (props) => {
   const classes = useStyles();
   const [title, setTitle] = React.useState('');
   const [titleError, setTitleError] = React.useState(null);
-  const { userState, inputState } = React.useContext(globalStateContext);
+  const { userState, globalActions } = React.useContext(globalStateContext);
   const [user] = userState;
-  const [, focusInput] = inputState;
   const [shop, setShop] = React.useState(20);
 
   useEffect(() => {
     if (!product) return;
     setTitle(product.title);
   }, [product]);
+
+  const handleSave = React.useCallback(() => {
+    updateIngredient(product, user, { title });
+  }, [product, user, title]);
+
+  useEffect(() => {
+    const doneIcon = {
+      icon: 'done',
+      callback: handleSave,
+    };
+    globalActions.setHeaderRightIcons(product ? [doneIcon] : []);
+  }, [globalActions, product, handleSave]);
 
   const handleTitleChange = (event) => {
     setTitleError(null);
@@ -45,7 +56,7 @@ export const Product = (props) => {
         title={title}
         titleError={titleError}
         handleTitleChange={handleTitleChange}
-        focusInput={focusInput}
+        focusInput={globalActions.focusInput}
       />
       <SelectShop value={shop} handleChange={setShop} />
     </>

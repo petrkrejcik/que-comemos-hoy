@@ -22,6 +22,7 @@ export { db, firebase };
 export const useColData = (query, options) => {
   const [data, setData] = React.useState([]);
   const [value, loading, error] = useCollection(query, options);
+
   React.useEffect(() => {
     if (!value) return;
     setData(

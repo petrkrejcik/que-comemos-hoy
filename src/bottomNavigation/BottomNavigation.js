@@ -11,8 +11,7 @@ export const Navigation = () => {
   const classes = useStyles();
   const location = useLocation();
   const history = useHistory();
-  const { bottomNavigationState } = React.useContext(globalStateContext);
-  const [isVisible] = bottomNavigationState;
+  const { globalState } = React.useContext(globalStateContext);
 
   const value = pages.findIndex(({ route }) => {
     if (route === '/') {
@@ -21,7 +20,7 @@ export const Navigation = () => {
     return location.pathname.indexOf(route) >= 0;
   });
 
-  if (!isVisible) return null;
+  if (!globalState.bottomNavigationVisible) return null;
 
   return (
     <BottomNavigation

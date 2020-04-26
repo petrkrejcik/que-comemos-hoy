@@ -1,5 +1,5 @@
 import React from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import {
   Container,
   List,
@@ -12,7 +12,7 @@ import {
 
 import Skeleton from '@material-ui/lab/Skeleton';
 import { makeStyles } from '@material-ui/core/styles';
-import SwipeableViews from 'react-swipeable-views';
+import { Swipeable } from 'app/Swipeable';
 import { db, useColData } from 'storage/firebase';
 import { globalStateContext } from 'app/GlobalStateContext';
 import { ProductList } from './ProductList';
@@ -20,7 +20,6 @@ import { AddNew } from './ProductListAddNew';
 import { Product } from './Product';
 
 export const Products = () => {
-  const history = useHistory();
   const { productId } = useParams();
   const { userState } = React.useContext(globalStateContext);
   const [user] = userState;
@@ -47,7 +46,7 @@ export const Products = () => {
   const available = ingredients && ingredients.filter(({ available }) => available);
 
   return (
-    <SwipeableViews axis="x" index={productId ? 1 : 0} onChangeIndex={(from, to) => history.push}>
+    <Swipeable index={productId ? 1 : 0} backIcon={!!productId}>
       <Container index={0}>
         <List>
           <ProductList ingredients={ingredients.filter(({ available }) => !available)} />
@@ -67,7 +66,7 @@ export const Products = () => {
       <Container index={1}>
         <Product products={ingredients} productId={productId} />
       </Container>
-    </SwipeableViews>
+    </Swipeable>
   );
 };
 

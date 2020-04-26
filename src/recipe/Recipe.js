@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAsync } from 'react-use';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
 import { Switch, Route, useLocation, useParams } from 'react-router-dom';
@@ -105,15 +105,4 @@ export const Recipe = (props) => {
       </Button>
     </>
   );
-};
-
-const getAllIngredients = async (user) => {
-  const result = await db.collection('products').where('userId', '==', user.id).get();
-  const ingredients = result.docs.map((doc) => {
-    return {
-      id: doc.id,
-      ...doc.data(),
-    };
-  });
-  return ingredients;
 };

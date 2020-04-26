@@ -1,14 +1,14 @@
 import React from 'react';
-import { useLocalStorage } from 'react-use';
+import { useLocalStorage, useMethods } from 'react-use';
+import { initialState, actions } from 'app/globalState';
 
 export const globalStateContext = React.createContext();
 
-export const GlobalStateProvider = ({ children, initialState }) => {
+export const GlobalStateProvider = ({ children }) => {
+  const [globalState, globalActions] = useMethods(actions, initialState);
   const [storageUser, setStorageUser] = useLocalStorage('user');
   const [user, setUser] = React.useState(storageUser);
   const [drawerOpened, openDrawer] = React.useState(false);
-  const [inputFocused, setInputFocused] = React.useState(false);
-  const [bottomNavigationVisible, setBottonNavigationVisible] = React.useState(true);
   const snackbar = React.useState(null);
   const { Provider } = globalStateContext;
 
@@ -30,18 +30,19 @@ export const GlobalStateProvider = ({ children, initialState }) => {
     [openDrawer]
   );
 
-  const setInputFocusedMemo = React.useCallback((isFocused) => {
-    setInputFocused(isFocused);
-    setBottonNavigationVisible(!isFocused);
-  }, []);
-
   const userState = [user, setUserMemo];
   const drawerState = [drawerOpened, openDrawerMemo];
-  const inputState = [inputFocused, setInputFocusedMemo];
-  const bottomNavigationState = [bottomNavigationVisible, setBottonNavigationVisible];
 
   return (
-    <Provider value={{ userState, drawerState, inputState, bottomNavigationState, snackbar }}>
+    <Provider
+      value={{
+        userState,
+        drawerState,
+        snackbar,
+        globalState,
+        globalActions,
+      }}
+    >
       {children}
     </Provider>
   );
