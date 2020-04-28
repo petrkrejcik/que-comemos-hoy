@@ -5,13 +5,13 @@ import {
   List,
   ListItem,
   Grid,
-  ExpansionPanel,
-  ExpansionPanelSummary,
+  ExpansionPanel as MuiExpansionPanel,
+  ExpansionPanelSummary as MuiExpansionPanelSummary,
   ExpansionPanelDetails,
 } from '@material-ui/core';
 
 import Skeleton from '@material-ui/lab/Skeleton';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { Swipeable } from 'app/Swipeable';
 import { db, useColData, useDocData } from 'storage/firebase';
 import { globalStateContext } from 'app/GlobalStateContext';
@@ -76,7 +76,7 @@ export const Products = () => {
           <AddNew ingredients={ingredients} />
         </List>
         {available.length > 0 && (
-          <ExpansionPanel>
+          <ExpansionPanel elevation={0}>
             <ExpansionPanelSummary>{available.length} products stocked</ExpansionPanelSummary>
             <ExpansionPanelDetails className={classes.expansionPanelDetails}>
               <List>
@@ -139,3 +139,35 @@ const useStyles = makeStyles({
     padding: 0,
   },
 });
+
+const ExpansionPanel = withStyles({
+  root: {
+    boxShadow: 'none',
+    '&:not(:last-child)': {
+      borderBottom: 0,
+    },
+    '&:before': {
+      display: 'none',
+    },
+    '&$expanded': {
+      margin: 'auto',
+    },
+  },
+  expanded: {},
+})(MuiExpansionPanel);
+
+const ExpansionPanelSummary = withStyles({
+  root: {
+    marginBottom: -1,
+    minHeight: 56,
+    '&$expanded': {
+      minHeight: 56,
+    },
+  },
+  content: {
+    '&$expanded': {
+      margin: '12px 0',
+    },
+  },
+  expanded: {},
+})(MuiExpansionPanelSummary);
