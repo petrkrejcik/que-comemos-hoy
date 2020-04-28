@@ -42,7 +42,7 @@ export const ProductList = (props) => {
       </Grid>
       <Grid item container xs={3} justify="flex-end">
         <Grid item>
-          {product.shop && props.shops[product.shop] && (
+          {product.shop && props.shops && props.shops[product.shop] && (
             <Chip label={props.shops[product.shop].title} />
           )}
         </Grid>

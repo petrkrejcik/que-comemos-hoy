@@ -70,7 +70,7 @@ export const Products = () => {
         <List>
           <ProductList
             ingredients={ingredients.filter(({ available }) => !available)}
-            shops={shops}
+            shops={shopsObj}
             active={getIndex() === PAGES.list}
           />
           <AddNew ingredients={ingredients} />
@@ -80,11 +80,7 @@ export const Products = () => {
             <ExpansionPanelSummary>{available.length} products stocked</ExpansionPanelSummary>
             <ExpansionPanelDetails className={classes.expansionPanelDetails}>
               <List>
-                <ProductList
-                  ingredients={available}
-                  shops={shops}
-                  active={getIndex() === PAGES.list}
-                />
+                <ProductList ingredients={available} active={getIndex() === PAGES.list} />
               </List>
             </ExpansionPanelDetails>
           </ExpansionPanel>
