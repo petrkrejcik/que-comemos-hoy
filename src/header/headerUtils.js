@@ -8,7 +8,7 @@ export const useHeader = (isActive) => {
     (icons) => {
       if (!isActive) return;
       globalActions.resetHeader();
-      icons.right && globalActions.setHeaderRightIcons(icons.right);
+      icons.right && globalActions.setHeaderRightButtons(icons.right);
       icons.menu && globalActions.setHeaderMenu(icons.menu);
       icons.left && globalActions.setHeaderLeftIcon(icons.left);
     },

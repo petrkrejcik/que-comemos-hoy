@@ -57,7 +57,7 @@ export const Product = (props) => {
       },
       right: [
         {
-          icon: 'done',
+          title: 'Save',
           action: handleSave,
         },
       ],

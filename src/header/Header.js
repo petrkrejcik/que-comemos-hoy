@@ -1,6 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { AppBar, Menu, MenuItem } from '@material-ui/core';
+import { AppBar, Menu, MenuItem, Button } from '@material-ui/core';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
@@ -20,7 +20,7 @@ export const Header = () => {
   const handleMenuClose = () => {
     setMenuAnchor(null);
   };
-
+  console.log('🛎 ', 'globalState.headerRightButtons', globalState.headerRightButtons);
   return (
     <div className={classes.root}>
       <AppBar position="fixed">
@@ -48,12 +48,18 @@ export const Header = () => {
             </IconButton>
           )}
           <Typography variant="h6" className={classes.title}></Typography>
-          {globalState.headerRightIcons &&
-            globalState.headerRightIcons.map((icon) => (
-              <IconButton onClick={icon.action} color="inherit" key={icon.icon}>
-                {icon.icon === 'done' && <Done />}
-              </IconButton>
-            ))}
+          {globalState.headerRightButtons &&
+            globalState.headerRightButtons.map((button) =>
+              button.icon ? (
+                <IconButton onClick={button.action} color="inherit" key={button.icon}>
+                  {button.icon === 'done' && <Done />}
+                </IconButton>
+              ) : button.title ? (
+                <Button color="inherit" onClick={button.action} key={button.title}>
+                  {button.title}
+                </Button>
+              ) : null
+            )}
           {globalState.headerMenu && (
             <>
               <IconButton onClick={handleMenuClick} color="inherit" key="menu">
