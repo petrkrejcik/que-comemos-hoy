@@ -2,6 +2,9 @@
 
 v1.0
 
+- [ ] jak udelat manage shops - obecne crud
+- [ ] update, delete
+- [ ] loading roztahnout
 - [x] taby pro ingredience - buy/have/all
 - [ ] delete ingredient (kam?)
 - [x] homepage bude login screena
@@ -43,16 +46,32 @@ Hooks doc: https://github.com/csfrequency/react-firebase-hooks/tree/7eb49f1624d7
     "group-user1": {
       "ingredients": {
         "product1": {
-          "title": "Product 1"
+          "title": "Product 1",
+          "available": true
         },
         "product2": {
-          "title": "Product 2"
+          "title": "Product 2",
+          "available": false,
+          "shop": {
+            "shop1": {
+              "title": "Shop 1"
+            }
+          }
         }
       },
-      "order": ["product2", "product1"],
+      "ingredientsOrder": ["product2", "product1"],
+      "shops": {
+        "shop1": {
+          "title": "Shop 1"
+        }
+      },
       "recipes": {
         "recipe1": {
           "title": "Recipe 1",
+          "ingredientsStatus": {
+            "alternative": 0,
+            "missing": 1
+          },
           "ingredients": {
             "product1": {
               "title": "Product 1"

@@ -38,6 +38,10 @@ export const addIngredient = async (title, user) => {
   });
 };
 
+export const removeProduct = async (productId, user) => {
+  return db.doc(`userGroups/${user.groupId}/ingredients/${productId}`).delete();
+};
+
 export const validateIngredient = (ingredient, ingredients) => {
   if (ingredients.find(({ title }) => title === ingredient)) {
     alert('Already exists');

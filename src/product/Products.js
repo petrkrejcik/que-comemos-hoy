@@ -13,14 +13,21 @@ import {
 import Skeleton from '@material-ui/lab/Skeleton';
 import { makeStyles } from '@material-ui/core/styles';
 import { Swipeable } from 'app/Swipeable';
-import { db, useColData } from 'storage/firebase';
+import { db, useColData, useDocData } from 'storage/firebase';
 import { globalStateContext } from 'app/GlobalStateContext';
 import { ProductList } from './ProductList';
 import { AddNew } from './ProductListAddNew';
 import { Product } from './Product';
+import { Shops } from 'shop/Shops';
+
+const PAGES = {
+  list: 0,
+  product: 1,
+  shops: 2,
+};
 
 export const Products = () => {
-  const { productId } = useParams();
+  const { productId, shop } = useParams();
   const { userState } = React.useContext(globalStateContext);
   const [user] = userState;
   const classes = useStyles();
@@ -31,25 +38,41 @@ export const Products = () => {
     { idField: 'id' }
   );
 
+  const [userData, userDataLoading, userDataError] = useDocData(
+    db.doc(`userGroups/${user.groupId}`)
+  );
+
   //   const deleteIngredient = (ingredient) => {
   //     updateIngredient(ingredient, 'delete');
   //     handleIngredientEdit(null);
   //   };
 
-  if (error) {
-    console.log('🛎 ', 'errorrr', error);
+  if (error || userDataError) {
+    console.log('🛎 ', 'errorrr', error || userDataError);
     return null;
   }
 
-  if (loading) return LoadingComponent;
+  if (loading || userDataLoading) return LoadingComponent;
+
+  const getIndex = () => {
+    if (!productId) return PAGES.list;
+    if (shop) return PAGES.shops;
+    return PAGES.product;
+  };
 
   const available = ingredients && ingredients.filter(({ available }) => available);
+  const shopsObj = (userData && userData.shops) || {};
+  const shops = Object.keys(shopsObj).reduce((acc, id) => [...acc, { id, ...shopsObj[id] }], []);
 
   return (
-    <Swipeable index={productId ? 1 : 0} backIcon={!!productId}>
-      <Container index={0}>
+    <Swipeable index={getIndex()}>
+      <Container index={PAGES.list}>
         <List>
-          <ProductList ingredients={ingredients.filter(({ available }) => !available)} />
+          <ProductList
+            ingredients={ingredients.filter(({ available }) => !available)}
+            shops={shops}
+            active={getIndex() === PAGES.list}
+          />
           <AddNew ingredients={ingredients} />
         </List>
         {available.length > 0 && (
@@ -57,14 +80,26 @@ export const Products = () => {
             <ExpansionPanelSummary>{available.length} products stocked</ExpansionPanelSummary>
             <ExpansionPanelDetails className={classes.expansionPanelDetails}>
               <List>
-                <ProductList ingredients={available} />
+                <ProductList
+                  ingredients={available}
+                  shops={shops}
+                  active={getIndex() === PAGES.list}
+                />
               </List>
             </ExpansionPanelDetails>
           </ExpansionPanel>
         )}
       </Container>
-      <Container index={1}>
-        <Product products={ingredients} productId={productId} />
+      <Container index={PAGES.product}>
+        <Product
+          products={ingredients}
+          productId={productId}
+          shops={shops}
+          active={getIndex() === PAGES.product}
+        />
+      </Container>
+      <Container index={PAGES.shops}>
+        <Shops shops={shops} active={getIndex() === PAGES.shops} />
       </Container>
     </Swipeable>
   );

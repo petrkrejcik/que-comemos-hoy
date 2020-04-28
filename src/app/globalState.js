@@ -1,14 +1,20 @@
 export const initialState = {
-  headerRightIcons: [],
+  headerRightIcons: null,
+  headerLeftIcon: null,
   bottomNavigationVisible: true,
-  backIcon: false,
 };
 export const actions = (state) => ({
   setHeaderRightIcons: (icons) => {
     return { ...state, headerRightIcons: icons };
   },
-  setBackIcon: (isVisible) => {
-    return { ...state, backIcon: isVisible };
+  setHeaderLeftIcon: (icon) => {
+    return { ...state, headerLeftIcon: icon };
+  },
+  setHeaderMenu: (items) => {
+    return { ...state, headerMenu: items };
+  },
+  resetHeader: () => {
+    return { ...state, headerMenu: null, headerRightIcons: null, headerLeftIcon: null };
   },
   focusInput: (isFocused) => {
     return { ...state, inputFocused: isFocused, bottomNavigationVisible: !isFocused };

@@ -22,7 +22,7 @@ function App() {
           <>
             <Header />
             <Switch>
-              <PrivateRoute path="/products/:productId?">
+              <PrivateRoute path="/products/:productId?/:shop?">
                 <Products />
               </PrivateRoute>
               <PrivateRoute path="/recipes">

@@ -2,7 +2,7 @@ import React from 'react';
 import * as firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
-import { useCollection } from 'react-firebase-hooks/firestore';
+import { useCollection, useDocumentData } from 'react-firebase-hooks/firestore';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyBfTjSCoH4xl6UFa31Eyj8h-Tf2ZxwPbmU',
@@ -37,4 +37,8 @@ export const useColData = (query, options) => {
   }, [value, options.idField]);
 
   return [data, loading, error];
+};
+
+export const useDocData = (query, options) => {
+  return useDocumentData(query, options);
 };

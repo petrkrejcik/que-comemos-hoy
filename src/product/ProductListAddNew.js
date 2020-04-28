@@ -14,11 +14,11 @@ export const AddNew = (props) => {
       <ProductAutocomplete ingredients={props.ingredients} onAfterEdit={() => setIsAdding(false)} />
     </Grid>
   ) : (
-    <AddNewButton onClick={() => setIsAdding(true)} />
+    <AddNewButton onClick={() => setIsAdding(true)}>Add ingredient</AddNewButton>
   );
 };
 
-const AddNewButton = (props) => {
+export const AddNewButton = (props) => {
   return (
     <Grid container>
       <Grid item>
@@ -27,7 +27,7 @@ const AddNewButton = (props) => {
         </IconButton>
       </Grid>
       <Button onClick={props.onClick} color="primary">
-        Add ingredient
+        {props.children}
       </Button>
     </Grid>
   );

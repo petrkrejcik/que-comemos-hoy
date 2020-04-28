@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useAsyncFn } from 'react-use';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import {
   Button,
   TextField,
@@ -11,39 +11,59 @@ import {
   MenuItem,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { Add, CheckBoxOutlineBlank } from '@material-ui/icons';
-import { updateIngredient, addIngredient, validateIngredient } from './ingredientUtils';
+import {
+  updateIngredient,
+  addIngredient,
+  validateIngredient,
+  removeProduct,
+} from './ingredientUtils';
 import { globalStateContext } from 'app/GlobalStateContext';
 import { Loading } from 'app/Loading';
+import { useHeader } from 'header/headerUtils';
 
 export const Product = (props) => {
-  const { productId, products } = props;
+  const history = useHistory();
+  // const classes = useStyles();
+  const setHeader = useHeader(props.active);
+  const { productId, products, shops } = props;
   const product = products.find((p) => p.id === productId);
-  const classes = useStyles();
   const [title, setTitle] = React.useState('');
   const [titleError, setTitleError] = React.useState(null);
   const { userState, globalActions } = React.useContext(globalStateContext);
   const [user] = userState;
-  const [shop, setShop] = React.useState(20);
-  const history = useHistory();
+  const [shop, setShop] = React.useState('');
 
   useEffect(() => {
     if (!product) return;
     setTitle(product.title);
+    setShop(product.shop || '');
   }, [product]);
 
   const [{ loading }, handleSave] = useAsyncFn(async () => {
-    await updateIngredient(product, user, { title });
+    await updateIngredient(product, user, { title, shop });
     history.goBack();
-  }, [product, user, title, history]);
+  }, [product, user, title, shop, history]);
+
+  const [{ loading: removeLoading }, handleRemove] = useAsyncFn(async () => {
+    await removeProduct(product.id, user);
+    history.goBack();
+  }, [product, user]);
 
   useEffect(() => {
-    const doneIcon = {
-      icon: 'done',
-      callback: handleSave,
-    };
-    globalActions.setHeaderRightIcons(product ? [doneIcon] : []);
-  }, [globalActions, product, handleSave]);
+    setHeader({
+      left: {
+        icon: 'close',
+        action: history.goBack,
+      },
+      right: [
+        {
+          icon: 'done',
+          action: handleSave,
+        },
+      ],
+      menu: [{ title: 'Remove', action: handleRemove }],
+    });
+  }, [handleSave, handleRemove, history, setHeader]);
 
   const handleTitleChange = (event) => {
     setTitleError(null);
@@ -54,18 +74,22 @@ export const Product = (props) => {
     newTitle.trim() === '' && setTitleError('Cannot be empty');
   };
 
-  if (loading) return <Loading />;
+  if ((loading, removeLoading)) return <Loading />;
 
   return (
-    <>
-      <TitleInput
-        title={title}
-        titleError={titleError}
-        handleTitleChange={handleTitleChange}
-        focusInput={globalActions.focusInput}
-      />
-      <SelectShop value={shop} handleChange={setShop} />
-    </>
+    <Grid container>
+      <Grid item xs={12}>
+        <TitleInput
+          title={title}
+          titleError={titleError}
+          handleTitleChange={handleTitleChange}
+          focusInput={globalActions.focusInput}
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <SelectShop value={shop} options={shops} handleChange={setShop} productId={productId} />
+      </Grid>
+    </Grid>
   );
 };
 
@@ -78,23 +102,34 @@ const TitleInput = (props) => (
     onChange={props.handleTitleChange}
     onFocus={() => props.focusInput(true)}
     onBlur={() => props.focusInput(false)}
+    fullWidth
   />
 );
 
 const SelectShop = (props) => (
-  <>
-    <InputLabel id="demo-simple-select-label">Shop</InputLabel>
-    <Select
-      labelId="demo-simple-select-label"
-      id="demo-simple-select"
-      value={props.value}
-      onChange={(e) => props.handleChange(e.target.value)}
-    >
-      <MenuItem value={10}>Ten</MenuItem>
-      <MenuItem value={20}>Twenty</MenuItem>
-      <MenuItem value={30}>Thirty</MenuItem>
-    </Select>
-  </>
+  <Grid container alignItems="center" justify="space-between">
+    <Grid item xs={7}>
+      <InputLabel id="demo-simple-select-label">Shop</InputLabel>
+      <Select
+        labelId="demo-simple-select-label"
+        id="demo-simple-select"
+        fullWidth
+        value={props.value}
+        onChange={(e) => props.handleChange(e.target.value)}
+      >
+        {props.options.map((option) => (
+          <MenuItem value={option.id} key={option.id}>
+            {option.title}
+          </MenuItem>
+        ))}
+      </Select>
+    </Grid>
+    {/* <Grid item>
+      <Link to={`/products/${props.productId}/shops`} style={{ textDecoration: 'none' }}>
+        <Button color="primary">Manage shops</Button>
+      </Link>
+    </Grid> */}
+  </Grid>
 );
 
 const useStyles = makeStyles({});
