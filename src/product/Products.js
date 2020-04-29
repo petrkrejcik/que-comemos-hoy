@@ -88,7 +88,7 @@ export const Products = () => {
                     </IconButton>
                   </Grid>
                   <Grid item xs={10}>
-                    {available.length} products stocked
+                    <Box pl={'8px'}>{available.length} products stocked</Box>
                   </Grid>
                 </Grid>
               </ExpansionPanelSummary>

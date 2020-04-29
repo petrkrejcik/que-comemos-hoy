@@ -38,7 +38,7 @@ export const ProductList = (props) => {
     <Box width={1}>
       <List disablePadding>
         {props.ingredients.map((product) => (
-          <Grid container alignItems="center" justifyX="space-between" key={product.id} width={1}>
+          <Grid container alignItems="center" key={product.id} width={1}>
             <Grid item>
               <Checkbox checked={product.available} onChange={handleChecked(product)} />
             </Grid>

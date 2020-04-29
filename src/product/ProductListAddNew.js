@@ -16,7 +16,7 @@ export const AddNew = (props) => {
       <Grid item xs={10}>
         <ProductAutocomplete
           ingredients={props.ingredients}
-          onAfterEdit={() => setIsAdding(true)}
+          onAfterEdit={() => setIsAdding(false)}
           style={{ paddingLeft: 8 }}
         />
       </Grid>
