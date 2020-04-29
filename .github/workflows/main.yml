@@ -16,5 +16,6 @@ jobs:
           yarn build
       - name: Firebase Deploy
         run: |
+          sudo npm install -g react-scripts 
           sudo npm install -g firebase-tools
           firebase deploy --token ${{ secrets.FIREBASE_TOKEN }}
