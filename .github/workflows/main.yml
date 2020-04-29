@@ -11,9 +11,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v1
+      - name: NPM or Yarn install with caching
+        uses: bahmutov/npm-install@v1.1.0
       - name: Build
         run: |
-          yarn install
+          yarn --frozen-lockfile
           yarn build
       - name: Firebase Deploy
         run: |
