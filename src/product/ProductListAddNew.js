@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, IconButton, Grid } from '@material-ui/core';
+import { Button, IconButton, Grid, Box } from '@material-ui/core';
 import { Add as AddIcon, CheckBoxOutlineBlank } from '@material-ui/icons';
 import { ProductAutocomplete } from './ProductAutocomplete';
 
@@ -8,10 +8,17 @@ export const AddNew = (props) => {
 
   return isAddingNew ? (
     <Grid container alignItems="center">
-      <IconButton>
-        <CheckBoxOutlineBlank />
-      </IconButton>
-      <ProductAutocomplete ingredients={props.ingredients} onAfterEdit={() => setIsAdding(false)} />
+      <Grid item>
+        <IconButton style={{ padding: 9 }}>
+          <CheckBoxOutlineBlank />
+        </IconButton>
+      </Grid>
+      <Grid item xs={10}>
+        <ProductAutocomplete
+          ingredients={props.ingredients}
+          onAfterEdit={() => setIsAdding(false)}
+        />
+      </Grid>
     </Grid>
   ) : (
     <AddNewButton onClick={() => setIsAdding(true)}>Add ingredient</AddNewButton>
@@ -22,7 +29,7 @@ export const AddNewButton = (props) => {
   return (
     <Grid container>
       <Grid item>
-        <IconButton>
+        <IconButton style={{ padding: 9 }}>
           <AddIcon />
         </IconButton>
       </Grid>

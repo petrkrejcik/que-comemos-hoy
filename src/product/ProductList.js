@@ -1,13 +1,15 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { useLongPress } from 'react-use';
-import { Checkbox, Grid, Box, Chip } from '@material-ui/core';
+import { Checkbox, Grid, Box, Chip, Button } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 import { useSnackbar } from 'snackbar/Snackbar';
 import { updateIngredient } from './ingredientUtils';
 import { globalStateContext } from 'app/GlobalStateContext';
 import { useHeader } from 'header/headerUtils';
 
 export const ProductList = (props) => {
+  const classes = useStyles();
   const history = useHistory();
   const showSnackbar = useSnackbar();
   const setHeader = useHeader(props.active);
@@ -33,12 +35,14 @@ export const ProductList = (props) => {
   };
 
   return props.ingredients.map((product) => (
-    <Grid container alignItems="center" justify="space-between" key={product.id}>
+    <Grid container alignItems="center" justifyX="space-between" key={product.id}>
       <Grid item>
         <Checkbox checked={product.available} onChange={handleChecked(product)} />
       </Grid>
       <Grid item xs={7}>
-        <span onClick={handleProductClick(product)}>{product.title}</span>
+        <Button onClick={handleProductClick(product)} classes={classes}>
+          {product.title}
+        </Button>
       </Grid>
       <Grid item container xs={3} justify="flex-end">
         <Grid item>
@@ -50,3 +54,9 @@ export const ProductList = (props) => {
     </Grid>
   ));
 };
+
+const useStyles = makeStyles({
+  label: {
+    textTransform: 'none',
+  },
+});
