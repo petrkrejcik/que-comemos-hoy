@@ -20,7 +20,7 @@ export const Header = () => {
   const handleMenuClose = () => {
     setMenuAnchor(null);
   };
-  console.log('🛎 ', 'globalState.headerRightButtons', globalState.headerRightButtons);
+
   return (
     <div className={classes.root}>
       <AppBar position="fixed">
