@@ -1,5 +1,14 @@
 {
   "projects": {
-    "default": "que-comemos-hoy-5febf"
+    "default": "quecomemos"
+  },
+  "targets": {
+    "que-comemos-hoy-5febf": {
+      "hosting": {
+        "web": [
+          "quecomemos"
+        ]
+      }
+    }
   }
 }
