@@ -1,7 +1,4 @@
 {
-  "projects": {
-    "default": "quecomemos"
-  },
   "targets": {
     "que-comemos-hoy-5febf": {
       "hosting": {
