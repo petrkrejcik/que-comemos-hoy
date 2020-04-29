@@ -1,7 +1,7 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { useLongPress } from 'react-use';
-import { Checkbox, Grid, Box, Chip, Button } from '@material-ui/core';
+import { Checkbox, Grid, Box, Chip, Button, Typography, List } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useSnackbar } from 'snackbar/Snackbar';
 import { updateIngredient } from './ingredientUtils';
@@ -34,29 +34,60 @@ export const ProductList = (props) => {
     history.push(`/products/${product.id}`);
   };
 
-  return props.ingredients.map((product) => (
-    <Grid container alignItems="center" justifyX="space-between" key={product.id}>
-      <Grid item>
-        <Checkbox checked={product.available} onChange={handleChecked(product)} />
-      </Grid>
-      <Grid item xs={7}>
-        <Button onClick={handleProductClick(product)} classes={classes}>
-          {product.title}
-        </Button>
-      </Grid>
-      <Grid item container xs={3} justify="flex-end">
-        <Grid item>
-          {product.shop && props.shops && props.shops[product.shop] && (
-            <Chip label={props.shops[product.shop].title} />
-          )}
-        </Grid>
-      </Grid>
-    </Grid>
-  ));
+  return (
+    <Box width={1}>
+      <List disablePadding>
+        {props.ingredients.map((product) => (
+          <Grid container alignItems="center" justifyX="space-between" key={product.id} width={1}>
+            <Grid item>
+              <Checkbox checked={product.available} onChange={handleChecked(product)} />
+            </Grid>
+            <Grid item xs={7}>
+              <Button onClick={handleProductClick(product)} classes={classes} width={1}>
+                <Typography noWrap>{product.title}</Typography>
+              </Button>
+            </Grid>
+            <Grid item container xs={3} justify="flex-end">
+              <Grid item>
+                {product.shop && props.shops && props.shops[product.shop] ? (
+                  <Chip label={props.shops[product.shop].title} />
+                ) : (
+                  <span>&nbsp;</span>
+                )}
+              </Grid>
+            </Grid>
+          </Grid>
+        ))}
+      </List>
+    </Box>
+  );
+
+  // return props.ingredients.map((product) => (
+  //   <Grid container alignItems="center" justifyX="space-between" key={product.id} width={1}>
+  //     <Grid item>
+  //       <Checkbox checked={product.available} onChange={handleChecked(product)} />
+  //     </Grid>
+  //     <Grid item xs={7}>
+  //       <Button onClick={handleProductClick(product)} classes={classes} width={1}>
+  //         <Typography noWrap>{product.title}</Typography>
+  //       </Button>
+  //     </Grid>
+  //     <Grid item container xs={3} justify="flex-end">
+  //       <Grid item>
+  //         {product.shop && props.shops && props.shops[product.shop] ? (
+  //           <Chip label={props.shops[product.shop].title} />
+  //         ) : (
+  //           <span>&nbsp;</span>
+  //         )}
+  //       </Grid>
+  //     </Grid>
+  //   </Grid>
+  // ));
 };
 
 const useStyles = makeStyles({
   label: {
     textTransform: 'none',
+    justifyContent: 'flex-start',
   },
 });

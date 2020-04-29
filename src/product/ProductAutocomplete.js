@@ -59,6 +59,7 @@ export const ProductAutocomplete = (props) => {
       getOptionLabel={(option) => option.title || option}
       onInputChange={handleType}
       onChange={handleAutocompleteSelect}
+      style={props.style || {}}
       renderInput={(params) => (
         <TextField
           {...params}

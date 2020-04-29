@@ -2,6 +2,7 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import {
   Container,
+  IconButton,
   List,
   ListItem,
   Grid,
@@ -9,8 +10,9 @@ import {
   ExpansionPanel as MuiExpansionPanel,
   ExpansionPanelSummary as MuiExpansionPanelSummary,
   ExpansionPanelDetails,
+  Divider,
 } from '@material-ui/core';
-
+import { ChevronRight } from '@material-ui/icons';
 import Skeleton from '@material-ui/lab/Skeleton';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { Swipeable } from 'app/Swipeable';
@@ -69,21 +71,29 @@ export const Products = () => {
     <Swipeable index={getIndex()}>
       <Container index={PAGES.list}>
         <Box ml={-1}>
-          <List>
-            <ProductList
-              ingredients={ingredients.filter(({ available }) => !available)}
-              shops={shopsObj}
-              active={getIndex() === PAGES.list}
-            />
-            <AddNew ingredients={ingredients} />
-          </List>
+          <ProductList
+            ingredients={ingredients.filter(({ available }) => !available)}
+            shops={shopsObj}
+            active={getIndex() === PAGES.list}
+          />
+          <AddNew ingredients={ingredients} />
+          <Divider />
           {available.length > 0 && (
-            <ExpansionPanel elevation={0}>
-              <ExpansionPanelSummary>{available.length} products stocked</ExpansionPanelSummary>
+            <ExpansionPanel elevation={0} style={{ width: '100%' }}>
+              <ExpansionPanelSummary className={classes.summary}>
+                <Grid container alignItems="center">
+                  <Grid item>
+                    <IconButton style={{ padding: 9 }}>
+                      <ChevronRight />
+                    </IconButton>
+                  </Grid>
+                  <Grid item xs={10}>
+                    {available.length} products stocked
+                  </Grid>
+                </Grid>
+              </ExpansionPanelSummary>
               <ExpansionPanelDetails className={classes.expansionPanelDetails}>
-                <List>
-                  <ProductList ingredients={available} active={getIndex() === PAGES.list} />
-                </List>
+                <ProductList ingredients={available} active={getIndex() === PAGES.list} />
               </ExpansionPanelDetails>
             </ExpansionPanel>
           )}
@@ -141,6 +151,7 @@ const useStyles = makeStyles({
   expansionPanelDetails: {
     padding: 0,
   },
+  summary: { padding: 0 },
 });
 
 const ExpansionPanel = withStyles({
