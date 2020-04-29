@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, IconButton, Grid, Box } from '@material-ui/core';
+import { Button, IconButton, Grid } from '@material-ui/core';
 import { Add as AddIcon, CheckBoxOutlineBlank } from '@material-ui/icons';
 import { ProductAutocomplete } from './ProductAutocomplete';
 
