@@ -23,7 +23,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "predeploy": "npm run build",
+    "predeployX": "npm run build",
     "deploy": "yarn build && firebase deploy",
     "deploy-github": "yarn build && gh-pages -d build",
     "test": "react-scripts test",
