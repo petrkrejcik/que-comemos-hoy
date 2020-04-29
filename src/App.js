@@ -1,5 +1,6 @@
 import React from 'react';
 import { Switch, Route, BrowserRouter as Router, Redirect } from 'react-router-dom';
+import { Box } from '@material-ui/core';
 import { Products } from './product/Products';
 import { Recipes } from './recipe/Recipes';
 import './App.css';
@@ -22,15 +23,17 @@ function App() {
           <>
             <Header />
             <Switch>
-              <PrivateRoute path="/products/:productId?/:shop?">
-                <Products />
-              </PrivateRoute>
-              <PrivateRoute path="/recipes">
-                <Recipes />
-              </PrivateRoute>
-              <PrivateRoute path="/add-member">
-                <AddMember />
-              </PrivateRoute>
+              <Box mt={2}>
+                <PrivateRoute path="/products/:productId?/:shop?">
+                  <Products />
+                </PrivateRoute>
+                <PrivateRoute path="/recipes">
+                  <Recipes />
+                </PrivateRoute>
+                <PrivateRoute path="/add-member">
+                  <AddMember />
+                </PrivateRoute>
+              </Box>
               <Redirect to="/products" />
             </Switch>
             <Navigation />

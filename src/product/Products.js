@@ -5,6 +5,7 @@ import {
   List,
   ListItem,
   Grid,
+  Box,
   ExpansionPanel as MuiExpansionPanel,
   ExpansionPanelSummary as MuiExpansionPanelSummary,
   ExpansionPanelDetails,
@@ -67,24 +68,26 @@ export const Products = () => {
   return (
     <Swipeable index={getIndex()}>
       <Container index={PAGES.list}>
-        <List>
-          <ProductList
-            ingredients={ingredients.filter(({ available }) => !available)}
-            shops={shopsObj}
-            active={getIndex() === PAGES.list}
-          />
-          <AddNew ingredients={ingredients} />
-        </List>
-        {available.length > 0 && (
-          <ExpansionPanel elevation={0}>
-            <ExpansionPanelSummary>{available.length} products stocked</ExpansionPanelSummary>
-            <ExpansionPanelDetails className={classes.expansionPanelDetails}>
-              <List>
-                <ProductList ingredients={available} active={getIndex() === PAGES.list} />
-              </List>
-            </ExpansionPanelDetails>
-          </ExpansionPanel>
-        )}
+        <Box ml={-1}>
+          <List>
+            <ProductList
+              ingredients={ingredients.filter(({ available }) => !available)}
+              shops={shopsObj}
+              active={getIndex() === PAGES.list}
+            />
+            <AddNew ingredients={ingredients} />
+          </List>
+          {available.length > 0 && (
+            <ExpansionPanel elevation={0}>
+              <ExpansionPanelSummary>{available.length} products stocked</ExpansionPanelSummary>
+              <ExpansionPanelDetails className={classes.expansionPanelDetails}>
+                <List>
+                  <ProductList ingredients={available} active={getIndex() === PAGES.list} />
+                </List>
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
+          )}
+        </Box>
       </Container>
       <Container index={PAGES.product}>
         <Product
