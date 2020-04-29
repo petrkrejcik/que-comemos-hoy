@@ -17,7 +17,9 @@ jobs:
         run: |
           yarn --frozen-lockfile
           CI=false yarn build
-      - name: Firebase Deploy
-        run: |
-          sudo npm install -g firebase-tools
-          firebase deploy --token ${{ secrets.FIREBASE_TOKEN }}
+      - name: Deploy to Firebase
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only hosting
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
