@@ -11,27 +11,24 @@ import {
   MenuItem,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import {
-  updateIngredient,
-  addIngredient,
-  validateIngredient,
-  removeProduct,
-} from './ingredientUtils';
+import { updateIngredient, removeProduct } from './ingredientUtils';
 import { globalStateContext } from 'app/GlobalStateContext';
 import { Loading } from 'app/Loading';
 import { useHeader } from 'header/headerUtils';
+import { useUserData, shops2Array } from 'user/userUtils';
 
 export const Product = (props) => {
   const history = useHistory();
   // const classes = useStyles();
   const setHeader = useHeader(props.active);
-  const { productId, products, shops } = props;
+  const { productId, products } = props;
   const product = products.find((p) => p.id === productId);
   const [title, setTitle] = React.useState('');
   const [titleError, setTitleError] = React.useState(null);
   const { userState, globalActions } = React.useContext(globalStateContext);
   const [user] = userState;
   const [shop, setShop] = React.useState('');
+  const [userData] = useUserData();
 
   useEffect(() => {
     if (!product) return;
@@ -75,6 +72,7 @@ export const Product = (props) => {
   };
 
   if ((loading, removeLoading)) return <Loading />;
+  const shops = shops2Array(userData?.shops || {});
 
   return (
     <Grid container spacing={3}>

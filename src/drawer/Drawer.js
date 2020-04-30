@@ -34,6 +34,9 @@ export const Drawer = (props) => {
             </ListItemText>
           )}
         </ListItem>
+        <ListItemText>
+          <Link to="/shops">Shops</Link>
+        </ListItemText>
         <Divider />
         <ListItem button>{user && <ListItemText primary="Logout" onClick={logout} />}</ListItem>
       </List>

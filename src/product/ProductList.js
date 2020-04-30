@@ -7,6 +7,7 @@ import { useSnackbar } from 'snackbar/Snackbar';
 import { updateIngredient } from './ingredientUtils';
 import { globalStateContext } from 'app/GlobalStateContext';
 import { useHeader } from 'header/headerUtils';
+import { useUserData } from 'user/userUtils';
 
 export const ProductList = (props) => {
   const classes = useStyles();
@@ -15,6 +16,7 @@ export const ProductList = (props) => {
   const setHeader = useHeader(props.active);
   const { userState } = React.useContext(globalStateContext);
   const [user] = userState;
+  const [userData] = useUserData();
   // const [hoveredId, setHoveredId] = React.useState(null);
   // const longPress = useLongPress((e) => {
   //   console.log('🛎 ', 'e', e.target);
@@ -34,6 +36,8 @@ export const ProductList = (props) => {
     history.push(`/products/${product.id}`);
   };
 
+  const { shops = [] } = userData || {};
+
   return (
     <Box width={1}>
       <List disablePadding>
@@ -49,8 +53,8 @@ export const ProductList = (props) => {
             </Grid>
             <Grid item container xs={3} justify="flex-end">
               <Grid item>
-                {product.shop && props.shops && props.shops[product.shop] ? (
-                  <Chip label={props.shops[product.shop].title} />
+                {props.showShops && product.shop && shops[product.shop] ? (
+                  <Chip label={shops[product.shop].title} />
                 ) : (
                   <span>&nbsp;</span>
                 )}
@@ -61,28 +65,6 @@ export const ProductList = (props) => {
       </List>
     </Box>
   );
-
-  // return props.ingredients.map((product) => (
-  //   <Grid container alignItems="center" justifyX="space-between" key={product.id} width={1}>
-  //     <Grid item>
-  //       <Checkbox checked={product.available} onChange={handleChecked(product)} />
-  //     </Grid>
-  //     <Grid item xs={7}>
-  //       <Button onClick={handleProductClick(product)} classes={classes} width={1}>
-  //         <Typography noWrap>{product.title}</Typography>
-  //       </Button>
-  //     </Grid>
-  //     <Grid item container xs={3} justify="flex-end">
-  //       <Grid item>
-  //         {product.shop && props.shops && props.shops[product.shop] ? (
-  //           <Chip label={props.shops[product.shop].title} />
-  //         ) : (
-  //           <span>&nbsp;</span>
-  //         )}
-  //       </Grid>
-  //     </Grid>
-  //   </Grid>
-  // ));
 };
 
 const useStyles = makeStyles({

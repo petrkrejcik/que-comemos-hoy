@@ -16,55 +16,39 @@ import { ChevronRight } from '@material-ui/icons';
 import Skeleton from '@material-ui/lab/Skeleton';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { Swipeable } from 'app/Swipeable';
-import { db, useColData, useDocData } from 'storage/firebase';
-import { globalStateContext } from 'app/GlobalStateContext';
 import { ProductList } from './ProductList';
+import { useProducts } from 'product/productUtils';
 import { AddNew } from './ProductListAddNew';
 import { Product } from './Product';
-import { Shops } from 'shop/Shops';
 
 const PAGES = {
   list: 0,
   product: 1,
-  shops: 2,
 };
 
 export const Products = () => {
-  const { productId, shop } = useParams();
-  const { userState } = React.useContext(globalStateContext);
-  const [user] = userState;
+  const { productId } = useParams();
   const classes = useStyles();
-
-  const [ingredients, loading, error] = useColData(
-    db.collection(`userGroups/${user.groupId}/ingredients`).orderBy('insertDate'),
-    { idField: 'id' }
-  );
-
-  const [userData, userDataLoading, userDataError] = useDocData(
-    db.doc(`userGroups/${user.groupId}`)
-  );
+  const [ingredients, loading, error] = useProducts();
 
   //   const deleteIngredient = (ingredient) => {
   //     updateIngredient(ingredient, 'delete');
   //     handleIngredientEdit(null);
   //   };
 
-  if (error || userDataError) {
-    console.log('🛎 ', 'errorrr', error || userDataError);
+  if (error) {
+    console.log('🛎 ', 'errorrr', error);
     return null;
   }
 
-  if (loading || userDataLoading) return LoadingComponent;
+  if (loading) return LoadingComponent;
 
   const getIndex = () => {
     if (!productId) return PAGES.list;
-    if (shop) return PAGES.shops;
     return PAGES.product;
   };
 
   const available = ingredients && ingredients.filter(({ available }) => available);
-  const shopsObj = (userData && userData.shops) || {};
-  const shops = Object.keys(shopsObj).reduce((acc, id) => [...acc, { id, ...shopsObj[id] }], []);
 
   return (
     <Swipeable index={getIndex()}>
@@ -72,8 +56,8 @@ export const Products = () => {
         <Box ml={-1}>
           <ProductList
             ingredients={ingredients.filter(({ available }) => !available)}
-            shops={shopsObj}
             active={getIndex() === PAGES.list}
+            showShops
           />
           <AddNew ingredients={ingredients} />
           <Divider />
@@ -102,12 +86,8 @@ export const Products = () => {
         <Product
           products={ingredients}
           productId={productId}
-          shops={shops}
           active={getIndex() === PAGES.product}
         />
-      </Container>
-      <Container index={PAGES.shops}>
-        <Shops shops={shops} active={getIndex() === PAGES.shops} />
       </Container>
     </Swipeable>
   );
