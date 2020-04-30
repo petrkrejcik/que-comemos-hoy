@@ -16,7 +16,9 @@ export const FirestoreProvider = ({ children }) => {
     }
   );
 
-  const userData = useDocData(db.doc(`userGroups/${user.groupId}`));
+  const userData = useDocData(db.doc(`userGroups/${user.groupId}`), {
+    idField: 'id',
+  });
 
   return (
     <Provider

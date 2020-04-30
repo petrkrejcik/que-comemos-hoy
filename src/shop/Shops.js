@@ -1,44 +1,47 @@
 import React from 'react';
-import {
-  Box,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemSecondaryAction,
-  IconButton,
-} from '@material-ui/core';
-import { Delete } from '@material-ui/icons';
-import { AddNewButton } from 'product/ProductListAddNew';
-import { useUserData, shops2Array } from 'user/userUtils';
+import { Box, Container } from '@material-ui/core';
+// import { makeStyles } from '@material-ui/core/styles';
+import { useParams, useLocation } from 'react-router-dom';
+import { Swipeable } from 'app/Swipeable';
+import { Shop } from 'shop/Shop';
+import { ShopsList } from 'shop/ShopsList';
+
+const PAGES = {
+  list: 0,
+  detail: 1,
+};
 
 export const Shops = (props) => {
-  const [userData, userDataLoading] = useUserData();
-  const handleRemove = (shop) => () => {
-    console.log('🛎 ', 'remove', shop);
-  };
-  const handleAdd = () => {
-    console.log('🛎 ', 'add');
-  };
+  // const classes = useStyles();
+  const { shopId } = useParams();
+  const location = useLocation();
 
-  if (userDataLoading) return 'loading';
-
-  const shops = shops2Array(userData.shops);
+  const getIndex = () => {
+    if (location === '/shops/new') return PAGES.detail;
+    if (shopId) return PAGES.detail;
+    return PAGES.list;
+  };
 
   return (
     <Box width={1}>
-      <List disablePadding>
-        {shops.map((shop) => (
-          <ListItem key={shop.id}>
-            <ListItemText>{shop.title}</ListItemText>
-            <ListItemSecondaryAction>
-              <IconButton onClick={handleRemove(shop)} aria-label="remove">
-                <Delete />
-              </IconButton>
-            </ListItemSecondaryAction>
-          </ListItem>
-        ))}
-      </List>
-      <AddNewButton onClick={handleAdd}>Add shop (todo)</AddNewButton>
+      <Swipeable index={getIndex()}>
+        <Container index={PAGES.list}>
+          <ShopsList active={getIndex() === PAGES.list} />
+        </Container>
+        <Container index={PAGES.detail}>
+          <Shop active={getIndex() === PAGES.detail} />
+        </Container>
+      </Swipeable>
     </Box>
   );
 };
+
+// const useStyles = makeStyles({
+//   label: {
+//     textTransform: 'none',
+//     justifyContent: 'flex-start',
+//   },
+//   link: {
+//     textDecoration: 'none',
+//   },
+// });

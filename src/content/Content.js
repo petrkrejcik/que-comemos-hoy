@@ -37,8 +37,8 @@ export const Content = () => {
           <Route path="/add-member">
             <AddMember />
           </Route>
-          <Route path="/shops">
-            <Shops shops={[]} />
+          <Route path="/shops/:shopId?">
+            <Shops />
           </Route>
         </Box>
         <Redirect to="/products" />

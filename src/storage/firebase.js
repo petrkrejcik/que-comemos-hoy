@@ -2,7 +2,7 @@ import React from 'react';
 import * as firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
-import { useCollection, useDocumentData } from 'react-firebase-hooks/firestore';
+import { useCollection, useDocument } from 'react-firebase-hooks/firestore';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyBfTjSCoH4xl6UFa31Eyj8h-Tf2ZxwPbmU',
@@ -40,5 +40,21 @@ export const useColData = (query, options) => {
 };
 
 export const useDocData = (query, options) => {
-  return useDocumentData(query, options);
+  const [data, setData] = React.useState(null);
+  const [value, , error] = useDocument(query, options);
+
+  React.useEffect(() => {
+    if (!value) return;
+    const data = value.data();
+    if (!data) return; // When opening the app from a link in a new tab. User is probably not authed yet.
+    const docData = { ...data };
+    if (options.idField) {
+      docData[options.idField] = value.id;
+    }
+    setData(docData);
+  }, [value, options.idField]);
+
+  const loading = !data && !error;
+
+  return [data, loading, error];
 };

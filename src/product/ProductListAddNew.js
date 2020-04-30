@@ -1,5 +1,7 @@
 import React from 'react';
 import { Button, IconButton, Grid } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+import { Link } from 'react-router-dom';
 import { Add as AddIcon, CheckBoxOutlineBlank } from '@material-ui/icons';
 import { ProductAutocomplete } from './ProductAutocomplete';
 
@@ -27,6 +29,8 @@ export const AddNew = (props) => {
 };
 
 export const AddNewButton = (props) => {
+  const classes = useStyles();
+
   return (
     <Grid container>
       <Grid item>
@@ -34,9 +38,24 @@ export const AddNewButton = (props) => {
           <AddIcon />
         </IconButton>
       </Grid>
-      <Button onClick={props.onClick} color="primary">
-        {props.children}
-      </Button>
+      {props.onClick ? (
+        <Button onClick={props.onClick} color="primary" classes={classes}>
+          {props.children}
+        </Button>
+      ) : (
+        <Link to={props.to} style={{ textDecoration: 'none' }}>
+          <Button color="primary" classes={classes}>
+            {props.children}
+          </Button>
+        </Link>
+      )}
     </Grid>
   );
 };
+
+const useStyles = makeStyles({
+  label: {
+    textTransform: 'none',
+    justifyContent: 'flex-start',
+  },
+});

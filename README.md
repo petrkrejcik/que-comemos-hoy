@@ -2,6 +2,7 @@
 
 v1.0
 
+- [ ] zavrit drawer po kliku
 - [ ] jak udelat manage shops - obecne crud
 - [ ] update, delete
 - [ ] loading roztahnout
@@ -53,9 +54,7 @@ Hooks doc: https://github.com/csfrequency/react-firebase-hooks/tree/7eb49f1624d7
           "title": "Product 2",
           "available": false,
           "shop": {
-            "shop1": {
-              "title": "Shop 1"
-            }
+            "shop1": true
           }
         }
       },
