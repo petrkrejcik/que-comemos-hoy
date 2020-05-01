@@ -13,6 +13,7 @@ import { Link } from 'react-router-dom';
 import { AddNewButton } from 'product/ProductListAddNew';
 import { useUserData, shops2Array } from 'user/userUtils';
 import { useHeader } from 'header/headerUtils';
+import { Loading } from 'app/Loading';
 
 export const ShopsList = (props) => {
   const classes = useStyles();
@@ -27,7 +28,7 @@ export const ShopsList = (props) => {
     console.log('🛎 ', 'edit', shop);
   };
 
-  if (userDataLoading) return 'loading';
+  if (userDataLoading) return <Loading />;
 
   const shops = shops2Array(userData.shops);
 

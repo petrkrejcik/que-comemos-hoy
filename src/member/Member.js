@@ -6,80 +6,78 @@ import { Button, TextField, Grid } from '@material-ui/core';
 import { globalStateContext } from 'app/GlobalStateContext';
 import { Loading } from 'app/Loading';
 import { useHeader } from 'header/headerUtils';
-import { useUserData } from 'user/userUtils';
-import { addShop, updateShop, removeShop } from 'shop/shopUtils';
+import { add, update, remove } from 'member/memberUtils';
 
-export const Shop = (props) => {
+export const Member = (props) => {
   const history = useHistory();
-  const { shopId } = useParams();
+  const { memberId } = useParams();
   // const classes = useStyles();
   const setHeader = useHeader(props.active);
-  const [title, setTitle] = React.useState('');
+  const [email, setEmail] = React.useState('');
   const [titleError, setTitleError] = React.useState(null);
   const { userState, globalActions } = React.useContext(globalStateContext);
   const [user] = userState;
-  const [userData, userDataLoading] = useUserData();
-  const [shop, setShop] = React.useState(null);
+  const [member, setMember] = React.useState(null);
 
   useEffect(() => {
-    if (userDataLoading) return;
-    if (!shopId) return;
-    const shop = userData.shops[shopId];
-    if (!shop) return;
-    setShop({ ...shop, id: shopId });
-    setTitle(shop.title);
-  }, [userData, shopId, userDataLoading, setTitle]);
+    if (!memberId) return;
+    const member = props.members.find((m) => m.id === memberId);
+    if (!member) return;
+    setMember(member);
+    setEmail(member.email);
+  }, [memberId, setEmail, props.members]);
 
   const [{ loading: loadingSave }, handleUpdate] = useAsyncFn(async () => {
-    await updateShop(shop, user, { title });
+    await update(member, user, { email });
     history.goBack();
-  }, [user, shop, history, title]);
+  }, [user, member, history, email]);
 
   const [{ loading: loadingAdd }, handleAdd] = useAsyncFn(async () => {
-    await addShop(user, title);
+    await add(user, email);
     history.goBack();
-  }, [user, shop, history, title]);
+  }, [user, member, history, email]);
 
   const [{ loading: loadingRemove }, handleRemove] = useAsyncFn(async () => {
-    await removeShop(shop, user);
+    await remove(member, user);
     history.goBack();
-  }, [shop, user]);
+  }, [member, user]);
 
   useEffect(() => {
     const buttons = {
       left: {
         icon: 'close',
-        action: () => history.push('/shops'),
+        action: () => history.push('/members'),
       },
-      right: [
+    };
+    if (member) {
+      buttons.menu = [{ title: 'Remove', action: handleRemove }];
+    } else {
+      buttons.right = [
         {
           title: 'Save',
-          action: shop ? handleUpdate : handleAdd,
+          action: member ? handleUpdate : handleAdd,
         },
-      ],
-    };
-    if (shop) {
-      buttons.menu = [{ title: 'Remove', action: handleRemove }];
+      ];
     }
     setHeader(buttons);
-  }, [handleUpdate, handleAdd, handleRemove, history, setHeader, shop]);
+  }, [handleUpdate, handleAdd, handleRemove, history, setHeader, member]);
 
   const handleTitleChange = (event) => {
     setTitleError(null);
     const newTitle = event.target.value;
-    setTitle(newTitle);
-    // const exists = userData.shops.find((p) => p.title === newTitle);
+    setEmail(newTitle);
+    // const exists = userData.shops.find((p) => p.email === newTitle);
     // exists && setTitleError('Already exists');
     newTitle.trim() === '' && setTitleError('Cannot be empty');
   };
 
-  if (userDataLoading || loadingSave || loadingAdd || loadingRemove) return <Loading />;
+  if (loadingSave || loadingAdd || loadingRemove) return <Loading />;
 
   return (
     <Grid container spacing={3}>
       <Grid item xs={12}>
         <TitleInput
-          title={title}
+          title={email}
           titleError={titleError}
           handleTitleChange={handleTitleChange}
           focusInput={globalActions.focusInput}
@@ -92,7 +90,7 @@ export const Shop = (props) => {
 const TitleInput = (props) => (
   <TextField
     value={props.title}
-    label="Shop"
+    label="Email"
     error={!!props.titleError}
     helperText={props.titleError}
     onChange={props.handleTitleChange}

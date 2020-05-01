@@ -6,7 +6,7 @@ import { Recipes } from 'recipe/Recipes';
 import { Header } from 'header/Header';
 import { Navigation } from 'bottomNavigation/BottomNavigation';
 import { Shops } from 'shop/Shops';
-import { AddMember } from 'addMember/AddMember';
+import { Members } from 'member/Members';
 import { globalStateContext } from 'app/GlobalStateContext';
 import { FirestoreProvider } from 'storage/FirestoreContext';
 
@@ -34,8 +34,8 @@ export const Content = () => {
           <Route path="/recipes">
             <Recipes />
           </Route>
-          <Route path="/add-member">
-            <AddMember />
+          <Route path="/members/:memberId?">
+            <Members />
           </Route>
           <Route path="/shops/:shopId?">
             <Shops />

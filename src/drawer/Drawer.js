@@ -30,13 +30,15 @@ export const Drawer = (props) => {
         <ListItem button>
           {user && (
             <ListItemText>
-              <Link to="/add-member">Add member</Link>
+              <Link to="/members">Members</Link>
             </ListItemText>
           )}
         </ListItem>
-        <ListItemText>
-          <Link to="/shops">Shops</Link>
-        </ListItemText>
+        <ListItem button>
+          <ListItemText>
+            <Link to="/shops">Shops</Link>
+          </ListItemText>
+        </ListItem>
         <Divider />
         <ListItem button>{user && <ListItemText primary="Logout" onClick={logout} />}</ListItem>
       </List>
