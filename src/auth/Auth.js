@@ -3,6 +3,7 @@ import { useAsyncFn } from 'react-use';
 import { useHistory } from 'react-router-dom';
 import { db, firebase } from 'storage/firebase';
 import { globalStateContext } from 'app/GlobalStateContext';
+import { createUserGroup } from 'user/userUtils';
 
 export const useLogin = () => {
   const { userState, drawerState } = React.useContext(globalStateContext);
@@ -29,16 +30,19 @@ export const useLogin = () => {
         return;
       }
       if (loggedUser.uid === user?.id) return;
-      const query = await db.collection('users').doc(loggedUser.uid).get();
+      const doc = await db.collection('users').doc(loggedUser.uid).get();
       let storedUser;
-      if (query.exists) {
-        storedUser = query.data();
+      if (doc.exists) {
+        storedUser = doc.data();
       } else {
         storedUser = {
           groupId: `group-${loggedUser.uid}`,
           originalGroupId: `group-${loggedUser.uid}`,
         };
-        await db.collection('users').doc(loggedUser.uid).set(storedUser);
+        await Promise.all([
+          db.collection('users').doc(loggedUser.uid).set(storedUser),
+          createUserGroup(storedUser),
+        ]);
       }
       setUser({
         ...storedUser,

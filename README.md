@@ -61,7 +61,8 @@ Hooks doc: https://github.com/csfrequency/react-firebase-hooks/tree/7eb49f1624d7
       "ingredientsOrder": ["product2", "product1"],
       "shops": {
         "shop1": {
-          "title": "Shop 1"
+          "title": "Shop 1",
+          "created": "datetime"
         }
       },
       "recipes": {

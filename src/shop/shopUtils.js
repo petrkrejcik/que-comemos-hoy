@@ -15,7 +15,7 @@ export const addShop = (user, title) => {
   return db.doc(`userGroups/${user.groupId}`).update({
     [`shops.${shopId}`]: {
       title: title,
-      insertDate: new Date(),
+      created: new Date(),
     },
   });
 };
