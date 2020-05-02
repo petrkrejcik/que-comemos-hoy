@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { AppBar, Menu, MenuItem, Button } from '@material-ui/core';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -10,9 +11,14 @@ import { globalStateContext } from 'app/GlobalStateContext';
 
 export const Header = () => {
   const classes = useStyles();
+  const location = useLocation();
   const { drawerState, globalState } = React.useContext(globalStateContext);
   const [menuAnchor, setMenuAnchor] = React.useState(null);
   const [, openDrawer] = drawerState;
+
+  React.useEffect(() => {
+    openDrawer(false)();
+  }, [location.pathname, openDrawer]);
 
   const handleMenuClick = (e) => {
     setMenuAnchor(e.currentTarget);
