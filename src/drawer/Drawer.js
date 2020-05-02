@@ -26,17 +26,28 @@ export const Drawer = (props) => {
       className={classes.root}
     >
       <List>
-        <ListItem>{user && <ListItemText>{user.email}</ListItemText>}</ListItem>
+        {user && (
+          <>
+            <ListItem>
+              <ListItemText>{user.email}</ListItemText>
+            </ListItem>
+            <Divider />
+          </>
+        )}
         <ListItem button>
           {user && (
             <ListItemText>
-              <Link to="/members">Members</Link>
+              <Link to="/members" style={{ textDecoration: 'none' }}>
+                Members
+              </Link>
             </ListItemText>
           )}
         </ListItem>
         <ListItem button>
           <ListItemText>
-            <Link to="/shops">Shops</Link>
+            <Link to="/shops" style={{ textDecoration: 'none' }}>
+              Shops
+            </Link>
           </ListItemText>
         </ListItem>
         <Divider />
