@@ -2,32 +2,80 @@
 
 v1.0
 
-- [ ] zavrit drawer po kliku
-- [ ] jak udelat manage shops - obecne crud
-- [ ] update, delete
-- [ ] loading roztahnout
-- [x] taby pro ingredience - buy/have/all
-- [ ] delete ingredient (kam?)
-- [x] homepage bude login screena
-- [x] homepage bude / ne /login
-- [x] presunout profil do draweru, protoze misto nej chci mit Add/Edit
-- [x] sdileni s jinym uzivatelem
-- [ ] persistent login?
-- [x] loader after login
-- [x] ingr date added
+- [ ] shops
+  - [x] CRUD
+  - [x] assign shop to product
+- [ ] frozen
+  - [ ] dva checkboxy pro availability - seru na to, moc by se to zkomplikovalo a "jenom" to resi dostupnost receptu
 
 v1.1
 
+- [ ] shops
+  - [ ] price per shop
+  - [ ] remove shop from product
+- [ ] delete ingredient (kam?)
 - [ ] namastit recepty + ingredience
 - [ ] odebrat recept id z ingredience
 - [ ] pocitadlo dostupnych ingredienci k receptu
 - [ ] fotka receptu
 - [ ] ingredients lazy load
 
-## Bugs
+## Typy produktu
 
-- input ingred se trochu chybe
-- update ingr neupdatne recept - mozna udelat subdotaz, abych nemusel ukladat recipes u ingr
+- Vysrat se na typy a mit to jako kategorie. Bude to jednodussi, kdyz chci koupit oba typy.
+- Typy
+  - Pan
+    - de maiz
+    - de semillas
+- Kategorie
+  - Pan de semillas #pan
+  - Pan de maiz #pan
+
+## Freezer
+
+- Jeden produkt muze byt v obou stavech
+- Bud je na seznamu ke koupi, nebo neni dostupny
+  - Uz nemam avokado, ale nechci ho koupit (v zime)
+- Musim byt schopny dat do listu, ze chci koupit but ten nebo ten stav
+  - Ne, protoze jsou to odlisny produkty
+- Neni to proste kategorie #frozen?
+  - neni, protoze muzu mit cast zmrazeno a cast ne
+
+### Flow zamrazeni vseho
+
+- Vyberu stav 'Frozen': 'Yes'
+- Ulozi se "availability": {"frozen": true}
+
+### Flow zamrazeni/rozmrazeni casti
+
+- Vyberu stav 'frozen': 'Both'
+- Ulozi se "availability": {"normal": true, "frozen": true}
+
+### Flow rozmrazeni
+
+- Vyberu stav 'frozen': 'No' / Klidnu na produkt v mrazaku
+- Ulozi se "availability": {"normal": true}
+
+Vse
+
+- pan
+- pan \*
+- merluza
+- merluza \*
+- merluza conjelada
+- merluza conjelada \*
+
+Koupit
+
+- pan
+- merluza
+- merluza conjelada
+
+Mrazak
+
+- pan \*
+- merluza \*
+- merluza conjelada \*
 
 Wishlist
 
@@ -48,14 +96,31 @@ Hooks doc: https://github.com/csfrequency/react-firebase-hooks/tree/7eb49f1624d7
       "ingredients": {
         "product1": {
           "title": "Product 1",
-          "available": true
+          "available": true,
+          "isOnShoppingList": false,
+          "lists": {
+            "shopping": true
+          },
+          "availability": {
+            "default": true,
+            "frozen": true
+          }
         },
         "product2": {
           "title": "Product 2",
           "available": false,
-          "shop": {
-            "shop1": true
-          }
+          "shop": "eroski",
+          "shop_": {
+            "shop1": {
+              "price": 1,
+              "selected": true
+            },
+            "shop2": {
+              "price": 1.2
+            }
+          },
+          "frozen_": "part",
+          "categories_": {}
         }
       },
       "ingredientsOrder": ["product2", "product1"],

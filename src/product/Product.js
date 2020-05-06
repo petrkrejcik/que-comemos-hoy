@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useAsyncFn } from 'react-use';
+import { useAsyncFn, useMap } from 'react-use';
 import { useHistory, Link } from 'react-router-dom';
 import {
   Button,
@@ -7,11 +7,22 @@ import {
   IconButton,
   Grid,
   InputLabel,
-  Select,
+  Select as SelectMui,
   MenuItem,
+  FormControlLabel,
+  Checkbox,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { updateIngredient, removeProduct } from './ingredientUtils';
+import {
+  updateIngredient,
+  removeProduct,
+  FROZEN_STATES,
+  isOnShoppingList,
+  toggleIsOnShoppingList,
+  setAvailability,
+  isFrozen,
+  isAvailable,
+} from './ingredientUtils';
 import { globalStateContext } from 'app/GlobalStateContext';
 import { Loading } from 'app/Loading';
 import { useHeader } from 'header/headerUtils';
@@ -23,23 +34,22 @@ export const Product = (props) => {
   const setHeader = useHeader(props.active);
   const { productId, products } = props;
   const product = products.find((p) => p.id === productId);
-  const [title, setTitle] = React.useState('');
   const [titleError, setTitleError] = React.useState(null);
   const { userState, globalActions } = React.useContext(globalStateContext);
   const [user] = userState;
-  const [shop, setShop] = React.useState('');
   const [userData] = useUserData();
+  const [productMap, { set, setAll, remove, reset }] = useMap(null);
 
   useEffect(() => {
     if (!product) return;
-    setTitle(product.title);
-    setShop(product.shop || '');
-  }, [product]);
+    setAll(product);
+  }, [product, setAll]);
 
   const [{ loading }, handleSave] = useAsyncFn(async () => {
-    await updateIngredient(product, user, { title, shop });
+    const { id, insertDate, ...updated } = productMap;
+    await updateIngredient(product, user, updated);
     history.goBack();
-  }, [product, user, title, shop, history]);
+  }, [productMap, user, history]);
 
   const [{ loading: removeLoading }, handleRemove] = useAsyncFn(async () => {
     await removeProduct(product.id, user);
@@ -65,12 +75,13 @@ export const Product = (props) => {
   const handleTitleChange = (event) => {
     setTitleError(null);
     const newTitle = event.target.value;
-    setTitle(newTitle);
+    set('title', newTitle);
     const exists = products.find((p) => p.title === newTitle);
     exists && setTitleError('Already exists');
     newTitle.trim() === '' && setTitleError('Cannot be empty');
   };
 
+  if (!productMap) return null;
   if ((loading, removeLoading)) return <Loading />;
   const shops = shops2Array(userData?.shops || {});
 
@@ -78,14 +89,40 @@ export const Product = (props) => {
     <Grid container spacing={3}>
       <Grid item xs={12}>
         <TitleInput
-          title={title}
+          title={productMap.title}
           titleError={titleError}
           handleTitleChange={handleTitleChange}
           focusInput={globalActions.focusInput}
         />
       </Grid>
       <Grid item xs={12}>
-        <SelectShop value={shop} options={shops} handleChange={setShop} productId={productId} />
+        <Select
+          label={'Shop'}
+          value={productMap.shop || ''}
+          options={shops}
+          handleChange={(value) => set('shop', value)}
+          productId={productId}
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <Select
+          label={'Frozen'}
+          value={getFrozenValue(productMap)}
+          options={frozenOptions}
+          handleChange={(value) => setAll(setAvailability(productMap, value))}
+          productId={productId}
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={isOnShoppingList(true)(productMap)}
+              onChange={() => setAll(toggleIsOnShoppingList(productMap))}
+            />
+          }
+          label="On shopping list"
+        />
       </Grid>
     </Grid>
   );
@@ -94,7 +131,7 @@ export const Product = (props) => {
 const TitleInput = (props) => (
   <TextField
     value={props.title}
-    label="Product"
+    label="Product title"
     error={!!props.titleError}
     helperText={props.titleError}
     onChange={props.handleTitleChange}
@@ -104,11 +141,11 @@ const TitleInput = (props) => (
   />
 );
 
-const SelectShop = (props) => (
+const Select = (props) => (
   <Grid container alignItems="center" justify="space-between">
     <Grid item xs={7}>
-      <InputLabel id="demo-simple-select-label">Shop</InputLabel>
-      <Select
+      <InputLabel id="demo-simple-select-label">{props.label}</InputLabel>
+      <SelectMui
         labelId="demo-simple-select-label"
         id="demo-simple-select"
         fullWidth
@@ -116,11 +153,11 @@ const SelectShop = (props) => (
         onChange={(e) => props.handleChange(e.target.value)}
       >
         {props.options.map((option) => (
-          <MenuItem value={option.id} key={option.id}>
+          <MenuItem value={option.id || option.value} key={option.id || option.value}>
             {option.title}
           </MenuItem>
         ))}
-      </Select>
+      </SelectMui>
     </Grid>
     {/* <Grid item>
       <Link to={`/products/${props.productId}/shops`} style={{ textDecoration: 'none' }}>
@@ -131,3 +168,27 @@ const SelectShop = (props) => (
 );
 
 const useStyles = makeStyles({});
+
+const getFrozenValue = (product) => {
+  const frozen = isFrozen(product);
+  return frozen
+    ? isAvailable(product)
+      ? FROZEN_STATES.both
+      : FROZEN_STATES.yes
+    : FROZEN_STATES.no;
+};
+
+const frozenOptions = [
+  {
+    title: 'No',
+    value: FROZEN_STATES.no,
+  },
+  {
+    title: 'Yes',
+    value: FROZEN_STATES.yes,
+  },
+  {
+    title: 'Both',
+    value: FROZEN_STATES.both,
+  },
+];

@@ -33,7 +33,8 @@ export const addIngredient = async (title, user) => {
   if (title.trim() === '') return;
   await db.collection(`userGroups/${user.groupId}/ingredients`).add({
     title: title,
-    available: false,
+    lists: { [LISTS.shopping]: true },
+    availability: {},
     insertDate: new Date(),
   });
 };
@@ -48,4 +49,47 @@ export const validateIngredient = (ingredient, ingredients) => {
     return false;
   }
   return true;
+};
+
+export const FROZEN_STATES = {
+  no: false,
+  yes: true,
+  both: 'both',
+};
+
+export const LISTS = {
+  shopping: 'shopping',
+};
+
+export const AVAILABILITY = {
+  default: 'default',
+  frozen: 'frozen',
+};
+
+export const isOnShoppingList = (isPresent) => (product) =>
+  isPresent ? !!product.lists[LISTS.shopping] : !product.lists[LISTS.shopping];
+
+export const isFrozen = (product) => !!product.availability[AVAILABILITY.frozen];
+export const isAvailable = (product) => !!product.availability[AVAILABILITY.default];
+
+export const toggleIsOnShoppingList = (product) => {
+  const copyProduct = { ...product };
+  if (isOnShoppingList(true)(copyProduct)) {
+    delete copyProduct.lists[LISTS.shopping];
+  } else {
+    copyProduct.lists[LISTS.shopping] = true;
+  }
+  return copyProduct;
+};
+
+export const setAvailability = (product, value) => {
+  const copyProduct = { ...product };
+  if (value === FROZEN_STATES.no) {
+    copyProduct.availability = {};
+  } else if (value === FROZEN_STATES.yes) {
+    copyProduct.availability = { [AVAILABILITY.frozen]: true };
+  } else {
+    copyProduct.availability = { [AVAILABILITY.default]: true, [AVAILABILITY.frozen]: true };
+  }
+  return copyProduct;
 };

@@ -20,6 +20,7 @@ import { ProductList } from './ProductList';
 import { useProducts } from 'product/productUtils';
 import { AddNew } from './ProductListAddNew';
 import { Product } from './Product';
+import { isOnShoppingList } from './ingredientUtils';
 
 const PAGES = {
   list: 0,
@@ -48,20 +49,20 @@ export const Products = () => {
     return PAGES.product;
   };
 
-  const available = ingredients && ingredients.filter(({ available }) => available);
+  const notOnShoppingList = ingredients && ingredients.filter(isOnShoppingList(false));
 
   return (
     <Swipeable index={getIndex()}>
       <Container index={PAGES.list}>
         <Box ml={-1}>
           <ProductList
-            ingredients={ingredients.filter(({ available }) => !available)}
+            ingredients={ingredients.filter(isOnShoppingList(true))}
             active={getIndex() === PAGES.list}
             showShops
           />
           <AddNew ingredients={ingredients} />
           <Divider />
-          {available.length > 0 && (
+          {notOnShoppingList.length > 0 && (
             <ExpansionPanel elevation={0} style={{ width: '100%' }}>
               <ExpansionPanelSummary className={classes.summary}>
                 <Grid container alignItems="center">
@@ -71,12 +72,12 @@ export const Products = () => {
                     </IconButton>
                   </Grid>
                   <Grid item xs={10}>
-                    <Box pl={'8px'}>{available.length} products stocked</Box>
+                    <Box pl={'8px'}>{notOnShoppingList.length} products not on shopping list</Box>
                   </Grid>
                 </Grid>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails className={classes.expansionPanelDetails}>
-                <ProductList ingredients={available} active={getIndex() === PAGES.list} />
+                <ProductList ingredients={notOnShoppingList} active={getIndex() === PAGES.list} />
               </ExpansionPanelDetails>
             </ExpansionPanel>
           )}

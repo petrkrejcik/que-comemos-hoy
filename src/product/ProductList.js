@@ -4,7 +4,7 @@ import { useLongPress } from 'react-use';
 import { Checkbox, Grid, Box, Chip, Button, Typography, List } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useSnackbar } from 'snackbar/Snackbar';
-import { updateIngredient } from './ingredientUtils';
+import { updateIngredient, isOnShoppingList, toggleIsOnShoppingList } from './ingredientUtils';
 import { globalStateContext } from 'app/GlobalStateContext';
 import { useHeader } from 'header/headerUtils';
 import { useUserData } from 'user/userUtils';
@@ -28,7 +28,8 @@ export const ProductList = (props) => {
   }, [setHeader]);
 
   const handleChecked = (ingredient) => () => {
-    updateIngredient(ingredient, user, { available: !ingredient.available });
+    const updated = toggleIsOnShoppingList(ingredient);
+    updateIngredient(ingredient, user, updated);
     showSnackbar({ message: 'Saved' });
   };
 
@@ -44,7 +45,10 @@ export const ProductList = (props) => {
         {props.ingredients.map((product) => (
           <Grid container alignItems="center" key={product.id} width={1}>
             <Grid item>
-              <Checkbox checked={product.available} onChange={handleChecked(product)} />
+              <Checkbox
+                checked={!isOnShoppingList(true)(product)}
+                onChange={handleChecked(product)}
+              />
             </Grid>
             <Grid item xs={7}>
               <Button onClick={handleProductClick(product)} classes={classes} width={1}>

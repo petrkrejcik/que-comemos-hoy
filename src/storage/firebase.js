@@ -31,10 +31,13 @@ export const useColData = (query, options) => {
         if (options.idField) {
           docData[options.idField] = doc.id;
         }
+        if (options.extend) {
+          Object.assign(docData, options.extend(docData));
+        }
         return docData;
       })
     );
-  }, [value, options.idField]);
+  }, [value, options]);
 
   return [data, loading, error];
 };
@@ -51,8 +54,11 @@ export const useDocData = (query, options) => {
     if (options.idField) {
       docData[options.idField] = value.id;
     }
+    if (options.extend) {
+      Object.assign(docData, options.extend(docData));
+    }
     setData(docData);
-  }, [value, options.idField]);
+  }, [value, options]);
 
   const loading = !data && !error;
 
