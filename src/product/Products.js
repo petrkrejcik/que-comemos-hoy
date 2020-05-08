@@ -1,41 +1,24 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import {
-  Container,
-  IconButton,
-  List,
-  ListItem,
-  Grid,
-  Box,
-  ExpansionPanel as MuiExpansionPanel,
-  ExpansionPanelSummary as MuiExpansionPanelSummary,
-  ExpansionPanelDetails,
-  Divider,
-} from '@material-ui/core';
-import { ChevronRight } from '@material-ui/icons';
+import { Container, List, ListItem, Grid } from '@material-ui/core';
 import Skeleton from '@material-ui/lab/Skeleton';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import { Swipeable } from 'app/Swipeable';
-import { ProductList } from './ProductList';
-import { useProducts } from 'product/productUtils';
-import { AddNew } from './ProductListAddNew';
-import { Product } from './Product';
-import { isOnShoppingList } from './ingredientUtils';
+import { ShoppingList } from 'product/ShoppingList';
+import { FrozenList } from 'product/FrozenList';
+import { Product } from 'product/Product';
+import { isOnShoppingList, useProducts, SECTIONS } from 'product/productUtils';
 
 const PAGES = {
   list: 0,
   product: 1,
+  frozen: 2,
 };
 
 export const Products = () => {
-  const { productId } = useParams();
-  const classes = useStyles();
+  const { section, productId } = useParams();
+  // const classes = useStyles();
   const [ingredients, loading, error] = useProducts();
-
-  //   const deleteIngredient = (ingredient) => {
-  //     updateIngredient(ingredient, 'delete');
-  //     handleIngredientEdit(null);
-  //   };
 
   if (error) {
     console.log('🛎 ', 'errorrr', error);
@@ -45,50 +28,26 @@ export const Products = () => {
   if (loading) return LoadingComponent;
 
   const getIndex = () => {
-    if (!productId) return PAGES.list;
-    return PAGES.product;
+    if (productId) return PAGES.product;
+    if (section === SECTIONS.frozen) return PAGES.frozen;
+    return PAGES.list;
   };
 
   const notOnShoppingList = ingredients && ingredients.filter(isOnShoppingList(false));
 
   return (
     <Swipeable index={getIndex()}>
-      <Container index={PAGES.list}>
-        <Box ml={-1}>
-          <ProductList
-            ingredients={ingredients.filter(isOnShoppingList(true))}
-            active={getIndex() === PAGES.list}
-            showShops
-          />
-          <AddNew ingredients={ingredients} />
-          <Divider />
-          {notOnShoppingList.length > 0 && (
-            <ExpansionPanel elevation={0} style={{ width: '100%' }}>
-              <ExpansionPanelSummary className={classes.summary}>
-                <Grid container alignItems="center">
-                  <Grid item>
-                    <IconButton style={{ padding: 9 }}>
-                      <ChevronRight />
-                    </IconButton>
-                  </Grid>
-                  <Grid item xs={10}>
-                    <Box pl={'8px'}>{notOnShoppingList.length} products not on shopping list</Box>
-                  </Grid>
-                </Grid>
-              </ExpansionPanelSummary>
-              <ExpansionPanelDetails className={classes.expansionPanelDetails}>
-                <ProductList ingredients={notOnShoppingList} active={getIndex() === PAGES.list} />
-              </ExpansionPanelDetails>
-            </ExpansionPanel>
-          )}
-        </Box>
-      </Container>
-      <Container index={PAGES.product}>
-        <Product
-          products={ingredients}
-          productId={productId}
-          active={getIndex() === PAGES.product}
+      <Container>
+        <ShoppingList
+          topProducts={ingredients.filter(isOnShoppingList(true))}
+          bottomProducts={notOnShoppingList}
         />
+      </Container>
+      <Container>
+        <Product productId={productId} active={getIndex() === PAGES.product} />
+      </Container>
+      <Container>
+        <FrozenList />
       </Container>
     </Swipeable>
   );
@@ -108,7 +67,7 @@ const Loading = () => (
   <Grid container justify="center">
     <Grid item xs={11}>
       <List>
-        {[...Array(10)].map((i) => (
+        {[...Array(10)].map((_, i) => (
           <ListItem key={i}>
             <SkeletonCheckbox />
             <SkeletonText />
@@ -122,46 +81,7 @@ const Loading = () => (
 const LoadingComponent = <Loading />;
 
 const useStyles = makeStyles({
-  root: {
-    position: 'fixed',
-  },
   rect: {
     marginRight: 8,
   },
-  expansionPanelDetails: {
-    padding: 0,
-  },
-  summary: { padding: 0 },
 });
-
-const ExpansionPanel = withStyles({
-  root: {
-    boxShadow: 'none',
-    '&:not(:last-child)': {
-      borderBottom: 0,
-    },
-    '&:before': {
-      display: 'none',
-    },
-    '&$expanded': {
-      margin: 'auto',
-    },
-  },
-  expanded: {},
-})(MuiExpansionPanel);
-
-const ExpansionPanelSummary = withStyles({
-  root: {
-    marginBottom: -1,
-    minHeight: 56,
-    '&$expanded': {
-      minHeight: 56,
-    },
-  },
-  content: {
-    '&$expanded': {
-      margin: '12px 0',
-    },
-  },
-  expanded: {},
-})(MuiExpansionPanelSummary);

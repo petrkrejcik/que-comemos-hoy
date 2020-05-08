@@ -13,6 +13,9 @@ v1.1
 - [ ] shops
   - [ ] price per shop
   - [ ] remove shop from product
+- [ ] immer.js
+  - pouzit, abych nepreukladal cely objekt productu
+  - pouzit hook misto useMap?
 - [ ] delete ingredient (kam?)
 - [ ] namastit recepty + ingredience
 - [ ] odebrat recept id z ingredience

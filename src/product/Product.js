@@ -22,7 +22,8 @@ import {
   setAvailability,
   isFrozen,
   isAvailable,
-} from './ingredientUtils';
+  useProducts,
+} from './productUtils';
 import { globalStateContext } from 'app/GlobalStateContext';
 import { Loading } from 'app/Loading';
 import { useHeader } from 'header/headerUtils';
@@ -32,13 +33,14 @@ export const Product = (props) => {
   const history = useHistory();
   // const classes = useStyles();
   const setHeader = useHeader(props.active);
-  const { productId, products } = props;
+  const [products] = useProducts();
+  const { productId } = props;
   const product = products.find((p) => p.id === productId);
   const [titleError, setTitleError] = React.useState(null);
   const { userState, globalActions } = React.useContext(globalStateContext);
   const [user] = userState;
   const [userData] = useUserData();
-  const [productMap, { set, setAll, remove, reset }] = useMap(null);
+  const [productMap, { set, setAll }] = useMap(null);
 
   useEffect(() => {
     if (!product) return;

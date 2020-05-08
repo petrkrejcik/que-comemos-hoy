@@ -2,11 +2,19 @@ import React from 'react';
 import { TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import { makeStyles } from '@material-ui/core/styles';
-import { updateIngredient, addIngredient, validateIngredient } from './ingredientUtils';
+import {
+  updateIngredient,
+  addIngredient,
+  validateIngredient,
+  useProducts,
+  isOnShoppingList,
+  toggleIsOnShoppingList,
+} from './productUtils';
 import { globalStateContext } from 'app/GlobalStateContext';
 
 export const ProductAutocomplete = (props) => {
   const classes = useStyles();
+  const [products] = useProducts();
   const [title, setTitle] = React.useState(props.edit?.title || '');
   const { userState, globalActions } = React.useContext(globalStateContext);
   const [user] = userState;
@@ -18,7 +26,7 @@ export const ProductAutocomplete = (props) => {
   };
 
   const handleConfirmNew = async () => {
-    if (!validateIngredient(title, props.ingredients)) return;
+    if (!validateIngredient(title, products)) return;
     if (props.edit) {
       updateIngredient(props.edit, user, { title });
     } else {
@@ -27,10 +35,11 @@ export const ProductAutocomplete = (props) => {
     clearInput();
   };
 
-  const handleAutocompleteSelect = (event, ingredient, reason) => {
+  const handleAutocompleteSelect = (event, product, reason) => {
     if (reason !== 'select-option') return;
-    if (!validateIngredient(ingredient, props.ingredients)) return;
-    updateIngredient(ingredient, user, { available: false });
+    if (!validateIngredient(product, products)) return;
+    const updated = toggleIsOnShoppingList(product);
+    updateIngredient(product, user, updated);
     clearInput();
   };
 
@@ -55,7 +64,7 @@ export const ProductAutocomplete = (props) => {
       clearOnEscape
       inputValue={title}
       classes={classes}
-      options={props.ingredients.filter(({ available }) => available)}
+      options={products.filter(isOnShoppingList(false))}
       getOptionLabel={(option) => option.title || option}
       onInputChange={handleType}
       onChange={handleAutocompleteSelect}

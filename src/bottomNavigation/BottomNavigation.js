@@ -3,8 +3,7 @@ import { Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
-import RestoreIcon from '@material-ui/icons/Restore';
-import FavoriteIcon from '@material-ui/icons/Favorite';
+import { AcUnit, ShoppingCart } from '@material-ui/icons';
 import { useHistory, useLocation } from 'react-router-dom';
 import { globalStateContext } from 'app/GlobalStateContext';
 
@@ -53,13 +52,13 @@ const useStyles = makeStyles({
 const pages = [
   {
     label: 'Shopping list',
-    route: '/products',
-    icon: RestoreIcon,
+    route: '/products/shopping-list',
+    icon: ShoppingCart,
   },
   {
-    label: 'Recipes',
-    route: '/recipes',
-    icon: FavoriteIcon,
+    label: 'Frozen',
+    route: '/products/frozen',
+    icon: AcUnit,
   },
   // {
   //   label: 'Schedule',

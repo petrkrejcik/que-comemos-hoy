@@ -12,6 +12,7 @@
     "@testing-library/user-event": "^10.1.0",
     "firebase": "^7.14.2",
     "gh-pages": "^2.2.0",
+    "immer": "^6.0.5",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-firebase-hooks": "^2.1.1",
