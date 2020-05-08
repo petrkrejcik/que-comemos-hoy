@@ -2,7 +2,6 @@ import React from 'react';
 import { db, useColData, useDocData } from 'storage/firebase';
 import { useMap } from 'react-use';
 import { globalStateContext } from 'app/GlobalStateContext';
-import { LISTS } from 'product/productUtils';
 
 export const firestoreContext = React.createContext();
 

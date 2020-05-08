@@ -35,6 +35,8 @@ export const ToggleList = (props) => {
           products={props.topProducts}
           isChecked={props.isChecked}
           handleChecked={props.handleChecked}
+          shopChip={!!props.topProductsShopChip}
+          icon={props.topProductsIcon}
         />
       </Box>
       {props.addNew && <AddNew />}

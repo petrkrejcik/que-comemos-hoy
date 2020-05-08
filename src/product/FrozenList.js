@@ -1,7 +1,9 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
+import { AcUnit } from '@material-ui/icons';
 import { useSnackbar } from 'snackbar/Snackbar';
 import { ToggleList } from 'product/ToggleList';
+import { useHeader } from 'header/headerUtils';
 import {
   isFrozen,
   toggleIsFrozen,
@@ -12,11 +14,17 @@ import {
 import { globalStateContext } from 'app/GlobalStateContext';
 
 export const FrozenList = () => {
-  const { section } = useParams();
+  const { section, productId } = useParams();
   const [products] = useProducts();
   const showSnackbar = useSnackbar();
+  const isActive = section === SECTIONS.frozen && !productId;
+  const setHeader = useHeader(isActive);
   const { userState } = React.useContext(globalStateContext);
   const [user] = userState;
+
+  React.useEffect(() => {
+    setHeader({});
+  }, [setHeader]);
 
   const handleChecked = (product) => () => {
     const updated = toggleIsFrozen(product);
@@ -27,8 +35,9 @@ export const FrozenList = () => {
   return (
     <ToggleList
       topProducts={products.filter((product) => isFrozen(product))}
+      topProductsIcon={AcUnit}
       bottomProducts={products.filter((product) => !isFrozen(product))}
-      active={section === SECTIONS.frozen}
+      active={isActive}
       expansionPanelTitle="products not frozen"
       handleChecked={handleChecked}
       isChecked={isFrozen}

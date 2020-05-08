@@ -2,6 +2,7 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useSnackbar } from 'snackbar/Snackbar';
 import { ToggleList } from 'product/ToggleList';
+import { useHeader } from 'header/headerUtils';
 import {
   isOnShoppingList,
   toggleIsOnShoppingList,
@@ -11,10 +12,16 @@ import {
 import { globalStateContext } from 'app/GlobalStateContext';
 
 export const ShoppingList = (props) => {
-  const { section } = useParams();
+  const { section, productId } = useParams();
   const showSnackbar = useSnackbar();
   const { userState } = React.useContext(globalStateContext);
   const [user] = userState;
+  const isActive = section === SECTIONS.shoppingList && !productId;
+  const setHeader = useHeader(isActive);
+
+  React.useEffect(() => {
+    setHeader({});
+  }, [setHeader]);
 
   const handleChecked = (product) => () => {
     const updated = toggleIsOnShoppingList(product);
@@ -25,8 +32,9 @@ export const ShoppingList = (props) => {
   return (
     <ToggleList
       topProducts={props.topProducts}
+      topProductsShopChip
       bottomProducts={props.bottomProducts}
-      active={section === SECTIONS.shoppingList}
+      active={isActive}
       expansionPanelTitle="products available"
       handleChecked={handleChecked}
       isChecked={isOnShoppingList(false)}

@@ -30,11 +30,8 @@ export const ProductList = (props) => {
           </Grid>
           <Grid item container xs={3} justify="flex-end">
             <Grid item>
-              {product.shop && shops[product.shop] ? (
-                <Chip label={shops[product.shop].title} />
-              ) : (
-                <span>&nbsp;</span>
-              )}
+              {props.shopChip && <ShopChip product={product} shops={shops} />}
+              {props.icon && <props.icon />}
             </Grid>
           </Grid>
         </Grid>
@@ -42,6 +39,13 @@ export const ProductList = (props) => {
     </List>
   );
 };
+
+export const ShopChip = (props) =>
+  props.product.shop && props.shops[props.product.shop] ? (
+    <Chip label={props.shops[props.product.shop].title} />
+  ) : (
+    <span>&nbsp;</span>
+  );
 
 const useStyles = makeStyles({
   label: {
