@@ -1,13 +1,5 @@
 import React from 'react';
-import {
-  Button,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemSecondaryAction,
-  IconButton,
-} from '@material-ui/core';
-import { Edit } from '@material-ui/icons';
+import { Button, List, ListItem, ListItemText } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
 
@@ -25,10 +17,6 @@ export const MembersList = (props) => {
     setHeader({});
   }, [setHeader]);
 
-  const handleRemove = (shop) => () => {
-    console.log('🛎 ', 'edit', shop);
-  };
-
   return (
     <>
       <List disablePadding>
@@ -43,11 +31,6 @@ export const MembersList = (props) => {
                   </Button>
                 </Link>
               </ListItemText>
-              <ListItemSecondaryAction>
-                <IconButton onClick={handleRemove(member)} aria-label="remove">
-                  <Edit />
-                </IconButton>
-              </ListItemSecondaryAction>
             </ListItem>
           ))}
       </List>

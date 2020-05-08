@@ -20,7 +20,7 @@ export const AddNew = (props) => {
       </Grid>
     </Grid>
   ) : (
-    <AddNewButton onClick={() => setIsAdding(true)}>Add ingredient</AddNewButton>
+    <AddNewButton onClick={() => setIsAdding(true)}>Add product</AddNewButton>
   );
 };
 

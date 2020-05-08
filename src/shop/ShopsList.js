@@ -1,13 +1,5 @@
 import React from 'react';
-import {
-  Button,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemSecondaryAction,
-  IconButton,
-} from '@material-ui/core';
-import { Edit } from '@material-ui/icons';
+import { Button, List, ListItem, ListItemText } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
 import { AddNewButton } from 'product/ProductListAddNew';
@@ -23,10 +15,6 @@ export const ShopsList = (props) => {
   React.useEffect(() => {
     setHeader({});
   }, [setHeader]);
-
-  const handleRemove = (shop) => () => {
-    console.log('🛎 ', 'edit', shop);
-  };
 
   if (userDataLoading) return <Loading />;
 
@@ -44,11 +32,6 @@ export const ShopsList = (props) => {
                 </Button>
               </Link>
             </ListItemText>
-            <ListItemSecondaryAction>
-              <IconButton onClick={handleRemove(shop)} aria-label="remove">
-                <Edit />
-              </IconButton>
-            </ListItemSecondaryAction>
           </ListItem>
         ))}
       </List>

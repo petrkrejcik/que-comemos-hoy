@@ -14,6 +14,10 @@ const PAGES = {
   detail: 1,
 };
 
+const options = {
+  idField: 'id',
+};
+
 export const Members = (props) => {
   // const classes = useStyles();
   const { memberId } = useParams();
@@ -22,9 +26,7 @@ export const Members = (props) => {
   const [user] = userState;
 
   const query = db.collection(`users`).where('groupId', '==', user.groupId);
-  const [members, loading, error] = useColData(query, {
-    idField: 'id',
-  });
+  const [members, loading, error] = useColData(query, options);
 
   if (loading) return <Loading />;
   if (error) return 'error loading users';
@@ -38,10 +40,10 @@ export const Members = (props) => {
   return (
     <Box width={1}>
       <Swipeable index={getIndex()}>
-        <Container index={PAGES.list}>
+        <Container>
           <MembersList members={members} active={getIndex() === PAGES.list} />
         </Container>
-        <Container index={PAGES.detail}>
+        <Container>
           <Member members={members} active={getIndex() === PAGES.detail} />
         </Container>
       </Swipeable>

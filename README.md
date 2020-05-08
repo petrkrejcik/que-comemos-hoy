@@ -11,8 +11,10 @@ v1.0
 v1.1
 
 - [ ] shops
+  - [ ] sort by shop
   - [ ] price per shop
   - [ ] remove shop from product
+- [ ] Remove bottom nav when in other page than products
 - [ ] immer.js
   - pouzit, abych nepreukladal cely objekt productu
   - pouzit hook misto useMap?
