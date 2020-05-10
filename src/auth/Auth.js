@@ -52,7 +52,7 @@ export const useLogin = () => {
         photoURL: loggedUser.photoURL,
       });
       openDrawer(false)();
-      history.push('/');
+      history.push('/products/shopping-list');
     });
   }, [setUser, history, openDrawer, user]);
 
