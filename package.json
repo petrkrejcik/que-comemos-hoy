@@ -1,7 +1,7 @@
 {
   "name": "que-comemos-hoy",
   "version": "0.1.2",
-  "homepage": ".",
+  "homepage": "",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.9.12",
