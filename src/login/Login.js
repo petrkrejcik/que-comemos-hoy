@@ -8,6 +8,7 @@ import { globalStateContext } from 'app/GlobalStateContext';
 import { Loading } from 'app/Loading';
 
 export const Login = () => {
+  console.log('🛎 ', 'Login');
   const classes = useStyles();
   const [loginState, login] = useLogin();
   const { userState } = React.useContext(globalStateContext);
@@ -17,6 +18,7 @@ export const Login = () => {
   const handleCloseError = () => setErrorOpen(false);
 
   if (user) {
+    console.log('🛎 ', 'Login redirect');
     return <Redirect to="/products/shopping-list" />;
   }
 

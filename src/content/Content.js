@@ -13,6 +13,7 @@ import { FirestoreProvider } from 'storage/FirestoreContext';
 export const Content = () => {
   const { userState } = React.useContext(globalStateContext);
   const [user] = userState;
+  console.log('🛎 ', 'Content');
 
   if (!user) {
     return (

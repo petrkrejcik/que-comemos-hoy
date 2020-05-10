@@ -24,6 +24,7 @@ export const useLogin = () => {
   }, []);
 
   useEffect(() => {
+    console.log('🛎 ', 'Auth useEffect');
     firebase.auth().onAuthStateChanged(async (loggedUser) => {
       if (!loggedUser) {
         setUser(null);
@@ -52,6 +53,7 @@ export const useLogin = () => {
         photoURL: loggedUser.photoURL,
       });
       openDrawer(false)();
+      console.log('🛎 ', 'Auth useEffect fin');
       history.push('/products/shopping-list');
     });
   }, [setUser, history, openDrawer, user]);

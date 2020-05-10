@@ -16,6 +16,7 @@ const PAGES = {
 };
 
 export const Products = () => {
+  console.log('🛎 ', 'Products');
   const { section, productId } = useParams();
   // const classes = useStyles();
   const [ingredients, loading, error] = useProducts();

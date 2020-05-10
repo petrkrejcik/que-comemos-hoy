@@ -8,6 +8,7 @@ import { Content } from 'content/Content';
 import { ErrorBoundary } from 'app/ErrorBoundary';
 
 function App() {
+  console.log('🛎 ', 'App');
   return (
     <ErrorBoundary>
       <GlobalStateProvider>
