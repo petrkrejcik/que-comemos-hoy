@@ -17,7 +17,7 @@ export const Login = () => {
   const handleCloseError = () => setErrorOpen(false);
 
   if (user) {
-    return <Redirect to="/products" />;
+    return <Redirect to="/products/shopping-list" />;
   }
 
   return (
