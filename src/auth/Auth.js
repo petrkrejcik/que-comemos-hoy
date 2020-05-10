@@ -10,6 +10,7 @@ export const useLogin = () => {
   const [user, setUser] = userState;
   const [, openDrawer] = drawerState;
   const history = useHistory();
+  const [userListener, setUserListener] = React.useState(false);
   const login = useAsyncFn(() => {
     const provider = new firebase.auth.GoogleAuthProvider();
     return new Promise(async (resolve, reject) => {
@@ -25,7 +26,10 @@ export const useLogin = () => {
 
   useEffect(() => {
     console.log('🛎 ', 'Auth useEffect');
+    if (userListener) console.log('🛎 ', 'uz mam listener');
+    if (userListener) return;
     firebase.auth().onAuthStateChanged(async (loggedUser) => {
+      console.log('🛎 ', 'onAuthStateChanged', loggedUser);
       if (!loggedUser) {
         console.log('🛎 ', '!loggedUser');
         setUser(null);
@@ -65,6 +69,7 @@ export const useLogin = () => {
       console.log('🛎 ', 'Auth useEffect fin');
       history.push('/products/shopping-list');
     });
+    setUserListener(true);
   }, [setUser, history, openDrawer, user]);
 
   return login;

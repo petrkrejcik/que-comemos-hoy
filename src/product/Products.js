@@ -26,9 +26,6 @@ export const Products = () => {
     return null;
   }
 
-  if (loading) {
-    console.log('🛎 ', 'loading...', LoadingComponent);
-  }
   if (loading) return 'loading...';
   // if (loading) return LoadingComponent;
 
