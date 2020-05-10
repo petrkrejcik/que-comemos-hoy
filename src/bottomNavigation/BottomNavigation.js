@@ -23,21 +23,21 @@ export const Navigation = () => {
   if (!globalState.bottomNavigationVisible) return null;
 
   return (
-    <Paper variant="outlined">
-      <BottomNavigation
-        value={value}
-        onChange={(event, newValue) => {
-          const route = pages[newValue].route;
-          history.push(route);
-        }}
-        showLabels
-        className={classes.root}
-      >
-        {pages.map((page) => (
-          <BottomNavigationAction label={page.label} icon={<page.icon />} key={page.route} />
-        ))}
-      </BottomNavigation>
-    </Paper>
+    // <Paper variant="outlined">
+    <BottomNavigation
+      value={value}
+      onChange={(event, newValue) => {
+        const route = pages[newValue].route;
+        history.push(route);
+      }}
+      showLabels
+      className={classes.root}
+    >
+      {pages.map((page) => (
+        <BottomNavigationAction label={page.label} icon={<page.icon />} key={page.route} />
+      ))}
+    </BottomNavigation>
+    // </Paper>
   );
 };
 
@@ -46,6 +46,7 @@ const useStyles = makeStyles({
     bottom: 0,
     position: 'fixed',
     width: '100%',
+    height: 56,
   },
 });
 
