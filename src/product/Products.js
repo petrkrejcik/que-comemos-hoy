@@ -29,7 +29,8 @@ export const Products = () => {
   if (loading) {
     console.log('🛎 ', 'loading...', LoadingComponent);
   }
-  if (loading) return LoadingComponent;
+  if (loading) return 'loading...';
+  // if (loading) return LoadingComponent;
 
   const getIndex = () => {
     if (productId) return PAGES.product;
