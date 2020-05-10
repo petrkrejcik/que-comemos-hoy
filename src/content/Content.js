@@ -26,8 +26,8 @@ export const Content = () => {
   return (
     <FirestoreProvider>
       <Header />
-      <Switch>
-        <Box mt={2} style={{ height: 'calc(100% - (56px + 56px + 16px + 3px))' }}>
+      <Box mt={2} style={{ height: 'calc(100% - (56px + 56px + 16px + 3px))' }}>
+        <Switch>
           <Route path="/products">
             <Switch>
               <Route path="/products/:section/:productId?">
@@ -45,9 +45,9 @@ export const Content = () => {
           <Route path="/shops/:shopId?">
             <Shops />
           </Route>
-        </Box>
-        <Redirect to="/products/shopping-list" />
-      </Switch>
+          <Redirect to="/products/shopping-list" />
+        </Switch>
+      </Box>
       <Navigation />
     </FirestoreProvider>
   );
