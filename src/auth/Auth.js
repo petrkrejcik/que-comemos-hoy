@@ -27,6 +27,7 @@ export const useLogin = () => {
     console.log('🛎 ', 'Auth useEffect');
     firebase.auth().onAuthStateChanged(async (loggedUser) => {
       if (!loggedUser) {
+        console.log('🛎 ', '!loggedUser');
         setUser(null);
         return;
       }
@@ -34,6 +35,7 @@ export const useLogin = () => {
       const doc = await db.collection('users').doc(loggedUser.uid).get();
       let storedUser;
       if (doc.exists) {
+        console.log('🛎 ', 'doc.data()', doc.data());
         storedUser = doc.data();
       } else {
         storedUser = {
@@ -45,6 +47,13 @@ export const useLogin = () => {
           createUserGroup(storedUser),
         ]);
       }
+      console.log('🛎 ', 'setuser', {
+        ...storedUser,
+        id: loggedUser.uid,
+        displayName: loggedUser.displayName,
+        email: loggedUser.email,
+        photoURL: loggedUser.photoURL,
+      });
       setUser({
         ...storedUser,
         id: loggedUser.uid,
