@@ -26,6 +26,9 @@ export const Products = () => {
     return null;
   }
 
+  if (loading) {
+    console.log('🛎 ', 'loading...', LoadingComponent);
+  }
   if (loading) return LoadingComponent;
 
   const getIndex = () => {
@@ -36,6 +39,7 @@ export const Products = () => {
 
   const notOnShoppingList = ingredients && ingredients.filter(isOnShoppingList(false));
 
+  console.log('🛎 ', 'returnuju products');
   return (
     <Swipeable index={getIndex()}>
       <Container>
