@@ -28,8 +28,13 @@ export const Content = () => {
       <Header />
       <Switch>
         <Box mt={2} style={{ height: 'calc(100% - (56px + 56px + 16px + 3px))' }}>
-          <Route path="/products/:section/:productId?">
-            <Products />
+          <Route path="/products">
+            <Switch>
+              <Route path="/products/:section/:productId?">
+                <Products />
+              </Route>
+              <Redirect to="/products/shopping-list" />
+            </Switch>
           </Route>
           <Route path="/recipes">
             <Recipes />
