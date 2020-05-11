@@ -7,6 +7,7 @@ export const globalStateContext = React.createContext();
 export const GlobalStateProvider = ({ children }) => {
   const [globalState, globalActions] = useMethods(actions, initialState);
   const [storageUser, setStorageUser] = useLocalStorage('user');
+  console.log('🛎 ', 'storageUser', storageUser);
   const [user, setUser] = React.useState(storageUser);
   const [drawerOpened, openDrawer] = React.useState(false);
   const snackbar = React.useState(null);
@@ -14,6 +15,8 @@ export const GlobalStateProvider = ({ children }) => {
 
   const setUserMemo = React.useCallback(
     (user) => {
+      console.log('🛎 ', 'setting user', user);
+      console.trace();
       setUser(user);
       setStorageUser(user);
     },
