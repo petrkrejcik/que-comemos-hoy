@@ -67,10 +67,10 @@ export const useLogin = () => {
       });
       openDrawer(false)();
       console.log('🛎 ', 'Auth useEffect fin');
-      history.push('/products/shopping-list');
+      // history.push('/products/shopping-list');
     });
     setUserListener(true);
-  }, [setUser, history, openDrawer, user]);
+  }, [setUser, history, openDrawer, user, userListener]);
 
   return login;
 };
