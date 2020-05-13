@@ -172,6 +172,18 @@ Hooks doc: https://github.com/csfrequency/react-firebase-hooks/tree/7eb49f1624d7
 }
 ```
 
+A) nejsem prihlasen, nemam localstorage
+
+- login
+  B) nejsem prihlasen, mam localstorage
+- obsah
+- po callbacku login
+  C) jsem prihlasen, nemam localstorage
+- loader
+- po callbacku vidim obsah
+  C) jsem prihlasen, mam localstorage
+- obsah
+
 ## Icons
 
 https://material-ui.com/components/material-icons/

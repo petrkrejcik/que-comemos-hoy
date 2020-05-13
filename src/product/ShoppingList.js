@@ -9,14 +9,12 @@ import {
   updateIngredient,
   SECTIONS,
 } from 'product/productUtils';
-import { globalStateContext } from 'app/GlobalStateContext';
+import { userContext } from 'user/UserProvider';
 
 export const ShoppingList = (props) => {
   const { section, productId } = useParams();
   const showSnackbar = useSnackbar();
-  const { userState } = React.useContext(globalStateContext);
-  const [user] = userState;
-  console.log('🛎 ', 'shopping list', user);
+  const [{ user }] = React.useContext(userContext);
   const isActive = section === SECTIONS.shoppingList && !productId;
   const setHeader = useHeader(isActive);
 

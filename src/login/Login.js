@@ -1,37 +1,46 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
+import { useAsyncFn } from 'react-use';
 import { Button, Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import { firebase } from 'storage/firebase';
 import { Dialog } from 'dialog/Dialog';
-import { useLogin } from 'auth/Auth';
-import { globalStateContext } from 'app/GlobalStateContext';
+import { userContext } from 'user/UserProvider';
 import { Loading } from 'app/Loading';
 
 export const Login = () => {
-  console.log('🛎 ', 'Login');
   const classes = useStyles();
-  const [loginState, login] = useLogin();
-  const { userState } = React.useContext(globalStateContext);
-  const [user] = userState;
+  const [{ user }] = React.useContext(userContext);
   const [isErrorOpen, setErrorOpen] = React.useState(true);
+  const [oAuth, login] = useAsyncFn(() => {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    return new Promise(async (resolve, reject) => {
+      try {
+        await firebase.auth().signInWithPopup(provider);
+        // Do not call resolve, because we want the loader to be displayed.
+        // Loader will be hidden by onAuthStateChanged.
+      } catch (e) {
+        reject(e);
+      }
+    });
+  }, []);
 
   const handleCloseError = () => setErrorOpen(false);
 
   if (user) {
-    console.log('🛎 ', 'Login redirect');
     return <Redirect to="/products/shopping-list" />;
   }
 
   return (
     <>
-      {loginState.error && (
+      {oAuth.error && (
         <Dialog handleClose={handleCloseError} open={isErrorOpen} title="Login error">
-          {loginState.error.message}
+          {oAuth.error.message}
         </Dialog>
       )}
       <Grid container justify="center" alignItems="center" className={classes.container}>
         <Grid item>
-          {loginState.loading ? (
+          {oAuth.loading || user !== null ? (
             <Loading />
           ) : (
             <Button onClick={login} color="primary" variant="outlined">

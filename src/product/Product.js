@@ -25,6 +25,7 @@ import {
   useProducts,
 } from './productUtils';
 import { globalStateContext } from 'app/GlobalStateContext';
+import { userContext } from 'user/UserProvider';
 import { Loading } from 'app/Loading';
 import { useHeader } from 'header/headerUtils';
 import { useUserData, shops2Array } from 'user/userUtils';
@@ -37,8 +38,8 @@ export const Product = (props) => {
   const { productId } = props;
   const product = products.find((p) => p.id === productId);
   const [titleError, setTitleError] = React.useState(null);
-  const { userState, globalActions } = React.useContext(globalStateContext);
-  const [user] = userState;
+  const { globalActions } = React.useContext(globalStateContext);
+  const [{ user }] = React.useContext(userContext);
   const [userData] = useUserData();
   const [productMap, { set, setAll }] = useMap(null);
 

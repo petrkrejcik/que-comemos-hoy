@@ -1,29 +1,15 @@
-import React, { useState } from 'react';
-import { useAsync } from 'react-use';
+import React from 'react';
 import { Switch, Route, useHistory, Redirect } from 'react-router-dom';
-import {
-  Button,
-  Checkbox,
-  TextField,
-  List,
-  IconButton,
-  Card,
-  CardActions,
-  CardContent,
-  CardMedia,
-  Typography,
-} from '@material-ui/core';
-import { Add } from '@material-ui/icons';
+import { List, Card, CardContent, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { db, useColData } from 'storage/firebase';
-import { globalStateContext } from 'app/GlobalStateContext';
+import { userContext } from 'user/UserProvider';
 import { Recipe } from './Recipe';
 
 export const Recipes = () => {
-  const { userState } = React.useContext(globalStateContext);
-  const [user] = userState;
+  const [{ user }] = React.useContext(userContext);
 
-  const [recipes, loading, error] = useColData(
+  const [recipes, loading] = useColData(
     db.collection(`userGroups/${user.groupId}/recipes`),
     // .orderBy('insertDate')
     { idField: 'id' }

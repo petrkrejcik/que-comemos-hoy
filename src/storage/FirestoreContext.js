@@ -1,14 +1,13 @@
 import React from 'react';
 import { db, useColData, useDocData } from 'storage/firebase';
 import { useMap } from 'react-use';
-import { globalStateContext } from 'app/GlobalStateContext';
+import { userContext } from 'user/UserProvider';
 
 export const firestoreContext = React.createContext();
 
 export const FirestoreProvider = ({ children }) => {
   const { Provider } = firestoreContext;
-  const { userState } = React.useContext(globalStateContext);
-  const [user] = userState;
+  const [{ user }] = React.useContext(userContext);
   const [productOptions] = useMap({
     idField: 'id',
   });

@@ -7,15 +7,14 @@ import { Header } from 'header/Header';
 import { Navigation } from 'bottomNavigation/BottomNavigation';
 import { Shops } from 'shop/Shops';
 import { Members } from 'member/Members';
-import { globalStateContext } from 'app/GlobalStateContext';
+import { Loading } from 'app/Loading';
+import { userContext } from 'user/UserProvider';
 import { FirestoreProvider } from 'storage/FirestoreContext';
 
 export const Content = () => {
-  const { userState } = React.useContext(globalStateContext);
-  const [user] = userState;
-  console.log('🛎 ', 'Content');
+  const [{ user }] = React.useContext(userContext);
 
-  if (!user) {
+  if (user === null) {
     return (
       <Redirect
         to={{
@@ -24,6 +23,11 @@ export const Content = () => {
       />
     );
   }
+  if (!user) {
+    // Waiting for auth to verify this user if it is logged.
+    return <Loading />;
+  }
+
   return (
     <FirestoreProvider>
       <Header />

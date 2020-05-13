@@ -16,7 +16,6 @@ const PAGES = {
 };
 
 export const Products = () => {
-  console.log('🛎 ', 'Products');
   const { section, productId } = useParams();
   // const classes = useStyles();
   const [ingredients, loading, error] = useProducts();
@@ -37,7 +36,6 @@ export const Products = () => {
 
   const notOnShoppingList = ingredients && ingredients.filter(isOnShoppingList(false));
 
-  console.log('🛎 ', 'returnuju products');
   return (
     <Swipeable index={getIndex()}>
       <Container>

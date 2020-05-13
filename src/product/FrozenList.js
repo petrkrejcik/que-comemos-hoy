@@ -11,7 +11,7 @@ import {
   useProducts,
   SECTIONS,
 } from 'product/productUtils';
-import { globalStateContext } from 'app/GlobalStateContext';
+import { userContext } from 'user/UserProvider';
 
 export const FrozenList = () => {
   const { section, productId } = useParams();
@@ -19,8 +19,7 @@ export const FrozenList = () => {
   const showSnackbar = useSnackbar();
   const isActive = section === SECTIONS.frozen && !productId;
   const setHeader = useHeader(isActive);
-  const { userState } = React.useContext(globalStateContext);
-  const [user] = userState;
+  const [{ user }] = React.useContext(userContext);
 
   React.useEffect(() => {
     setHeader({});

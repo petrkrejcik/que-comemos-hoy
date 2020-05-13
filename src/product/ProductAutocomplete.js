@@ -11,13 +11,14 @@ import {
   toggleIsOnShoppingList,
 } from './productUtils';
 import { globalStateContext } from 'app/GlobalStateContext';
+import { userContext } from 'user/UserProvider';
 
 export const ProductAutocomplete = (props) => {
   const classes = useStyles();
   const [products] = useProducts();
   const [title, setTitle] = React.useState(props.edit?.title || '');
-  const { userState, globalActions } = React.useContext(globalStateContext);
-  const [user] = userState;
+  const { globalActions } = React.useContext(globalStateContext);
+  const [{ user }] = React.useContext(userContext);
 
   const clearInput = () => {
     setTitle('');

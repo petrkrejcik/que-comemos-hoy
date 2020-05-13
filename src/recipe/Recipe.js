@@ -1,30 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { useAsync } from 'react-use';
+import React from 'react';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
-import { Switch, Route, useLocation, useParams } from 'react-router-dom';
-import {
-  Button,
-  Checkbox,
-  TextField,
-  List,
-  IconButton,
-  Card,
-  CardActions,
-  CardContent,
-  CardMedia,
-  Typography,
-} from '@material-ui/core';
+import { useParams } from 'react-router-dom';
+import { Button, TextField, List } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { Add } from '@material-ui/icons';
-import { makeStyles } from '@material-ui/core/styles';
-import { db, firebase, useColData } from 'storage/firebase';
-import { globalStateContext } from 'app/GlobalStateContext';
+import { db, useColData } from 'storage/firebase';
+import { userContext } from 'user/UserProvider';
 // import { getRecipeById } from './recipeUtils';
 
 export const Recipe = (props) => {
   const { recipeId } = useParams();
-  const { userState } = React.useContext(globalStateContext);
-  const [user] = userState;
+  const [{ user }] = React.useContext(userContext);
   const [ingredientSearch, setIngredientSearch] = React.useState('');
 
   const [recipe, loading, error] = useDocumentData(

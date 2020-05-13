@@ -6,7 +6,7 @@ import { db, useColData } from 'storage/firebase';
 import { Swipeable } from 'app/Swipeable';
 import { Member } from 'member/Member';
 import { MembersList } from 'member/MembersList';
-import { globalStateContext } from 'app/GlobalStateContext';
+import { userContext } from 'user/UserProvider';
 import { Loading } from 'app/Loading';
 
 const PAGES = {
@@ -22,8 +22,7 @@ export const Members = (props) => {
   // const classes = useStyles();
   const { memberId } = useParams();
   const location = useLocation();
-  const { userState } = React.useContext(globalStateContext);
-  const [user] = userState;
+  const [{ user }] = React.useContext(userContext);
 
   const query = db.collection(`users`).where('groupId', '==', user.groupId);
   const [members, loading, error] = useColData(query, options);

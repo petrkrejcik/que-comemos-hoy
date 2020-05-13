@@ -4,6 +4,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import { Button, TextField, Grid } from '@material-ui/core';
 // import { makeStyles } from '@material-ui/core/styles';
 import { globalStateContext } from 'app/GlobalStateContext';
+import { userContext } from 'user/UserProvider';
 import { Loading } from 'app/Loading';
 import { useHeader } from 'header/headerUtils';
 import { add, update, remove } from 'member/memberUtils';
@@ -15,8 +16,8 @@ export const Member = (props) => {
   const setHeader = useHeader(props.active);
   const [email, setEmail] = React.useState('');
   const [titleError, setTitleError] = React.useState(null);
-  const { userState, globalActions } = React.useContext(globalStateContext);
-  const [user] = userState;
+  const { globalActions } = React.useContext(globalStateContext);
+  const [{ user }] = React.useContext(userContext);
   const [member, setMember] = React.useState(null);
 
   useEffect(() => {

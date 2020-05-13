@@ -1,12 +1,11 @@
 import React from 'react';
 import { Button, TextField } from '@material-ui/core';
 import { db } from 'storage/firebase';
-import { globalStateContext } from 'app/GlobalStateContext';
+import { userContext } from 'user/UserProvider';
 
 export const AddMember = () => {
   const [email, setEmail] = React.useState('');
-  const { userState } = React.useContext(globalStateContext);
-  const [user, setUser] = userState;
+  const [{ user }, { setUser }] = React.useContext(userContext);
 
   const addMember = async () => {
     const query = await db.collection('users').where('email', '==', email).limit(1).get();
@@ -23,8 +22,8 @@ export const AddMember = () => {
       [`members.${member.id}`]: true,
     });
     batch.commit();
-    // TODO: await and if OK then do this
     setUser({
+      // TODO: await and if OK then do this
       ...user,
       members: {
         ...user.members,
