@@ -23,7 +23,6 @@ export const Navigation = () => {
   if (!globalState.bottomNavigationVisible) return null;
 
   return (
-    // <Paper variant="outlined">
     <BottomNavigation
       value={value}
       onChange={(event, newValue) => {
@@ -37,7 +36,6 @@ export const Navigation = () => {
         <BottomNavigationAction label={page.label} icon={<page.icon />} key={page.route} />
       ))}
     </BottomNavigation>
-    // </Paper>
   );
 };
 

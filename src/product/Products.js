@@ -25,8 +25,7 @@ export const Products = () => {
     return null;
   }
 
-  if (loading) return 'loading...';
-  // if (loading) return LoadingComponent;
+  if (loading) return LoadingComponent;
 
   const getIndex = () => {
     if (productId) return PAGES.product;
