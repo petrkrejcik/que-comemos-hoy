@@ -23,19 +23,21 @@ export const Navigation = () => {
   if (!globalState.bottomNavigationVisible) return null;
 
   return (
-    <BottomNavigation
-      value={value}
-      onChange={(event, newValue) => {
-        const route = pages[newValue].route;
-        history.push(route);
-      }}
-      showLabels
-      className={classes.root}
-    >
-      {pages.map((page) => (
-        <BottomNavigationAction label={page.label} icon={<page.icon />} key={page.route} />
-      ))}
-    </BottomNavigation>
+    <Paper variant="outlined">
+      <BottomNavigation
+        value={value}
+        onChange={(event, newValue) => {
+          const route = pages[newValue].route;
+          history.push(route);
+        }}
+        showLabels
+        className={classes.root}
+      >
+        {pages.map((page) => (
+          <BottomNavigationAction label={page.label} icon={<page.icon />} key={page.route} />
+        ))}
+      </BottomNavigation>
+    </Paper>
   );
 };
 
