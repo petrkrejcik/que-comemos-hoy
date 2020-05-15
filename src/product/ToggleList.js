@@ -9,7 +9,7 @@ import {
   ExpansionPanelDetails,
   Divider,
 } from '@material-ui/core';
-import { ChevronRight } from '@material-ui/icons';
+import { KeyboardArrowRight, KeyboardArrowDown } from '@material-ui/icons';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { useHeader } from 'header/headerUtils';
 import { AddNew } from './ProductListAddNew';
@@ -18,18 +18,22 @@ import { ProductList } from 'product/ProductList';
 export const ToggleList = (props) => {
   const classes = useStyles();
   const setHeader = useHeader(props.active);
+  const [isBottomProductsVisible, setIsBottomProductsVisible] = React.useState(false);
   // const [hoveredId, setHoveredId] = React.useState(null);
   // const longPress = useLongPress((e) => {
   //   console.log('🛎 ', 'e', e.target);
   //   // setHoveredId()
   // });
+  const handleExpand = (event, isExpanded) => {
+    setIsBottomProductsVisible(isExpanded);
+  };
 
   React.useEffect(() => {
     setHeader({});
   }, [setHeader]);
 
   return (
-    <Box ml={-1}>
+    <Box>
       <Box width={1}>
         <ProductList
           products={props.topProducts}
@@ -42,12 +46,12 @@ export const ToggleList = (props) => {
       {props.addNew && <AddNew />}
       <Divider />
       {props.bottomProducts.length > 0 && (
-        <ExpansionPanel elevation={0} style={{ width: '100%' }}>
+        <ExpansionPanel elevation={0} onChange={handleExpand} style={{ width: '100%' }}>
           <ExpansionPanelSummary className={classes.summary}>
             <Grid container alignItems="center">
               <Grid item>
                 <IconButton style={{ padding: 9 }}>
-                  <ChevronRight />
+                  {isBottomProductsVisible ? <KeyboardArrowDown /> : <KeyboardArrowRight />}
                 </IconButton>
               </Grid>
               <Grid item xs={10}>
