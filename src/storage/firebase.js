@@ -15,8 +15,16 @@ const firebaseConfig = {
 };
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
-
 const db = firebase.firestore();
+
+db.enablePersistence().catch(function (err) {
+  if (err.code === 'failed-precondition') {
+    console.log("More tabs opened. Offline support won't work.");
+  } else if (err.code === 'unimplemented') {
+    console.log('Offline mode not supported.');
+  }
+});
+
 export { db, firebase };
 
 export const useColData = (query, options) => {

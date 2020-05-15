@@ -13,8 +13,8 @@ v1.1
 - [ ] shops
   - [ ] edit title zustane pro pridani novyho shopu vyplneny
   - [ ] sort by shop
-  - [ ] price per shop
   - [ ] remove shop from product
+  - [ ] price per shop
 - [ ] Remove bottom nav when in other page than products
 - [ ] immer.js
   - pouzit, abych nepreukladal cely objekt productu

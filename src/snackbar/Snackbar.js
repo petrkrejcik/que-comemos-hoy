@@ -13,7 +13,7 @@ export const Snackbar = () => {
         horizontal: 'left',
       }}
       open={!!snackbarObject}
-      autoHideDuration={3000}
+      autoHideDuration={1500}
       onClose={() => setSnackbar(null)}
       message={message}
       // action={
