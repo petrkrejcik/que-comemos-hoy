@@ -10,6 +10,13 @@
           "quecomemos"
         ]
       }
+    },
+    "que-comemos-develop": {
+      "hosting": {
+        "develop": [
+          "quecomemos-develop"
+        ]
+      }
     }
   }
 }
