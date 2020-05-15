@@ -186,6 +186,11 @@ A) nejsem prihlasen, nemam localstorage
   C) jsem prihlasen, mam localstorage
 - obsah
 
+## Firebase CLI
+
+`firebase use default`
+`firebase use develop`
+
 ## Icons
 
 https://material-ui.com/components/material-icons/

@@ -3,18 +3,11 @@ import * as firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
 import { useCollection, useDocument } from 'react-firebase-hooks/firestore';
+import { config } from 'config';
 
-const firebaseConfig = {
-  apiKey: 'AIzaSyBfTjSCoH4xl6UFa31Eyj8h-Tf2ZxwPbmU',
-  authDomain: 'que-comemos-hoy-5febf.firebaseapp.com',
-  databaseURL: 'https://que-comemos-hoy-5febf.firebaseio.com',
-  projectId: 'que-comemos-hoy-5febf',
-  storageBucket: 'que-comemos-hoy-5febf.appspot.com',
-  messagingSenderId: '545019553365',
-  appId: '1:545019553365:web:333935cb9e69e47e4196dc',
-};
+const env = process.env.REACT_APP_ENV || 'production';
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+firebase.initializeApp(config.firebase[env]);
 const db = firebase.firestore();
 
 db.enablePersistence().catch(function (err) {

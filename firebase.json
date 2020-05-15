@@ -10,6 +10,18 @@
           "destination": "/index.html"
         }
       ]
+    },
+    {
+      "target": "develop",
+      "site": "quecomemos-develop",
+      "public": "build",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
     }
   ]
 }

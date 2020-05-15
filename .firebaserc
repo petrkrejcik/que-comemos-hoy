@@ -1,6 +1,7 @@
 {
   "projects": {
-    "default": "que-comemos-hoy-5febf"
+    "default": "que-comemos-hoy-5febf",
+    "develop": "que-comemos-develop"
   },
   "targets": {
     "que-comemos-hoy-5febf": {

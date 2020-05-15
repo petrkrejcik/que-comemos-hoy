@@ -1,0 +1,25 @@
+name: CI/CD develop
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: NPM or Yarn install with caching
+        uses: bahmutov/npm-install@v1.1.0
+      - name: Build
+        run: |
+          yarn --frozen-lockfile
+          CI=false REACT_APP_ENV=develop yarn build
+      - name: Deploy to Firebase - develop
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only hosting:quecomemos-develop
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
