@@ -17,9 +17,15 @@ jobs:
         run: |
           yarn --frozen-lockfile
           CI=false REACT_APP_ENV=develop yarn build
+      - name: Set Firebase Project - develop
+        uses: w9jds/firebase-action@master
+        with:
+          args: use develop
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
       - name: Deploy to Firebase - develop
         uses: w9jds/firebase-action@master
         with:
-          args: deploy --only hosting:quecomemos-develop
+          args: deploy --only hosting:develop
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
