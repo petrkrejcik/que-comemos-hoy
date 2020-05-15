@@ -1,5 +1,7 @@
 # TODO
 
+- rozlisit produkt vs. uvareny jidlo v mrazaku
+
 v1.0
 
 - [ ] shops
@@ -10,9 +12,12 @@ v1.0
 
 v1.1
 
+- [ ] products
+  - [ ] sort by insert date
+  - [ ] sort by drag and drop
+  - [ ] sort by shop
 - [ ] shops
   - [ ] edit title zustane pro pridani novyho shopu vyplneny
-  - [ ] sort by shop
   - [ ] remove shop from product
   - [ ] price per shop
 - [ ] Remove bottom nav when in other page than products
@@ -62,27 +67,6 @@ v1.1
 
 - Vyberu stav 'frozen': 'No' / Klidnu na produkt v mrazaku
 - Ulozi se "availability": {"normal": true}
-
-Vse
-
-- pan
-- pan \*
-- merluza
-- merluza \*
-- merluza conjelada
-- merluza conjelada \*
-
-Koupit
-
-- pan
-- merluza
-- merluza conjelada
-
-Mrazak
-
-- pan \*
-- merluza \*
-- merluza conjelada \*
 
 Wishlist
 
@@ -173,18 +157,6 @@ Hooks doc: https://github.com/csfrequency/react-firebase-hooks/tree/7eb49f1624d7
   }
 }
 ```
-
-A) nejsem prihlasen, nemam localstorage
-
-- login
-  B) nejsem prihlasen, mam localstorage
-- obsah
-- po callbacku login
-  C) jsem prihlasen, nemam localstorage
-- loader
-- po callbacku vidim obsah
-  C) jsem prihlasen, mam localstorage
-- obsah
 
 ## Firebase CLI
 
