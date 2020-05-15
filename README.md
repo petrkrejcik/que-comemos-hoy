@@ -11,6 +11,7 @@ v1.0
 v1.1
 
 - [ ] shops
+  - [ ] edit title zustane pro pridani novyho shopu vyplneny
   - [ ] sort by shop
   - [ ] price per shop
   - [ ] remove shop from product
@@ -18,6 +19,7 @@ v1.1
 - [ ] immer.js
   - pouzit, abych nepreukladal cely objekt productu
   - pouzit hook misto useMap?
+- [ ] je divny, ze tam jsou dva loadery. Idealne jenom skeleton
 - [ ] delete ingredient (kam?)
 - [ ] namastit recepty + ingredience
 - [ ] odebrat recept id z ingredience

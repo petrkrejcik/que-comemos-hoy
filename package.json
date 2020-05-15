@@ -23,7 +23,8 @@
     "slugify": "^1.4.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "react-app-rewired start",
+    "start-no-fast-refresh": "react-scripts start",
     "build": "react-scripts build",
     "predeploy": "yarn build",
     "deploy": "firebase deploy",
@@ -46,5 +47,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "customize-cra": "^0.9.1",
+    "customize-cra-react-refresh": "^1.0.1",
+    "react-app-rewired": "^2.1.6"
   }
 }
