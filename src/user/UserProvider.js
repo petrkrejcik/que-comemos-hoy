@@ -44,6 +44,7 @@ export const UserProvider = ({ children }) => {
           storedUser = doc.data();
         } else {
           storedUser = {
+            email: oAuthUser.email,
             groupId: `group-${oAuthUser.uid}`,
             originalGroupId: `group-${oAuthUser.uid}`,
           };
