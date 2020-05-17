@@ -1,3 +1,7 @@
+# Build
+
+`REACT_APP_ENV=develop yarn build`
+
 # TODO
 
 - rozlisit produkt vs. uvareny jidlo v mrazaku

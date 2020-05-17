@@ -11,7 +11,7 @@ const { Provider } = userContext;
 export const UserProvider = ({ children }) => {
   const [storageUser, setStorageUser] = useLocalStorage('user');
   const initialUserState = React.useRef({ user: storageUser });
-  const [state, actions] = useMethods(userActions, initialUserState);
+  const [state, actions] = useMethods(userActions, initialUserState.current);
   const [oAuthUser, setOAuthUser] = React.useState();
   const { drawerState } = React.useContext(globalStateContext);
   const [, openDrawer] = drawerState;
@@ -23,6 +23,7 @@ export const UserProvider = ({ children }) => {
   }, []);
 
   React.useEffect(() => {
+    if (state.user === undefined) return;
     setStorageUser(state.user);
   }, [state.user, setStorageUser]);
 
