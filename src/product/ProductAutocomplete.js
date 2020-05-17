@@ -74,6 +74,7 @@ export const ProductAutocomplete = (props) => {
         <TextField
           {...params}
           autoFocus
+          autoCapitalize="sentences"
           InputProps={{ ...params.InputProps, disableUnderline: true }}
           onFocus={() => globalActions.focusInput(true)}
           onBlur={handleBlur}
