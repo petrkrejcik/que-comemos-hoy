@@ -1,9 +1,23 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import App from './App';
+// import * as mockFirebase from '@firebase/testing';
+// import { init } from 'storage/firebaseInit';
+// import { db, firebase } from 'storage/firebase';
 
-test('renders learn react link', () => {
-  const { getByText } = render(<App />);
-  const linkElement = getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+// test('renders login button', async () => {
+//   const { findByText } = render(<App />);
+//   const loginBtn = await findByText(/Login via Google/i);
+//   expect(loginBtn).toBeInTheDocument();
+// });
+
+test('renders products', async () => {
+  console.log('🛎 ', 'running test');
+  // const { db } = init();
+  // console.log('🛎 ', 'db initialized');
+  // const ref = await db.collection('neco').add({ name: 'test item' });
+  // console.log('🛎 ', 'done test query');
+  const { findByText } = render(<App />);
+  const addProductBtn = await findByText(/add product/i);
+  // expect(addProductBtn).toBeInTheDocument();
 });

@@ -9,6 +9,7 @@ export const userContext = React.createContext();
 const { Provider } = userContext;
 
 export const UserProvider = ({ children }) => {
+  console.log('🛎 ', 'UserProvider');
   const [storageUser, setStorageUser] = useLocalStorage('user');
   const initialUserState = React.useRef({ user: storageUser });
   const [state, actions] = useMethods(userActions, initialUserState.current);
@@ -17,18 +18,22 @@ export const UserProvider = ({ children }) => {
   const [, openDrawer] = drawerState;
 
   React.useEffect(() => {
+    console.log('🛎 ', 'ef 1');
     firebase.auth().onAuthStateChanged((loggedUser) => {
+      console.log('🛎 ', 'ef 1 cb', loggedUser);
       setOAuthUser(loggedUser || null);
     });
   }, []);
 
   React.useEffect(() => {
     if (state.user === undefined) return;
+    console.log('🛎 ', 'ef 2');
     setStorageUser(state.user);
   }, [state.user, setStorageUser]);
 
   React.useEffect(() => {
     if (oAuthUser === null) {
+      console.log('🛎 ', 'ef 3');
       // null = Logged out
       actions.setUser(null);
     }
@@ -38,9 +43,12 @@ export const UserProvider = ({ children }) => {
     if (oAuthUser.uid === state.user?.id) return;
 
     const onOAuthChange = async () => {
+      console.log('🛎 ', 'ef 4', oAuthUser);
       let storedUser;
       try {
+        console.log('🛎 ', 'ef 4 pred');
         const doc = await db.collection('users').doc(oAuthUser.uid).get();
+        console.log('🛎 ', 'ef 4 po');
         if (doc.exists) {
           storedUser = doc.data();
         } else {
@@ -49,6 +57,7 @@ export const UserProvider = ({ children }) => {
             groupId: `group-${oAuthUser.uid}`,
             originalGroupId: `group-${oAuthUser.uid}`,
           };
+          console.log('🛎 ', 'new user', storedUser);
           await Promise.all([
             db.collection('users').doc(oAuthUser.uid).set(storedUser),
             createUserGroup(storedUser),

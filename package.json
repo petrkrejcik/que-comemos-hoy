@@ -30,7 +30,8 @@
     "predeploy": "yarn build",
     "deploy": "firebase deploy",
     "deploy-github": "yarn build && gh-pages -d build",
-    "test": "react-scripts test",
+    "jest": "react-scripts test --env=jest-environment-jsdom-sixteen",
+    "test": "firebase emulators:exec --only firestore 'yarn jest'",
     "eject": "react-scripts eject",
     "format-fix": "npx prettier --write \"{*,src/**/*}.{js,json}\""
   },
@@ -50,8 +51,10 @@
     ]
   },
   "devDependencies": {
+    "@firebase/testing": "^0.19.4",
     "customize-cra": "^0.9.1",
     "customize-cra-react-refresh": "^1.0.1",
+    "jest-environment-jsdom-sixteen": "https://github.com/petrkrejcik/jest-environment-jsdom-sixteen",
     "react-app-rewired": "^2.1.6"
   }
 }
