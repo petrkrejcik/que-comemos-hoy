@@ -9,6 +9,7 @@ const env = process.env.REACT_APP_ENV || 'production';
 // Initialize Firebase
 firebase.initializeApp(config.firebase[env]);
 // firebase.firestore.setLogLevel('debug');
+firebase.firestore().settings({ experimentalForceLongPolling: true });
 const db = firebase.firestore();
 
 db.enablePersistence().catch(function (err) {
