@@ -3,21 +3,22 @@ import { useDocumentData } from 'react-firebase-hooks/firestore';
 import { useParams } from 'react-router-dom';
 import { Button, TextField, List } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { db, useColData } from 'storage/firebase';
-import { userContext } from 'user/UserProvider';
+import { useFirestore, useColData } from 'storage/firebase';
+import { useUser } from 'user/userUtils';
 // import { getRecipeById } from './recipeUtils';
 
 export const Recipe = (props) => {
   const { recipeId } = useParams();
-  const [{ user }] = React.useContext(userContext);
-  const [ingredientSearch, setIngredientSearch] = React.useState('');
+  const user = useUser();
+  const db = useFirestore();
+  const [ingredientSearch] = React.useState('');
 
   const [recipe, loading, error] = useDocumentData(
     db.doc(`userGroups/${user.groupId}/recipes/${recipeId}`),
     { idField: 'id' }
   );
 
-  const [ingredients, ingredientsLoading, ingredientsError] = useColData(
+  const [ingredients, ingredientsLoading] = useColData(
     db.collection(`userGroups/${user.groupId}/ingredients`),
     { idField: 'id' }
   );

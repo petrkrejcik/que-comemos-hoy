@@ -2,12 +2,13 @@ import React from 'react';
 import { Switch, Route, useHistory, Redirect } from 'react-router-dom';
 import { List, Card, CardContent, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { db, useColData } from 'storage/firebase';
-import { userContext } from 'user/UserProvider';
+import { useColData, useFirestore } from 'storage/firebase';
+import { useUser } from 'user/userUtils';
 import { Recipe } from './Recipe';
 
 export const Recipes = () => {
-  const [{ user }] = React.useContext(userContext);
+  const user = useUser();
+  const db = useFirestore();
 
   const [recipes, loading] = useColData(
     db.collection(`userGroups/${user.groupId}/recipes`),

@@ -1,7 +1,7 @@
 import slugify from 'slugify';
-import { db, firebase } from 'storage/firebase';
+import firebase from 'firebase/app';
 
-export const updateShop = (shop, user, data) => {
+export const updateShop = (db, shop, user, data) => {
   const values = Object.keys(data).reduce((acc, key) => {
     acc[`shops.${shop.id}.${key}`] = data[key];
     return acc;
@@ -9,7 +9,7 @@ export const updateShop = (shop, user, data) => {
   return db.doc(`userGroups/${user.groupId}`).update(values);
 };
 
-export const addShop = (user, title) => {
+export const addShop = (db, user, title) => {
   if (title.trim() === '') return;
   const shopId = slugify(title, { lower: true });
   return db.doc(`userGroups/${user.groupId}`).update({
@@ -20,7 +20,7 @@ export const addShop = (user, title) => {
   });
 };
 
-export const removeShop = (shop, user) => {
+export const removeShop = (db, shop, user) => {
   return db.doc(`userGroups/${user.groupId}`).set(
     {
       shops: { [shop.id]: firebase.firestore.FieldValue.delete() },

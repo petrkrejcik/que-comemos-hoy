@@ -1,26 +1,13 @@
 import React from 'react';
-import * as firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
 import { useCollection, useDocument } from 'react-firebase-hooks/firestore';
-import { config } from 'config';
+import { firestoreContext } from 'storage/FirestoreContext';
 
-const env = process.env.REACT_APP_ENV || 'production';
-// Initialize Firebase
-firebase.initializeApp(config.firebase[env]);
-// firebase.firestore.setLogLevel('debug');
-// firebase.firestore().settings({ experimentalForceLongPolling: true });
-const db = firebase.firestore();
-
-db.enablePersistence().catch(function (err) {
-  if (err.code === 'failed-precondition') {
-    console.log("More tabs opened. Offline support won't work.");
-  } else if (err.code === 'unimplemented') {
-    console.log('Offline mode not supported.');
-  }
-});
-
-export { db, firebase };
+export const useFirestore = () => {
+  const db = React.useContext(firestoreContext);
+  return db;
+};
 
 export const useColData = (query, options) => {
   const [data, setData] = React.useState([]);

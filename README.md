@@ -2,9 +2,18 @@
 
 `REACT_APP_ENV=develop yarn build`
 
+# Test
+
+`firebase init firestore`
+`firebase setup:emulators:firestore`
+`firebase emulators:start --only firestore`
+
 # TODO
 
+- pri testu neni logged user, protoze to na nej v Content nepocka (Content se nerenderuje)
 - rozlisit produkt vs. uvareny jidlo v mrazaku
+- odstranit `--env=jest-environment-jsdom-sixteen` az bude jest 25
+- useUserData aby vzdy vratilo data a ne i treba loading
 
 v1.0
 

@@ -1,9 +1,50 @@
 import React from 'react';
 import produce from 'immer';
-import { db, firebase } from 'storage/firebase';
-import { firestoreContext } from 'storage/FirestoreContext';
+// import { useAsyncFn } from 'react-use';
+// import { useHistory } from 'react-router-dom';
+import firebase from 'firebase/app';
+// import { useFirestore } from 'storage/firebase';
+import { productContext } from 'product/ProductProvider';
+// import { useUser } from 'user/userUtils';
 
-export const updateIngredient = async (ingredient, user, data) => {
+// export const useUpdateIngredient = async (product) => {
+//   const db = useFirestore();
+//   const user = useUser();
+//   const history = useHistory();
+
+//   // if (ingredient.recipes) {
+//   //   Object.keys(ingredient.recipes).forEach((recipeId) => {
+//   //     if (data === 'delete') {
+//   //       batch.set(
+//   //         db.doc(`userGroups/${user.groupId}/recipes/${recipeId}`),
+//   //         { ingredients: { [ingredient.id]: firebase.firestore.FieldValue.delete() } },
+//   //         { merge: true }
+//   //       );
+//   //     } else {
+//   //       const values = Object.keys(data).reduce((acc, key) => {
+//   //         acc[`ingredients.${ingredient.id}.${key}`] = data[key];
+//   //         return acc;
+//   //       }, {});
+//   //       batch.update(db.doc(`userGroups/${user.groupId}/recipes/${recipeId}`), values);
+//   //     }
+//   //   });
+//   // }
+//   return useAsyncFn(async () => {
+//     if (!product) return;
+//     const { id, insertDate, ...updated } = product;
+//     const batch = db.batch();
+//     const ingredientRef = db.doc(`userGroups/${user.groupId}/ingredients/${product.id}`);
+//     if (product === 'delete') {
+//       batch.delete(ingredientRef);
+//     } else {
+//       batch.update(ingredientRef, updated);
+//     }
+//     await batch.commit();
+//     history.goBack();
+//   }, [product, user, history]);
+// };
+
+export const updateIngredient = async (db, ingredient, user, data) => {
   if (!ingredient) return;
   const batch = db.batch();
   const ingredientRef = db.doc(`userGroups/${user.groupId}/ingredients/${ingredient.id}`);
@@ -32,7 +73,7 @@ export const updateIngredient = async (ingredient, user, data) => {
   await batch.commit();
 };
 
-export const addIngredient = async (title, user) => {
+export const addIngredient = async (db, title, user) => {
   if (title.trim() === '') return;
   await db.collection(`userGroups/${user.groupId}/ingredients`).add({
     title: title,
@@ -42,7 +83,7 @@ export const addIngredient = async (title, user) => {
   });
 };
 
-export const removeProduct = async (productId, user) => {
+export const removeProduct = async (db, productId, user) => {
   return db.doc(`userGroups/${user.groupId}/ingredients/${productId}`).delete();
 };
 
@@ -107,7 +148,7 @@ export const setAvailability = (product, value) => {
 };
 
 export const useProducts = () => {
-  const { products } = React.useContext(firestoreContext);
+  const { products } = React.useContext(productContext);
   return products;
 };
 

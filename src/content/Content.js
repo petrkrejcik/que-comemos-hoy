@@ -8,11 +8,10 @@ import { Navigation } from 'bottomNavigation/BottomNavigation';
 import { Shops } from 'shop/Shops';
 import { Members } from 'member/Members';
 import { Loading } from 'app/Loading';
-import { userContext } from 'user/UserProvider';
-import { FirestoreProvider } from 'storage/FirestoreContext';
+import { authContext } from 'user/AuthProvider';
 
 export const Content = () => {
-  const [{ user }] = React.useContext(userContext);
+  const [{ user }] = React.useContext(authContext);
 
   if (user === null) {
     return (
@@ -29,7 +28,7 @@ export const Content = () => {
   }
 
   return (
-    <FirestoreProvider>
+    <>
       <Header />
       <Box mt={2} style={{ height: 'calc(100% - (56px + 56px + 16px + 3px))' }}>
         <Switch>
@@ -54,6 +53,6 @@ export const Content = () => {
         </Switch>
       </Box>
       <Navigation />
-    </FirestoreProvider>
+    </>
   );
 };
