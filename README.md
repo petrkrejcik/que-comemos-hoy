@@ -12,6 +12,7 @@
 
 - rozlisit produkt vs. uvareny jidlo v mrazaku
 - odstranit `--env=jest-environment-jsdom-sixteen` az bude jest 25
+- useUserData aby vzdy vratilo data a ne i treba loading
 
 v1.0
 
