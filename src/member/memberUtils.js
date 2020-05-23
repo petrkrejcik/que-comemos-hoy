@@ -1,6 +1,7 @@
-import { db, firebase } from 'storage/firebase';
+import firebase from 'firebase/app';
+// import { useFirestore } from 'storage/firebase';
 
-export const update = (shop, user, data) => {
+export const update = (db, shop, user, data) => {
   const values = Object.keys(data).reduce((acc, key) => {
     acc[`shops.${shop.id}.${key}`] = data[key];
     return acc;
@@ -8,7 +9,7 @@ export const update = (shop, user, data) => {
   return db.doc(`userGroups/${user.groupId}`).update(values);
 };
 
-export const add = async (user, email) => {
+export const add = async (db, user, email) => {
   if (email.trim() === '') return;
   const doc = await db.collection(`users`).where('email', '==', email).limit(1).get();
   if (doc.empty) {
@@ -24,18 +25,13 @@ export const add = async (user, email) => {
   });
 };
 
-export const remove = (shop, user) => {
+export const remove = (db, shop, user) => {
   return db.doc(`userGroups/${user.groupId}`).set(
     {
       shops: { [shop.id]: firebase.firestore.FieldValue.delete() },
     },
     { merge: true }
   );
-};
-
-export const findByGroupId = async (groupId) => {
-  const doc = await db.collection(`users`).where('groupId', '==', groupId).get();
-  doc.docs[0].data();
 };
 
 export const validateIngredient = (ingredient, ingredients) => {

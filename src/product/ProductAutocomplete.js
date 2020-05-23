@@ -10,15 +10,17 @@ import {
   isOnShoppingList,
   toggleIsOnShoppingList,
 } from './productUtils';
+import { useFirestore } from 'storage/firebase';
 import { globalStateContext } from 'app/GlobalStateContext';
-import { userContext } from 'user/UserProvider';
+import { useUser } from 'user/userUtils';
 
 export const ProductAutocomplete = (props) => {
   const classes = useStyles();
   const [products] = useProducts();
+  const db = useFirestore();
   const [title, setTitle] = React.useState(props.edit?.title || '');
   const { globalActions } = React.useContext(globalStateContext);
-  const [{ user }] = React.useContext(userContext);
+  const user = useUser();
 
   const clearInput = () => {
     setTitle('');
@@ -29,9 +31,9 @@ export const ProductAutocomplete = (props) => {
   const handleConfirmNew = async () => {
     if (!validateIngredient(title, products)) return;
     if (props.edit) {
-      updateIngredient(props.edit, user, { title });
+      updateIngredient(db, props.edit, user, { title });
     } else {
-      addIngredient(title, user);
+      addIngredient(db, title, user);
     }
     clearInput();
   };
@@ -40,7 +42,7 @@ export const ProductAutocomplete = (props) => {
     if (reason !== 'select-option') return;
     if (!validateIngredient(product, products)) return;
     const updated = toggleIsOnShoppingList(product);
-    updateIngredient(product, user, updated);
+    updateIngredient(db, product, user, updated);
     clearInput();
   };
 

@@ -1,11 +1,14 @@
 import React from 'react';
 import { Button, TextField } from '@material-ui/core';
-import { db } from 'storage/firebase';
-import { userContext } from 'user/UserProvider';
+import { useUser } from 'user/userUtils';
+import { authContext } from 'user/AuthProvider';
+import { useFirestore } from 'storage/firebase';
 
 export const AddMember = () => {
   const [email, setEmail] = React.useState('');
-  const [{ user }, { setUser }] = React.useContext(userContext);
+  const user = useUser();
+  const [, { setUser }] = React.useContext(authContext);
+  const db = useFirestore();
 
   const addMember = async () => {
     const query = await db.collection('users').where('email', '==', email).limit(1).get();

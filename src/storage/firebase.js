@@ -2,9 +2,12 @@ import React from 'react';
 import 'firebase/firestore';
 import 'firebase/auth';
 import { useCollection, useDocument } from 'react-firebase-hooks/firestore';
-import { init } from 'storage/firebaseInit';
+import { firestoreContext } from 'storage/FirestoreContext';
 
-export const { db, firebase } = init(); // Initialize Firebase
+export const useFirestore = () => {
+  const db = React.useContext(firestoreContext);
+  return db;
+};
 
 export const useColData = (query, options) => {
   const [data, setData] = React.useState([]);

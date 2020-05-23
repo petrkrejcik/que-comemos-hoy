@@ -5,11 +5,11 @@ import { Link } from 'react-router-dom';
 
 import { AddNewButton } from 'product/ProductListAddNew';
 import { useHeader } from 'header/headerUtils';
-import { userContext } from 'user/UserProvider';
+import { useUser } from 'user/userUtils';
 
 export const MembersList = (props) => {
   const classes = useStyles();
-  const [{ user }] = React.useContext(userContext);
+  const user = useUser();
   const setHeader = useHeader(props.active);
 
   React.useEffect(() => {

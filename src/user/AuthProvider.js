@@ -1,20 +1,22 @@
 import React from 'react';
 import { useLocalStorage, useMethods } from 'react-use';
-import { db, firebase } from 'storage/firebase';
+import firebase from 'firebase/app';
+import { useFirestore } from 'storage/firebase';
 import { actions as userActions } from 'user/userState';
 import { createUserGroup } from 'user/userUtils';
 import { globalStateContext } from 'app/GlobalStateContext';
 
-export const userContext = React.createContext();
-const { Provider } = userContext;
+export const authContext = React.createContext();
+const { Provider } = authContext;
 
-export const UserProvider = ({ children }) => {
+export const AuthProvider = ({ children }) => {
   const [storageUser, setStorageUser] = useLocalStorage('user');
   const initialUserState = React.useRef({ user: storageUser });
   const [state, actions] = useMethods(userActions, initialUserState.current);
   const [oAuthUser, setOAuthUser] = React.useState();
   const { drawerState } = React.useContext(globalStateContext);
   const [, openDrawer] = drawerState;
+  const db = useFirestore();
 
   React.useEffect(() => {
     firebase.auth().onAuthStateChanged((loggedUser) => {
@@ -51,7 +53,7 @@ export const UserProvider = ({ children }) => {
           };
           await Promise.all([
             db.collection('users').doc(oAuthUser.uid).set(storedUser),
-            createUserGroup(storedUser),
+            createUserGroup(db, storedUser),
           ]);
         }
       } catch (e) {
@@ -70,7 +72,7 @@ export const UserProvider = ({ children }) => {
       openDrawer(false)();
     };
     onOAuthChange();
-  }, [oAuthUser, actions, openDrawer, state.user]);
+  }, [oAuthUser, actions, openDrawer, state.user, db]);
 
   return <Provider value={[state, actions]}>{children}</Provider>;
 };

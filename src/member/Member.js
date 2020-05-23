@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
 import { useAsyncFn } from 'react-use';
 import { useHistory, useParams } from 'react-router-dom';
-import { Button, TextField, Grid } from '@material-ui/core';
+import { TextField, Grid } from '@material-ui/core';
 // import { makeStyles } from '@material-ui/core/styles';
 import { globalStateContext } from 'app/GlobalStateContext';
-import { userContext } from 'user/UserProvider';
+import { useFirestore } from 'storage/firebase';
+import { useUser } from 'user/userUtils';
 import { Loading } from 'app/Loading';
 import { useHeader } from 'header/headerUtils';
 import { add, update, remove } from 'member/memberUtils';
@@ -12,12 +13,13 @@ import { add, update, remove } from 'member/memberUtils';
 export const Member = (props) => {
   const history = useHistory();
   const { memberId } = useParams();
+  const db = useFirestore();
   // const classes = useStyles();
   const setHeader = useHeader(props.active);
   const [email, setEmail] = React.useState('');
   const [titleError, setTitleError] = React.useState(null);
   const { globalActions } = React.useContext(globalStateContext);
-  const [{ user }] = React.useContext(userContext);
+  const user = useUser();
   const [member, setMember] = React.useState(null);
 
   useEffect(() => {
@@ -29,17 +31,17 @@ export const Member = (props) => {
   }, [memberId, setEmail, props.members]);
 
   const [{ loading: loadingSave }, handleUpdate] = useAsyncFn(async () => {
-    await update(member, user, { email });
+    await update(db, member, user, { email });
     history.goBack();
   }, [user, member, history, email]);
 
   const [{ loading: loadingAdd }, handleAdd] = useAsyncFn(async () => {
-    await add(user, email);
+    await add(db, user, email);
     history.goBack();
   }, [user, member, history, email]);
 
   const [{ loading: loadingRemove }, handleRemove] = useAsyncFn(async () => {
-    await remove(member, user);
+    await remove(db, member, user);
     history.goBack();
   }, [member, user]);
 
@@ -67,7 +69,7 @@ export const Member = (props) => {
     setTitleError(null);
     const newTitle = event.target.value;
     setEmail(newTitle);
-    // const exists = userData.shops.find((p) => p.email === newTitle);
+    // const exists = user.shops.find((p) => p.email === newTitle);
     // exists && setTitleError('Already exists');
     newTitle.trim() === '' && setTitleError('Cannot be empty');
   };

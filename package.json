@@ -24,7 +24,7 @@
     "use-immer": "^0.4.0"
   },
   "scripts": {
-    "start": "react-app-rewired start",
+    "start": "REACT_APP_ENV=develop react-app-rewired start",
     "start-no-fast-refresh": "react-scripts start",
     "build": "react-scripts build",
     "predeploy": "yarn build",

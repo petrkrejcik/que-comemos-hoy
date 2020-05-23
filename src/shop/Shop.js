@@ -1,48 +1,49 @@
 import React, { useEffect } from 'react';
 import { useAsyncFn } from 'react-use';
 import { useHistory, useParams } from 'react-router-dom';
-import { Button, TextField, Grid } from '@material-ui/core';
+import { TextField, Grid } from '@material-ui/core';
 // import { makeStyles } from '@material-ui/core/styles';
 import { globalStateContext } from 'app/GlobalStateContext';
-import { userContext } from 'user/UserProvider';
+import { useFirestore } from 'storage/firebase';
+import { useUser, useUserData } from 'user/userUtils';
 import { Loading } from 'app/Loading';
 import { useHeader } from 'header/headerUtils';
-import { useUserData } from 'user/userUtils';
 import { addShop, updateShop, removeShop } from 'shop/shopUtils';
 
 export const Shop = (props) => {
   const history = useHistory();
   const { shopId } = useParams();
+  const db = useFirestore();
   // const classes = useStyles();
   const setHeader = useHeader(props.active);
   const [title, setTitle] = React.useState('');
   const [titleError, setTitleError] = React.useState(null);
   const { globalActions } = React.useContext(globalStateContext);
-  const [{ user }] = React.useContext(userContext);
+  const user = useUser();
   const [userData, userDataLoading] = useUserData();
   const [shop, setShop] = React.useState(null);
 
   useEffect(() => {
-    if (userDataLoading) return;
     if (!shopId) return;
+    if (userDataLoading) return;
     const shop = userData.shops[shopId];
     if (!shop) return;
     setShop({ ...shop, id: shopId });
     setTitle(shop.title);
-  }, [userData, shopId, userDataLoading, setTitle]);
+  }, [shopId, setTitle, userData, userDataLoading]);
 
   const [{ loading: loadingSave }, handleUpdate] = useAsyncFn(async () => {
-    await updateShop(shop, user, { title });
+    await updateShop(db, shop, user, { title });
     history.goBack();
   }, [user, shop, history, title]);
 
   const [{ loading: loadingAdd }, handleAdd] = useAsyncFn(async () => {
-    await addShop(user, title);
+    await addShop(db, user, title);
     history.goBack();
   }, [user, shop, history, title]);
 
   const [{ loading: loadingRemove }, handleRemove] = useAsyncFn(async () => {
-    await removeShop(shop, user);
+    await removeShop(db, shop, user);
     history.goBack();
   }, [shop, user]);
 
@@ -69,7 +70,7 @@ export const Shop = (props) => {
     setTitleError(null);
     const newTitle = event.target.value;
     setTitle(newTitle);
-    // const exists = userData.shops.find((p) => p.title === newTitle);
+    // const exists = user.shops.find((p) => p.title === newTitle);
     // exists && setTitleError('Already exists');
     newTitle.trim() === '' && setTitleError('Cannot be empty');
   };

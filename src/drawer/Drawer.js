@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { List, ListItem, ListItemText, Divider, SwipeableDrawer } from '@material-ui/core';
 import { useLogout } from 'user/userUtils';
 import { globalStateContext } from 'app/GlobalStateContext';
-import { userContext } from 'user/UserProvider';
+import { useUser } from 'user/userUtils';
 
 const useStyles = makeStyles({
   root: {
@@ -15,7 +15,7 @@ const useStyles = makeStyles({
 export const Drawer = (props) => {
   const classes = useStyles();
   const logout = useLogout();
-  const [{ user }] = React.useContext(userContext);
+  const user = useUser();
   const { drawerState } = React.useContext(globalStateContext);
   const [drawerOpened, openDrawer] = drawerState;
 

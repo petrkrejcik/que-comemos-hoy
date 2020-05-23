@@ -14,16 +14,18 @@ import {
   SECTIONS,
   useProducts,
 } from 'product/productUtils';
-import { userContext } from 'user/UserProvider';
+import { useFirestore } from 'storage/firebase';
+import { useUser } from 'user/userUtils';
 
 export const ShoppingList = (props) => {
   const { section, productId } = useParams();
   const showSnackbar = useSnackbar();
-  const [{ user }] = React.useContext(userContext);
+  const user = useUser();
   const isActive = section === SECTIONS.shoppingList && !productId;
   const setHeader = useHeader(isActive);
   const [products, loading, error] = useProducts();
   const [productsLocal, updateProductsLocal] = useImmer([]);
+  const db = useFirestore();
 
   React.useEffect(() => {
     updateProductsLocal((draft) => {
@@ -42,7 +44,7 @@ export const ShoppingList = (props) => {
       Object.assign(old, updated);
     });
     showSnackbar({ message: 'Saved' });
-    await updateIngredient(product, user, updated);
+    await updateIngredient(db, product, user, updated);
   };
 
   if (error) {

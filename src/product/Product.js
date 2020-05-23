@@ -1,10 +1,8 @@
 import React, { useEffect } from 'react';
 import { useAsyncFn, useMap } from 'react-use';
-import { useHistory, Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import {
-  Button,
   TextField,
-  IconButton,
   Grid,
   InputLabel,
   Select as SelectMui,
@@ -12,7 +10,6 @@ import {
   FormControlLabel,
   Checkbox,
 } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
 import {
   updateIngredient,
   removeProduct,
@@ -24,24 +21,26 @@ import {
   isAvailable,
   useProducts,
 } from './productUtils';
+import { useFirestore } from 'storage/firebase';
 import { globalStateContext } from 'app/GlobalStateContext';
-import { userContext } from 'user/UserProvider';
 import { Loading } from 'app/Loading';
 import { useHeader } from 'header/headerUtils';
-import { useUserData, shops2Array } from 'user/userUtils';
+import { useUser, shops2Array, useUserData } from 'user/userUtils';
 
 export const Product = (props) => {
   const history = useHistory();
   // const classes = useStyles();
   const setHeader = useHeader(props.active);
   const [products] = useProducts();
+  const db = useFirestore();
   const { productId } = props;
   const product = products.find((p) => p.id === productId);
   const [titleError, setTitleError] = React.useState(null);
   const { globalActions } = React.useContext(globalStateContext);
-  const [{ user }] = React.useContext(userContext);
+  const user = useUser();
   const [userData] = useUserData();
   const [productMap, { set, setAll }] = useMap(null);
+  // const [{ loading }, handleSave] = useUpdateIngredient(productMap);
 
   useEffect(() => {
     if (!product) return;
@@ -50,12 +49,12 @@ export const Product = (props) => {
 
   const [{ loading }, handleSave] = useAsyncFn(async () => {
     const { id, insertDate, ...updated } = productMap;
-    await updateIngredient(product, user, updated);
+    await updateIngredient(db, product, user, updated);
     history.goBack();
   }, [productMap, user, history]);
 
   const [{ loading: removeLoading }, handleRemove] = useAsyncFn(async () => {
-    await removeProduct(product.id, user);
+    await removeProduct(db, product.id, user);
     history.goBack();
   }, [product, user]);
 
@@ -169,8 +168,6 @@ const Select = (props) => (
     </Grid> */}
   </Grid>
 );
-
-const useStyles = makeStyles({});
 
 const getFrozenValue = (product) => {
   const frozen = isFrozen(product);

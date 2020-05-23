@@ -11,7 +11,8 @@ import {
   useProducts,
   SECTIONS,
 } from 'product/productUtils';
-import { userContext } from 'user/UserProvider';
+import { useFirestore } from 'storage/firebase';
+import { useUser } from 'user/userUtils';
 
 export const FrozenList = () => {
   const { section, productId } = useParams();
@@ -19,7 +20,8 @@ export const FrozenList = () => {
   const showSnackbar = useSnackbar();
   const isActive = section === SECTIONS.frozen && !productId;
   const setHeader = useHeader(isActive);
-  const [{ user }] = React.useContext(userContext);
+  const user = useUser();
+  const db = useFirestore();
 
   React.useEffect(() => {
     setHeader({});
@@ -27,7 +29,7 @@ export const FrozenList = () => {
 
   const handleChecked = (product) => () => {
     const updated = toggleIsFrozen(product);
-    updateIngredient(product, user, updated);
+    updateIngredient(db, product, user, updated);
     showSnackbar({ message: 'Saved' });
   };
 

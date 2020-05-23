@@ -8,6 +8,7 @@ export const init = () => {
       auth: user,
     })
     .firestore();
+
   return {
     db,
     firebase: {

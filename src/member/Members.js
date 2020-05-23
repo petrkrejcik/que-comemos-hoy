@@ -2,12 +2,13 @@ import React from 'react';
 import { Box, Container } from '@material-ui/core';
 // import { makeStyles } from '@material-ui/core/styles';
 import { useParams, useLocation } from 'react-router-dom';
-import { db, useColData } from 'storage/firebase';
+import { useColData } from 'storage/firebase';
 import { Swipeable } from 'app/Swipeable';
 import { Member } from 'member/Member';
 import { MembersList } from 'member/MembersList';
-import { userContext } from 'user/UserProvider';
+import { useUser } from 'user/userUtils';
 import { Loading } from 'app/Loading';
+import { useFirestore } from 'storage/firebase';
 
 const PAGES = {
   list: 0,
@@ -22,7 +23,8 @@ export const Members = (props) => {
   // const classes = useStyles();
   const { memberId } = useParams();
   const location = useLocation();
-  const [{ user }] = React.useContext(userContext);
+  const user = useUser();
+  const db = useFirestore();
 
   const query = db.collection(`users`).where('groupId', '==', user.groupId);
   const [members, loading, error] = useColData(query, options);

@@ -3,14 +3,14 @@ import { Redirect } from 'react-router-dom';
 import { useAsyncFn } from 'react-use';
 import { Button, Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { firebase } from 'storage/firebase';
+import firebase from 'firebase/app';
 import { Dialog } from 'dialog/Dialog';
-import { userContext } from 'user/UserProvider';
+import { authContext } from 'user/AuthProvider';
 import { Loading } from 'app/Loading';
 
 export const Login = () => {
   const classes = useStyles();
-  const [{ user }] = React.useContext(userContext);
+  const [{ user }] = React.useContext(authContext);
   const [isErrorOpen, setErrorOpen] = React.useState(true);
   const [oAuth, login] = useAsyncFn(() => {
     const provider = new firebase.auth.GoogleAuthProvider();
