@@ -108,7 +108,6 @@ const ExpansionPanel = withStyles({
 
 const ExpansionPanelSummary = withStyles({
   root: {
-    marginBottom: -1,
     minHeight: 56,
     '&$expanded': {
       minHeight: 56,
