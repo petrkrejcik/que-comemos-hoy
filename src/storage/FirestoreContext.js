@@ -18,6 +18,7 @@ export const FirestoreProvider = ({ children }) => {
     }),
   });
 
+  console.log('🛎 ', 'from', `userGroups/${user.groupId}/ingredients`);
   const products = useColData(
     db.collection(`userGroups/${user.groupId}/ingredients`).orderBy('insertDate'),
     productOptions

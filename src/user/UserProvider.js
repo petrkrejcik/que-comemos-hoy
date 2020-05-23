@@ -18,7 +18,6 @@ export const UserProvider = ({ children }) => {
   const [, openDrawer] = drawerState;
 
   React.useEffect(() => {
-    console.log('🛎 ', 'ef 1');
     firebase.auth().onAuthStateChanged((loggedUser) => {
       console.log('🛎 ', 'ef 1 cb', loggedUser);
       setOAuthUser(loggedUser || null);
@@ -27,7 +26,6 @@ export const UserProvider = ({ children }) => {
 
   React.useEffect(() => {
     if (state.user === undefined) return;
-    console.log('🛎 ', 'ef 2');
     setStorageUser(state.user);
   }, [state.user, setStorageUser]);
 
@@ -43,14 +41,13 @@ export const UserProvider = ({ children }) => {
     if (oAuthUser.uid === state.user?.id) return;
 
     const onOAuthChange = async () => {
-      console.log('🛎 ', 'ef 4', oAuthUser);
       let storedUser;
       try {
         console.log('🛎 ', 'ef 4 pred');
         const doc = await db.collection('users').doc(oAuthUser.uid).get();
-        console.log('🛎 ', 'ef 4 po');
         if (doc.exists) {
           storedUser = doc.data();
+          console.log('🛎 ', 'user existuje');
         } else {
           storedUser = {
             email: oAuthUser.email,
