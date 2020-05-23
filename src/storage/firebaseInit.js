@@ -1,8 +1,7 @@
-import * as firebase from 'firebase/app';
+import firebase from 'firebase/app';
 import { config } from 'config';
 
 export const init = () => {
-  console.log('🛎 ', 'initttiiiing');
   const env = process.env.REACT_APP_ENV || 'production';
   firebase.initializeApp(config.firebase[env]);
   firebase.firestore().settings({ experimentalForceLongPolling: true });

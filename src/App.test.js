@@ -3,7 +3,7 @@ import { render, wait } from '@testing-library/react';
 import App from './App';
 // import * as mockFirebase from '@firebase/testing';
 // import { init } from 'storage/firebaseInit';
-import { db, firebase } from 'storage/firebase';
+import { db } from 'storage/firebase';
 
 // test('renders login button', async () => {
 //   const { findByText } = render(<App />);

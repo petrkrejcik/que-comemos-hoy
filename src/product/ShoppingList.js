@@ -24,7 +24,6 @@ export const ShoppingList = (props) => {
   const setHeader = useHeader(isActive);
   const [products, loading, error] = useProducts();
   const [productsLocal, updateProductsLocal] = useImmer([]);
-  console.log('🛎 ', 'products', products);
 
   React.useEffect(() => {
     updateProductsLocal((draft) => {
@@ -51,12 +50,9 @@ export const ShoppingList = (props) => {
     return null;
   }
 
-  if (loading) console.log('🛎 ', 'if (loading) return LoadingComponent;');
   if (loading) return LoadingComponent;
 
   const notOnShoppingList = productsLocal && productsLocal.filter(isOnShoppingList(false));
-
-  console.log('🛎 ', 'productsLocal', productsLocal);
 
   return (
     <ToggleList

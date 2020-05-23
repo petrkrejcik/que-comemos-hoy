@@ -1,10 +1,24 @@
-import * as firebase from 'firebase/app';
-import '@firebase/testing';
+import * as firebase from '@firebase/testing';
 
 export const init = () => {
-  firebase.initializeTestApp({
-    projectId: 'someprojectid',
-    auth: { uid: 'foo', email: 'foo@bar.com' },
-  });
-  return firebase.firestore();
+  const user = { uid: 'foo', email: 'foo@bar.com' };
+  const db = firebase
+    .initializeTestApp({
+      projectId: 'que-comemos-develop',
+      auth: user,
+    })
+    .firestore();
+  return {
+    db,
+    firebase: {
+      ...firebase,
+      auth: () => ({
+        onAuthStateChanged: (cb) => {
+          setTimeout(() => {
+            cb(user);
+          }, 1);
+        },
+      }),
+    },
+  };
 };

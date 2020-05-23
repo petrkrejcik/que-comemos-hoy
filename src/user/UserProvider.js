@@ -9,7 +9,6 @@ export const userContext = React.createContext();
 const { Provider } = userContext;
 
 export const UserProvider = ({ children }) => {
-  console.log('🛎 ', 'UserProvider');
   const [storageUser, setStorageUser] = useLocalStorage('user');
   const initialUserState = React.useRef({ user: storageUser });
   const [state, actions] = useMethods(userActions, initialUserState.current);
@@ -19,7 +18,6 @@ export const UserProvider = ({ children }) => {
 
   React.useEffect(() => {
     firebase.auth().onAuthStateChanged((loggedUser) => {
-      console.log('🛎 ', 'ef 1 cb', loggedUser);
       setOAuthUser(loggedUser || null);
     });
   }, []);
@@ -31,7 +29,6 @@ export const UserProvider = ({ children }) => {
 
   React.useEffect(() => {
     if (oAuthUser === null) {
-      console.log('🛎 ', 'ef 3');
       // null = Logged out
       actions.setUser(null);
     }
@@ -43,18 +40,15 @@ export const UserProvider = ({ children }) => {
     const onOAuthChange = async () => {
       let storedUser;
       try {
-        console.log('🛎 ', 'ef 4 pred');
         const doc = await db.collection('users').doc(oAuthUser.uid).get();
         if (doc.exists) {
           storedUser = doc.data();
-          console.log('🛎 ', 'user existuje');
         } else {
           storedUser = {
             email: oAuthUser.email,
             groupId: `group-${oAuthUser.uid}`,
             originalGroupId: `group-${oAuthUser.uid}`,
           };
-          console.log('🛎 ', 'new user', storedUser);
           await Promise.all([
             db.collection('users').doc(oAuthUser.uid).set(storedUser),
             createUserGroup(storedUser),

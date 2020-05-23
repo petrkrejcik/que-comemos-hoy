@@ -4,9 +4,7 @@ import 'firebase/auth';
 import { useCollection, useDocument } from 'react-firebase-hooks/firestore';
 import { init } from 'storage/firebaseInit';
 
-const { db, firebase } = init(); // Initialize Firebase
-
-export { db, firebase };
+export const { db, firebase } = init(); // Initialize Firebase
 
 export const useColData = (query, options) => {
   const [data, setData] = React.useState([]);
