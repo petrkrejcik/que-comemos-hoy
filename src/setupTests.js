@@ -3,7 +3,7 @@
 // expect(element).toHaveTextContent(/react/i)
 // learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom/extend-expect';
-import * as mockFirebase from 'storage/firebaseInit.mock';
+import { browser } from 'test/testUtils';
 
 const localStorageMock = {
   getItem: jest.fn(),
@@ -12,4 +12,17 @@ const localStorageMock = {
 };
 global.localStorage = localStorageMock;
 
-jest.mock('storage/firebaseInit', () => mockFirebase);
+console.warn = jest.fn();
+
+beforeEach(() => browser('running'));
+
+jest.mock('firebase/app', () => ({
+  auth: () => ({
+    onAuthStateChanged: (cb) => {
+      setTimeout(() => {
+        cb({ uid: 'foo', email: 'foo@bar.com' });
+        // cb(mockUser);
+      }, 1);
+    },
+  }),
+}));

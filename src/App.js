@@ -8,12 +8,14 @@ import { Content } from 'content/Content';
 import { ErrorBoundary } from 'app/ErrorBoundary';
 import { AuthProvider } from 'user/AuthProvider';
 import { FirestoreProvider } from 'storage/FirestoreContext';
+import { init } from 'storage/firebaseInit/firebaseInit';
 
 function App() {
+  const { db } = init(); // Initialize Firebase
   return (
     <ErrorBoundary>
       <GlobalStateProvider>
-        <FirestoreProvider>
+        <FirestoreProvider db={db}>
           <AuthProvider>
             <Router basename={process.env.PUBLIC_URL}>
               <Switch>

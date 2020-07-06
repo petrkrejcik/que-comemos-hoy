@@ -1,18 +1,15 @@
 import React from 'react';
-import { render, wait } from '@testing-library/react';
-import App from './App';
-// import * as mockFirebase from '@firebase/testing';
-// import { init } from 'storage/firebaseInit';
-import { db } from 'storage/firebase';
+import { wait, screen, waitFor, waitForElementToBeRemoved } from '@testing-library/react';
+import ReactDOM from 'react-dom';
+import { renderWithProvides } from 'test/testUtils';
+import { init } from 'storage/firebaseInit/firebaseInitTest';
+import { Products } from 'product/Products';
+import { browser } from 'test/testUtils';
 
-// test('renders login button', async () => {
-//   const { findByText } = render(<App />);
-//   const loginBtn = await findByText(/Login via Google/i);
-//   expect(loginBtn).toBeInTheDocument();
-// });
+const mockUser = { uid: 'foo', email: 'foo@bar.com' };
+const { db } = init(mockUser);
 
 beforeAll(async () => {
-  console.log('🛎 ', 'before');
   await db
     .collection(`userGroups/group-foo/ingredients`)
     .doc('123')
@@ -27,17 +24,24 @@ beforeAll(async () => {
     groupId: 'group-foo',
     originalGroupId: 'group-foo',
   });
-  console.log('🛎 ', 'stored');
 });
 
 test('renders products', async () => {
-  console.log('🛎 ', 'running test');
-  // const { db } = init();
-  // console.log('🛎 ', 'db initialized');
-  // const ref = await db.collection('neco').add({ name: 'test item' });
-  // console.log('🛎 ', 'done test query');
-  const { findByText } = render(<App />);
-  const addProductBtn = await findByText(/add product/i);
-  await wait();
-  // expect(addProductBtn).toBeInTheDocument();
+  const { findByText, container, getByTestId, getByText } = renderWithProvides(<Products />, {
+    db,
+    user: mockUser,
+  });
+  await waitForElementToBeRemoved(() => getByTestId('loading'));
+  // const b = await findByText(/add product/i);
+  // expect(b).toBeInTheDocument();
+  await waitFor(() => {
+    expect(getByText(/add product/i)).toBeInTheDocument();
+    console.log('🛎 ', 'je tam');
+    // expect(b).toBeInTheDocument();
+  });
+  console.log('🛎 ', 'potom');
+  getByText(/add product/i);
+  await browser(ReactDOM.findDOMNode(container).innerHTML);
+  // await browser(container.innerHTML);
+  await waitFor(() => {});
 });

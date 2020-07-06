@@ -9,8 +9,8 @@ import { globalStateContext } from 'app/GlobalStateContext';
 export const authContext = React.createContext();
 const { Provider } = authContext;
 
-export const AuthProvider = ({ children }) => {
-  const [storageUser, setStorageUser] = useLocalStorage('user');
+export const AuthProvider = ({ initialUser, children }) => {
+  const [storageUser, setStorageUser] = useLocalStorage('user', initialUser);
   const initialUserState = React.useRef({ user: storageUser });
   const [state, actions] = useMethods(userActions, initialUserState.current);
   const [oAuthUser, setOAuthUser] = React.useState();

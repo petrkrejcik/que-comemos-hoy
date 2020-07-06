@@ -9,7 +9,6 @@ import { Shops } from 'shop/Shops';
 import { Members } from 'member/Members';
 import { Loading } from 'app/Loading';
 import { authContext } from 'user/AuthProvider';
-import { ProductProvider } from 'product/ProductProvider';
 
 export const Content = () => {
   const [{ user }] = React.useContext(authContext);
@@ -36,9 +35,7 @@ export const Content = () => {
           <Route path="/products">
             <Switch>
               <Route path="/products/:section/:productId?">
-                <ProductProvider>
-                  <Products />
-                </ProductProvider>
+                <Products />
               </Route>
               <Redirect to="/products/shopping-list" />
             </Switch>

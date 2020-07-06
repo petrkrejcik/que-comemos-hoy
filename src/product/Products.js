@@ -6,6 +6,7 @@ import { ShoppingList } from 'product/ShoppingList';
 import { FrozenList } from 'product/FrozenList';
 import { Product } from 'product/Product';
 import { SECTIONS } from 'product/productUtils';
+import { ProductProvider } from 'product/ProductProvider';
 
 const PAGES = {
   list: 0,
@@ -23,16 +24,18 @@ export const Products = () => {
   };
 
   return (
-    <Swipeable index={getIndex()}>
-      <Container>
-        <ShoppingList />
-      </Container>
-      <Container>
-        <Product productId={productId} active={getIndex() === PAGES.product} />
-      </Container>
-      <Container>
-        <FrozenList />
-      </Container>
-    </Swipeable>
+    <ProductProvider>
+      <Swipeable index={getIndex()}>
+        <Container>
+          <ShoppingList />
+        </Container>
+        <Container>
+          <Product productId={productId} active={getIndex() === PAGES.product} />
+        </Container>
+        <Container>
+          <FrozenList />
+        </Container>
+      </Swipeable>
+    </ProductProvider>
   );
 };
