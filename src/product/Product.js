@@ -47,6 +47,7 @@ export const Product = (props) => {
   const user = useUser();
   const [userData] = useUserData();
   const [productMap, { set, setAll }] = useMap(null);
+  const variants = (product && product.variants) || {};
   // const [{ loading }, handleSave] = useUpdateIngredient(productMap);
 
   useEffect(() => {
@@ -142,23 +143,18 @@ export const Product = (props) => {
           <Add />
         </IconButton>
         <List aria-label="variants">
-          {product.variants &&
-            Object.keys(product.variants).map((key) => (
-              <ListItem
-                button
-                onClick={() =>
-                  history.push(`/products/${section}/${props.productId}/variant/${key}`)
-                }
-                key={key}
-              >
-                <ListItemText
-                  primary={product.variants[key].title}
-                  secondary={
-                    product.variants[key].rating && `Rating: ${product.variants[key].rating}`
-                  }
-                />
-              </ListItem>
-            ))}
+          {Object.keys(variants).map((key) => (
+            <ListItem
+              button
+              onClick={() => history.push(`/products/${section}/${props.productId}/variant/${key}`)}
+              key={key}
+            >
+              <ListItemText
+                primary={variants[key].title}
+                secondary={variants[key].rating && `Rating: ${variants[key].rating}`}
+              />
+            </ListItem>
+          ))}
         </List>
       </Grid>
     </Grid>
