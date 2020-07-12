@@ -7,17 +7,20 @@ import { FrozenList } from 'product/FrozenList';
 import { Product } from 'product/Product';
 import { SECTIONS } from 'product/productUtils';
 import { ProductProvider } from 'product/ProductProvider';
+import { ProductVariant } from 'product/productVariant/ProductVariant';
 
 const PAGES = {
   list: 0,
   product: 1,
-  frozen: 2,
+  variant: 2,
+  frozen: 3,
 };
 
 export const Products = () => {
-  const { section, productId } = useParams();
+  const { section, productId, variant } = useParams();
 
   const getIndex = () => {
+    if (variant) return PAGES.variant;
     if (productId) return PAGES.product;
     if (section === SECTIONS.frozen) return PAGES.frozen;
     return PAGES.list;
@@ -31,6 +34,9 @@ export const Products = () => {
         </Container>
         <Container>
           <Product productId={productId} active={getIndex() === PAGES.product} />
+        </Container>
+        <Container>
+          <ProductVariant productId={productId} active={getIndex() === PAGES.variant} />
         </Container>
         <Container>
           <FrozenList />

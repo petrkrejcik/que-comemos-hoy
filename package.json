@@ -16,6 +16,8 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-firebase-hooks": "^2.1.1",
+    "react-hook-form": "^6.0.3",
+    "react-query": "^2.4.14",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.1",
     "react-swipeable-views": "^0.13.9",

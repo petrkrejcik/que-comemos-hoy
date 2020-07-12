@@ -34,7 +34,7 @@ export const Content = () => {
         <Switch>
           <Route path="/products">
             <Switch>
-              <Route path="/products/:section/:productId?">
+              <Route path="/products/:section/:productId?/:variant?/:variantId?">
                 <Products />
               </Route>
               <Redirect to="/products/shopping-list" />

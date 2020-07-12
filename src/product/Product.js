@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useAsyncFn, useMap } from 'react-use';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import {
   TextField,
   Grid,
@@ -9,7 +9,13 @@ import {
   MenuItem,
   FormControlLabel,
   Checkbox,
+  Typography,
+  IconButton,
+  List,
+  ListItem,
+  ListItemText,
 } from '@material-ui/core';
+import { Add } from '@material-ui/icons';
 import {
   updateIngredient,
   removeProduct,
@@ -29,6 +35,7 @@ import { useUser, shops2Array, useUserData } from 'user/userUtils';
 
 export const Product = (props) => {
   const history = useHistory();
+  const { section } = useParams();
   // const classes = useStyles();
   const setHeader = useHeader(props.active);
   const [products] = useProducts();
@@ -125,6 +132,34 @@ export const Product = (props) => {
           }
           label="On shopping list"
         />
+      </Grid>
+      <Grid item xs={12}>
+        <Typography>Variant</Typography>
+        <IconButton
+          aria-label="add variant"
+          onClick={() => history.push(`/products/${section}/${props.productId}/variant`)}
+        >
+          <Add />
+        </IconButton>
+        <List aria-label="variants">
+          {product.variants &&
+            Object.keys(product.variants).map((key) => (
+              <ListItem
+                button
+                onClick={() =>
+                  history.push(`/products/${section}/${props.productId}/variant/${key}`)
+                }
+                key={key}
+              >
+                <ListItemText
+                  primary={product.variants[key].title}
+                  secondary={
+                    product.variants[key].rating && `Rating: ${product.variants[key].rating}`
+                  }
+                />
+              </ListItem>
+            ))}
+        </List>
       </Grid>
     </Grid>
   );
