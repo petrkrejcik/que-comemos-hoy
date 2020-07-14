@@ -55,6 +55,7 @@ export const ShoppingList = (props) => {
   if (loading) return LoadingComponent;
 
   const notOnShoppingList = productsLocal && productsLocal.filter(isOnShoppingList(false));
+  notOnShoppingList.sort((a, b) => (a.title.localeCompare(b.title) ? -1 : 1));
 
   return (
     <ToggleList
