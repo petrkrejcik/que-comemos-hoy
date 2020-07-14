@@ -32,6 +32,7 @@ import { globalStateContext } from 'app/GlobalStateContext';
 import { Loading } from 'app/Loading';
 import { useHeader } from 'header/headerUtils';
 import { useUser, shops2Array, useUserData } from 'user/userUtils';
+import { ProductVariantsList } from 'product/productVariantsList';
 
 export const Product = (props) => {
   const history = useHistory();
@@ -135,27 +136,7 @@ export const Product = (props) => {
         />
       </Grid>
       <Grid item xs={12}>
-        <Typography>Variant</Typography>
-        <IconButton
-          aria-label="add variant"
-          onClick={() => history.push(`/products/${section}/${props.productId}/variant`)}
-        >
-          <Add />
-        </IconButton>
-        <List aria-label="variants">
-          {Object.keys(variants).map((key) => (
-            <ListItem
-              button
-              onClick={() => history.push(`/products/${section}/${props.productId}/variant/${key}`)}
-              key={key}
-            >
-              <ListItemText
-                primary={variants[key].title}
-                secondary={variants[key].rating && `Rating: ${variants[key].rating}`}
-              />
-            </ListItem>
-          ))}
-        </List>
+        <ProductVariantsList variants={variants} productId={productId} />
       </Grid>
     </Grid>
   );
