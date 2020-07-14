@@ -37,9 +37,7 @@ export const ProductVariant = (props) => {
     shop: '',
     price: '',
   };
-  const { control, handleSubmit, getValues, setValue } = useForm({
-    defaultValues: variant,
-  });
+  const { control, handleSubmit, getValues, setValue, reset } = useForm({ defaultValues: variant });
   const { refetch: save, isLoading: isSaving } = useSave({ ...getValues(), variantId }, variant);
   const shops = userData?.shops || {};
   const shopsArray = shops2Array(shops);
@@ -70,7 +68,10 @@ export const ProductVariant = (props) => {
       ],
       // menu: [{ title: 'Remove', action: handleRemove }],
     });
-  }, [save, history, setHeader]);
+    if (!props.active) {
+      reset();
+    }
+  }, [save, history, setHeader, props.active]);
 
   return (
     <Grid container spacing={3}>
@@ -143,6 +144,7 @@ export const ProductVariant = (props) => {
                     onFocus={() => globalActions.focusInput(true)}
                     onBlur={() => globalActions.focusInput(false)}
                     fullWidth
+                    type="number"
                   />
                 }
                 name="price"
