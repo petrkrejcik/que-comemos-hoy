@@ -1,69 +1,46 @@
 import React from 'react';
-import { Switch, Route, useHistory, Redirect } from 'react-router-dom';
-import { List, Card, CardContent, Typography } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-import { useColData, useFirestore } from 'storage/firebase';
-import { useUser } from 'user/userUtils';
+import { Switch, Route, useHistory, Redirect, useParams } from 'react-router-dom';
 import { Recipe } from './Recipe';
+import { RecipesProvider } from 'recipe/RecipesProvider';
+import { RecipesList } from 'recipe/RecipesList';
+import { AddEditRecipe } from 'recipe/AddEditRecipe';
+import { Swipeable } from 'app/Swipeable';
+import { Container } from '@material-ui/core';
+import { ProductProvider } from 'product/ProductProvider';
+import { Shell } from 'app/Shell';
 
-export const Recipes = () => {
-  const user = useUser();
-  const db = useFirestore();
-
-  const [recipes, loading] = useColData(
-    db.collection(`userGroups/${user.groupId}/recipes`),
-    // .orderBy('insertDate')
-    { idField: 'id' }
-  );
-
-  if (loading) {
-    return 'loading';
-  }
-
-  return (
-    <Switch>
-      <Route exact path="/recipes/:recipeId">
-        <Recipe />
-      </Route>
-      <Route exact path="/recipes">
-        <List>
-          {recipes.map((recipe) => (
-            <RecipeItem recipe={recipe} key={recipe.id} />
-          ))}
-        </List>
-      </Route>
-      <Redirect to="/recipes" />
-    </Switch>
-  );
+const PAGES = {
+  list: 0,
+  recipe: 1,
+  addEdit: 2,
 };
 
-const recipeItemStyle = makeStyles({
-  root: {
-    maxWidth: 345,
-  },
-  media: {
-    height: 140,
-  },
-});
+export const Recipes = () => {
+  const { recipeId } = useParams();
 
-const RecipeItem = ({ recipe }) => {
-  const classes = recipeItemStyle();
-  const history = useHistory();
-
-  const handleRecipeClick = (id) => () => {
-    history.push(`/recipes/${id}`, { recipe });
+  const getIndex = () => {
+    if (recipeId === 'new') return PAGES.addEdit;
+    if (recipeId) return PAGES.recipe;
+    return PAGES.list;
   };
+
   return (
-    <Card className={classes.root} onClick={handleRecipeClick(recipe.id)}>
-      {/* <CardMedia title={recipe.title} /> */}
-      <CardContent>
-        <Typography className={classes.title} color="textSecondary" gutterBottom>
-          {recipe.title}
-        </Typography>
-        <Typography variant="body2" component="p" color="textSecondary">
-          {recipe.description}
-        </Typography>
-      </CardContent>
-    </Card>
+    <Shell>
+      <ProductProvider>
+        <RecipesProvider>
+          <Swipeable index={getIndex()}>
+            <Container>
+              <RecipesList active={getIndex() === PAGES.list} />
+            </Container>
+            <Container>
+              <Recipe active={getIndex() === PAGES.recipe} />
+            </Container>
+            <Container>
+              <AddEditRecipe active={getIndex() === PAGES.addEdit} />
+            </Container>
+          </Swipeable>
+        </RecipesProvider>
+      </ProductProvider>
+    </Shell>
   );
 };

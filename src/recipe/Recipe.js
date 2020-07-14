@@ -2,30 +2,29 @@ import React from 'react';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
 import { useParams } from 'react-router-dom';
 import { Button, TextField, List } from '@material-ui/core';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+
 import { useFirestore, useColData } from 'storage/firebase';
 import { useUser } from 'user/userUtils';
-// import { getRecipeById } from './recipeUtils';
+import { useRecipes } from 'recipe/recipesHooks';
+import { useProducts } from 'product/productUtils';
 
 export const Recipe = (props) => {
   const { recipeId } = useParams();
   const user = useUser();
   const db = useFirestore();
+  const [recipes, recipesLoading, recipesError] = useRecipes();
+  const [products, productsLoading] = useProducts();
   const [ingredientSearch] = React.useState('');
-
-  const [recipe, loading, error] = useDocumentData(
-    db.doc(`userGroups/${user.groupId}/recipes/${recipeId}`),
-    { idField: 'id' }
-  );
-
-  const [ingredients, ingredientsLoading] = useColData(
-    db.collection(`userGroups/${user.groupId}/ingredients`),
-    { idField: 'id' }
-  );
+  // const recipe = (recipes && recipes[recipeId]) || {
+  //   title: '',
+  //   description: '',
+  //   ingredients: '',
+  // };
+  // const { control, handleSubmit, getValues, setValue, reset } = useForm({ defaultValues: recipe });
 
   const addIngredient = async (ingredient) => {
     if (!ingredient) return;
-    const exists = recipeIngredients.find((ing) => ing.id === ingredient.id);
+    const exists = ingredients.find((ing) => ing.id === ingredient.id);
     if (exists) return;
 
     // TODO: batch
@@ -45,15 +44,22 @@ export const Recipe = (props) => {
       });
   };
 
-  if (loading || ingredientsLoading) {
+  if (recipesLoading || productsLoading) {
     return 'loading';
   }
 
-  if (error) {
-    console.log('🛎 ', 'error', error);
+  if (recipesError) {
+    console.log('🛎 ', 'error', recipesError);
     return null;
   }
-  const recipeIngredients = Object.keys(recipe.ingredients).reduce((acc, key) => {
+
+  const recipe = recipes[recipeId];
+
+  if (!recipe) {
+    return 'Recipe not found';
+  }
+
+  const ingredients = Object.keys(recipe.ingredients).reduce((acc, key) => {
     return [...acc, { ...recipe.ingredients[key], id: key }];
   }, []);
 
@@ -66,29 +72,12 @@ export const Recipe = (props) => {
         <Add />
       </IconButton> */}
       <List>
-        {recipeIngredients.map((ingredient) => (
+        {ingredients.map((ingredient) => (
           <div key={ingredient.id}>
             {ingredient.title} {ingredient.available ? '✅' : '❌'}
           </div>
         ))}
       </List>
-      <Autocomplete
-        options={ingredients.filter((ing) => !recipeIngredients.find((i) => i.id === ing.id))}
-        getOptionLabel={(option) => option.title}
-        freeSolo
-        renderInput={(params) => <TextField {...params} label="Search" />}
-        onChange={(event, value) => {
-          addIngredient(value);
-        }}
-      />
-      <Button
-        onClick={addIngredient}
-        color="primary"
-        variant="outlined"
-        disabled={ingredientSearch.trim() === ''}
-      >
-        Add
-      </Button>
     </>
   );
 };

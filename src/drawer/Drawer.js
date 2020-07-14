@@ -51,6 +51,13 @@ export const Drawer = (props) => {
             </Link>
           </ListItemText>
         </ListItem>
+        <ListItem button>
+          <ListItemText>
+            <Link to="/recipes" style={{ textDecoration: 'none' }}>
+              Recipes
+            </Link>
+          </ListItemText>
+        </ListItem>
         <Divider />
         <ListItem button>{user && <ListItemText primary="Logout" onClick={logout} />}</ListItem>
       </List>

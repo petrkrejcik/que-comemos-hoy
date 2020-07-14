@@ -3,17 +3,16 @@ import { Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
-import { AcUnit, ShoppingCart } from '@material-ui/icons';
 import { useHistory, useLocation } from 'react-router-dom';
 import { globalStateContext } from 'app/GlobalStateContext';
 
-export const Navigation = () => {
+export const Navigation = (props) => {
   const classes = useStyles();
   const location = useLocation();
   const history = useHistory();
   const { globalState } = React.useContext(globalStateContext);
 
-  const value = pages.findIndex(({ route }) => {
+  const value = props.pages.findIndex(({ route }) => {
     if (route === '/') {
       return location.pathname === '/';
     }
@@ -27,13 +26,13 @@ export const Navigation = () => {
       <BottomNavigation
         value={value}
         onChange={(event, newValue) => {
-          const route = pages[newValue].route;
+          const route = props.pages[newValue].route;
           history.push(route);
         }}
         showLabels
         className={classes.root}
       >
-        {pages.map((page) => (
+        {props.pages.map((page) => (
           <BottomNavigationAction label={page.label} icon={<page.icon />} key={page.route} />
         ))}
       </BottomNavigation>
@@ -49,21 +48,3 @@ const useStyles = makeStyles({
     height: 56,
   },
 });
-
-const pages = [
-  {
-    label: 'Shopping list',
-    route: '/products/shopping-list',
-    icon: ShoppingCart,
-  },
-  {
-    label: 'Frozen',
-    route: '/products/frozen',
-    icon: AcUnit,
-  },
-  // {
-  //   label: 'Schedule',
-  //   route: '/schedule',
-  //   icon: LocationOnIcon,
-  // },
-];

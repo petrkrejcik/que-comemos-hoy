@@ -5,6 +5,7 @@ import { useParams, useLocation } from 'react-router-dom';
 import { Swipeable } from 'app/Swipeable';
 import { Shop } from 'shop/Shop';
 import { ShopsList } from 'shop/ShopsList';
+import { Shell } from 'app/Shell';
 
 const PAGES = {
   list: 0,
@@ -23,16 +24,18 @@ export const Shops = (props) => {
   };
 
   return (
-    <Box width={1}>
-      <Swipeable index={getIndex()}>
-        <Container index={PAGES.list}>
-          <ShopsList active={getIndex() === PAGES.list} />
-        </Container>
-        <Container index={PAGES.detail}>
-          <Shop active={getIndex() === PAGES.detail} />
-        </Container>
-      </Swipeable>
-    </Box>
+    <Shell>
+      <Box width={1}>
+        <Swipeable index={getIndex()}>
+          <Container index={PAGES.list}>
+            <ShopsList active={getIndex() === PAGES.list} />
+          </Container>
+          <Container index={PAGES.detail}>
+            <Shop active={getIndex() === PAGES.detail} />
+          </Container>
+        </Swipeable>
+      </Box>
+    </Shell>
   );
 };
 

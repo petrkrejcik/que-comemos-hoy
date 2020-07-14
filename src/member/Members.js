@@ -9,6 +9,7 @@ import { MembersList } from 'member/MembersList';
 import { useUser } from 'user/userUtils';
 import { Loading } from 'app/Loading';
 import { useFirestore } from 'storage/firebase';
+import { Shell } from 'app/Shell';
 
 const PAGES = {
   list: 0,
@@ -39,16 +40,18 @@ export const Members = (props) => {
   };
 
   return (
-    <Box width={1}>
-      <Swipeable index={getIndex()}>
-        <Container>
-          <MembersList members={members} active={getIndex() === PAGES.list} />
-        </Container>
-        <Container>
-          <Member members={members} active={getIndex() === PAGES.detail} />
-        </Container>
-      </Swipeable>
-    </Box>
+    <Shell>
+      <Box width={1}>
+        <Swipeable index={getIndex()}>
+          <Container>
+            <MembersList members={members} active={getIndex() === PAGES.list} />
+          </Container>
+          <Container>
+            <Member members={members} active={getIndex() === PAGES.detail} />
+          </Container>
+        </Swipeable>
+      </Box>
+    </Shell>
   );
 };
 
