@@ -1,21 +1,23 @@
 import React from 'react';
-import { Switch, Route, useHistory, Redirect } from 'react-router-dom';
 import { List, Card, CardContent, Typography, IconButton, Box, Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import { Add } from '@material-ui/icons';
+import { Switch, Route, useHistory, Redirect } from 'react-router-dom';
+import { useHeader } from 'header/headerUtils';
+import { useRecipes } from 'recipe/recipesHooks';
+import { RecipesProvider } from 'recipe/RecipesProvider';
 import { useColData, useFirestore } from 'storage/firebase';
 import { useUser } from 'user/userUtils';
 import { Recipe } from './Recipe';
-import { RecipesProvider } from 'recipe/RecipesProvider';
-import { useRecipes } from 'recipe/recipesHooks';
-import { Add } from '@material-ui/icons';
 
-export const RecipesList = () => {
-  const [recipes, loading] = useRecipes();
+export const RecipesList = (props) => {
+  const recipes = useRecipes();
   const history = useHistory();
+  const setHeader = useHeader(props.active);
 
-  if (loading) {
-    return 'loading';
-  }
+  React.useEffect(() => {
+    setHeader({});
+  }, [setHeader]);
 
   return (
     <List>

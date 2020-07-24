@@ -1,6 +1,7 @@
 import React from 'react';
-import { useFirestore, useColData } from 'storage/firebase';
 import { useMap } from 'react-use';
+import { Loading } from 'app/Loading';
+import { useFirestore, useColData } from 'storage/firebase';
 import { useUser } from 'user/userUtils';
 
 export const recipesContext = React.createContext();
@@ -9,14 +10,16 @@ export const RecipesProvider = ({ children }) => {
   const { Provider } = recipesContext;
   const user = useUser();
   const db = useFirestore();
-  const [productOptions] = useMap({
+  const [options] = useMap({
     idField: 'id',
   });
 
-  const recipes = useColData(
+  const [recipes, loading] = useColData(
     db.collection(`userGroups/${user.groupId}/recipes`).orderBy('insertDate'),
-    productOptions
+    options
   );
+
+  if (loading) return <Loading />;
 
   return (
     <Provider

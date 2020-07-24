@@ -1,18 +1,18 @@
 import React from 'react';
+import { Button, TextField, List } from '@material-ui/core';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
 import { useParams } from 'react-router-dom';
-import { Button, TextField, List } from '@material-ui/core';
 
+import { useProducts } from 'product/productUtils';
+import { useRecipes } from 'recipe/recipesHooks';
 import { useFirestore, useColData } from 'storage/firebase';
 import { useUser } from 'user/userUtils';
-import { useRecipes } from 'recipe/recipesHooks';
-import { useProducts } from 'product/productUtils';
 
-export const Recipe = (props) => {
+export const RecipeDeprecated = (props) => {
   const { recipeId } = useParams();
   const user = useUser();
   const db = useFirestore();
-  const [recipes, recipesLoading, recipesError] = useRecipes();
+  const recipes = useRecipes();
   const [products, productsLoading] = useProducts();
   const [ingredientSearch] = React.useState('');
   // const recipe = (recipes && recipes[recipeId]) || {
@@ -44,22 +44,17 @@ export const Recipe = (props) => {
       });
   };
 
-  if (recipesLoading || productsLoading) {
+  if (productsLoading) {
     return 'loading';
   }
 
-  if (recipesError) {
-    console.log('🛎 ', 'error', recipesError);
-    return null;
-  }
-
-  const recipe = recipes[recipeId];
+  const recipe = recipes.find((r) => r.id === recipeId);
 
   if (!recipe) {
     return 'Recipe not found';
   }
 
-  const ingredients = Object.keys(recipe.ingredients).reduce((acc, key) => {
+  const ingredients = Object.keys(recipe.ingredients || {}).reduce((acc, key) => {
     return [...acc, { ...recipe.ingredients[key], id: key }];
   }, []);
 

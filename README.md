@@ -13,6 +13,7 @@
 - variant
   - zobrazit varianty produktu a u kazdy cenu
   - zobrazit kolik stoji tahle varianta v urcitem obchode
+- recepty
 - pri testu neni logged user, protoze to na nej v Content nepocka (Content se nerenderuje)
 - rozlisit produkt vs. uvareny jidlo v mrazaku
 - odstranit `--env=jest-environment-jsdom-sixteen` az bude jest 25
@@ -95,6 +96,7 @@ Wishlist
 ## DB
 
 Hooks doc: https://github.com/csfrequency/react-firebase-hooks/tree/7eb49f1624d7c1bfb5ad8083a8702b19bf0e6929/firestore
+Firestore queries: https://medium.com/@aaron_lu1/firebase-cloud-firestore-add-set-update-delete-get-data-6da566513b1b
 
 ```json
 {

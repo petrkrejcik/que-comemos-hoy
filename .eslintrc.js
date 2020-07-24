@@ -8,31 +8,32 @@ const getAllDirs = (dir) => {
 };
 
 module.exports = {
-  extends: ['plugin:cypress/recommended'],
-  plugins: ['cypress'],
-  // rules: {
-  //   'import/order': [
-  //     'warn',
-  //     {
-  //       alphabetize: { order: 'asc', caseInsensitive: true },
-  //       groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
-  //       pathGroups: [
-  //         {
-  //           pattern: 'react',
-  //           group: 'external',
-  //           position: 'before',
-  //         },
-  //         {
-  //           // prints 'dir,dir/**' for each dir
-  //           pattern: `{${getAllDirs('src').join(',')},${getAllDirs('src')
-  //             .map((dir) => `${dir}/**`)
-  //             .join(',')}}`,
-  //           group: 'internal',
-  //         },
-  //       ],
-  //       pathGroupsExcludedImportTypes: ['react'],
-  //     },
-  //   ],
-  //   'no-restricted-imports': ['warn', { patterns: ['../*'] }],
-  // },
+  // extends: ['plugin:cypress/recommended'],
+  extends: ['react-app'],
+  // plugins: ['cypress'],
+  rules: {
+    'import/order': [
+      'warn',
+      {
+        alphabetize: { order: 'asc', caseInsensitive: true },
+        groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
+        pathGroups: [
+          {
+            pattern: 'react',
+            group: 'external',
+            position: 'before',
+          },
+          {
+            // prints 'dir,dir/**' for each dir
+            pattern: `{${getAllDirs('src').join(',')},${getAllDirs('src')
+              .map((dir) => `${dir}/**`)
+              .join(',')}}`,
+            group: 'internal',
+          },
+        ],
+        pathGroupsExcludedImportTypes: ['react'],
+      },
+    ],
+    'no-restricted-imports': ['warn', { patterns: ['../*'] }],
+  },
 };

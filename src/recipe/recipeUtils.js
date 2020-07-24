@@ -1,16 +1,19 @@
-// import { useFirestore } from 'storage/firebase';
+import slugify from 'slugify';
 
-// export const getRecipeById = async (db, id, onChange) => {
+export const upsert = (db, user) => (values, id) => async () => {
+  if (id) {
+    // update
+    await db.doc(`userGroups/${user.groupId}/recipes/${id}`).update({ ...values, updateDate: new Date() });
+  } else {
+    // insert
+    id = slugify(values.title, { lower: true });
+    await db
+      .collection(`userGroups/${user.groupId}/recipes`)
+      .doc(id)
+      .set({ ...values, insertDate: new Date() });
+  }
+};
 
-//   const doc = await db.collection('recipes').doc(id).get();
-//   if (!doc.exists) {
-//     throw new Error('Recipe not found');
-//   }
-//   doc.onSnapshot((snapshot) => {
-//     const recipe = {
-//       id: snapshot.id,
-//       ...snapshot.data(),
-//     };
-//     onChange(recipe);
-//   });
-// };
+export const remove = (db, user) => (id) => async () => {
+  await db.doc(`userGroups/${user.groupId}/recipes/${id}`).delete();
+};

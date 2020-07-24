@@ -1,26 +1,23 @@
 import React from 'react';
-import { Switch, Route, useHistory, Redirect, useParams } from 'react-router-dom';
-import { Recipe } from './Recipe';
-import { RecipesProvider } from 'recipe/RecipesProvider';
-import { RecipesList } from 'recipe/RecipesList';
-import { AddEditRecipe } from 'recipe/AddEditRecipe';
-import { Swipeable } from 'app/Swipeable';
 import { Container } from '@material-ui/core';
-import { ProductProvider } from 'product/ProductProvider';
+import { Switch, Route, useHistory, Redirect, useParams } from 'react-router-dom';
 import { Shell } from 'app/Shell';
+import { Swipeable } from 'app/Swipeable';
+import { ProductProvider } from 'product/ProductProvider';
+import { RecipeDetail } from 'recipe/recipeDetail';
+import { RecipesList } from 'recipe/RecipesList';
+import { RecipesProvider } from 'recipe/RecipesProvider';
 
 const PAGES = {
   list: 0,
-  recipe: 1,
-  addEdit: 2,
+  detail: 1,
 };
 
 export const Recipes = () => {
   const { recipeId } = useParams();
 
   const getIndex = () => {
-    if (recipeId === 'new') return PAGES.addEdit;
-    if (recipeId) return PAGES.recipe;
+    if (recipeId) return PAGES.detail;
     return PAGES.list;
   };
 
@@ -33,10 +30,7 @@ export const Recipes = () => {
               <RecipesList active={getIndex() === PAGES.list} />
             </Container>
             <Container>
-              <Recipe active={getIndex() === PAGES.recipe} />
-            </Container>
-            <Container>
-              <AddEditRecipe active={getIndex() === PAGES.addEdit} />
+              <RecipeDetail active={getIndex() === PAGES.detail} />
             </Container>
           </Swipeable>
         </RecipesProvider>

@@ -1,9 +1,9 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { makeStyles } from '@material-ui/core/styles';
 import { List, ListItem, ListItemText, Divider, SwipeableDrawer } from '@material-ui/core';
-import { useLogout } from 'user/userUtils';
+import { makeStyles } from '@material-ui/core/styles';
+import { Link } from 'react-router-dom';
 import { globalStateContext } from 'app/GlobalStateContext';
+import { useLogout } from 'user/userUtils';
 import { useUser } from 'user/userUtils';
 
 const useStyles = makeStyles({
@@ -35,6 +35,15 @@ export const Drawer = (props) => {
             <Divider />
           </>
         )}
+        <ListItem button>
+          {user && (
+            <ListItemText>
+              <Link to="/products" style={{ textDecoration: 'none' }}>
+                Products
+              </Link>
+            </ListItemText>
+          )}
+        </ListItem>
         <ListItem button>
           {user && (
             <ListItemText>
