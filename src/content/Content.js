@@ -1,10 +1,10 @@
 import React from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
+import { Loading } from 'app/Loading';
+import { Members } from 'member/Members';
 import { Products } from 'product/Products';
 import { Recipes } from 'recipe/Recipes';
 import { Shops } from 'shop/Shops';
-import { Members } from 'member/Members';
-import { Loading } from 'app/Loading';
 import { authContext } from 'user/AuthProvider';
 
 export const Content = () => {
@@ -28,7 +28,7 @@ export const Content = () => {
     <Switch>
       <Route path="/products">
         <Switch>
-          <Route path="/products/:section/:productId?/:variant?/:variantId?">
+          <Route path="/products/:section/:productId?/:brand?/:brandId?/:variant?/:variantId?">
             <Products />
           </Route>
           <Redirect to="/products/shopping-list" />

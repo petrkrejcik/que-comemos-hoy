@@ -2,7 +2,7 @@ import { useQuery } from 'react-query';
 import { useHistory } from 'react-router-dom';
 import { useSnackbar } from 'snackbar/Snackbar';
 
-export const useCrud = (key, queryFn) => {
+export const useCrud = (key, queryFn, options = {}) => {
   const history = useHistory();
   const showSnackbar = useSnackbar();
 
@@ -13,5 +13,9 @@ export const useCrud = (key, queryFn) => {
       history.goBack();
       showSnackbar({ message: 'Saved' });
     },
+    onError: () => {
+      showSnackbar({ message: 'Error during saving' });
+    },
+    ...options,
   });
 };

@@ -1,22 +1,24 @@
 import React from 'react';
 import { TextField } from '@material-ui/core';
-import { Autocomplete } from '@material-ui/lab';
 import { makeStyles } from '@material-ui/core/styles';
+import { Autocomplete } from '@material-ui/lab';
+import { globalStateContext } from 'app/GlobalStateContext';
+import { useProduct } from 'product/productHooks';
 import {
   updateIngredient,
-  addIngredient,
   validateIngredient,
   useProducts,
   isOnShoppingList,
   toggleIsOnShoppingList,
-} from './productUtils';
+  upsert,
+} from 'product/productUtils';
 import { useFirestore } from 'storage/firebase';
-import { globalStateContext } from 'app/GlobalStateContext';
 import { useUser } from 'user/userUtils';
 
 export const ProductAutocomplete = (props) => {
   const classes = useStyles();
   const [products] = useProducts();
+  const emptyProduct = useProduct();
   const db = useFirestore();
   const [title, setTitle] = React.useState(props.edit?.title || '');
   const { globalActions } = React.useContext(globalStateContext);
@@ -30,11 +32,12 @@ export const ProductAutocomplete = (props) => {
 
   const handleConfirmNew = async () => {
     if (!validateIngredient(title, products)) return;
-    if (props.edit) {
-      updateIngredient(db, props.edit, user, { title });
-    } else {
-      addIngredient(db, title, user);
-    }
+    upsert(db, user)({ ...emptyProduct, title })();
+    // if (props.edit) {
+    //   updateIngredient(db, props.edit, user, { title });
+    // } else {
+    //   addIngredient(db, title, user);
+    // }
     clearInput();
   };
 

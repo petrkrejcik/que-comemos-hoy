@@ -14,6 +14,8 @@
   - zobrazit varianty produktu a u kazdy cenu
   - zobrazit kolik stoji tahle varianta v urcitem obchode
 - recepty
+- product provider by mel mit loader a pustit dal jen po nacteni produktu jako recipes
+- ingredients => products
 - pri testu neni logged user, protoze to na nej v Content nepocka (Content se nerenderuje)
 - rozlisit produkt vs. uvareny jidlo v mrazaku
 - odstranit `--env=jest-environment-jsdom-sixteen` az bude jest 25
@@ -105,8 +107,8 @@ Firestore queries: https://medium.com/@aaron_lu1/firebase-cloud-firestore-add-se
       "ingredients": {
         "product1": {
           "title": "Product 1",
-          "available": true,
-          "isOnShoppingList": false,
+          "-available": true,
+          "-isOnShoppingList": false,
           "lists": {
             "shopping": true
           },
@@ -114,12 +116,30 @@ Firestore queries: https://medium.com/@aaron_lu1/firebase-cloud-firestore-add-se
             "default": true,
             "frozen": true
           },
+          "brands": {
+            "voll-damm": {
+              "title": "Voll Damm",
+              "rating": 3.5,
+              "variants": {
+                "33": {
+                  "title": "Voll Damm 33 ml",
+                  "+quantity": "33",
+                  "+unit": "ml",
+                  "shops": {
+                    "shop1": {
+                      "price": 0.7
+                    }
+                  }
+                }
+              }
+            }
+          },
           "variants": {
             "voldamm33": {
               "title": "Voll Damm 33 ml",
-              "quantity_": "33",
-              "unit_": "ml",
-              "rating": 3.5,
+              "+quantity": "33",
+              "+unit": "ml",
+              "-rating": 3.5,
               "shops": {
                 "shop1": {
                   "price": 0.7
@@ -132,7 +152,7 @@ Firestore queries: https://medium.com/@aaron_lu1/firebase-cloud-firestore-add-se
           "title": "Product 2",
           "available": false,
           "shop": "eroski",
-          "shop_": {
+          "-shop": {
             "shop1": {
               "price": 1,
               "selected": true

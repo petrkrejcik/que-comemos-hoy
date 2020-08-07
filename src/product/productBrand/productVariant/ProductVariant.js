@@ -1,27 +1,17 @@
 import React, { useEffect } from 'react';
-import { useAsyncFn } from 'react-use';
+import { TextField, Grid, Select, MenuItem, Table, TableBody, TableRow, TableCell, TableHead } from '@material-ui/core';
 import { useForm, Controller } from 'react-hook-form';
 import { useHistory, useParams } from 'react-router-dom';
-import {
-  TextField,
-  Grid,
-  Select,
-  MenuItem,
-  Table,
-  TableBody,
-  TableRow,
-  TableCell,
-  TableHead,
-} from '@material-ui/core';
+import { useAsyncFn } from 'react-use';
 // import { makeStyles } from '@material-ui/core/styles';
 import { globalStateContext } from 'app/GlobalStateContext';
-import { useFirestore } from 'storage/firebase';
-import { useUser, useUserData, shops2Array } from 'user/userUtils';
 import { Loading } from 'app/Loading';
 import { useHeader } from 'header/headerUtils';
-import { addShop, updateShop, removeShop } from 'shop/shopUtils';
-import { useSave } from 'product/productVariant/productVariantHooks';
+import { useSave } from 'product/productBrand/productVariant/productVariantHooks';
 import { useProducts } from 'product/productUtils';
+import { addShop, updateShop, removeShop } from 'shop/shopUtils';
+import { useFirestore } from 'storage/firebase';
+import { useUser, useUserData, shops2Array } from 'user/userUtils';
 
 export const ProductVariant = (props) => {
   const history = useHistory();
@@ -52,7 +42,7 @@ export const ProductVariant = (props) => {
     Object.keys(variant).map((key) => {
       setValue(key, variant[key]);
     });
-  }, [variant.title, setValue]);
+  }, [variant.title, setValue, variant]);
 
   useEffect(() => {
     setHeader({
@@ -71,7 +61,7 @@ export const ProductVariant = (props) => {
     if (!props.active) {
       reset();
     }
-  }, [save, history, setHeader, props.active]);
+  }, [save, history, setHeader, props.active, handleSubmit, reset]);
 
   return (
     <Grid container spacing={3}>
@@ -86,20 +76,6 @@ export const ProductVariant = (props) => {
             />
           }
           name="title"
-          control={control}
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <Controller
-          as={
-            <TextField
-              label="Rating"
-              onFocus={() => globalActions.focusInput(true)}
-              onBlur={() => globalActions.focusInput(false)}
-              fullWidth
-            />
-          }
-          name="rating"
           control={control}
         />
       </Grid>

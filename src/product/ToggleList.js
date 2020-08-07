@@ -9,11 +9,11 @@ import {
   ExpansionPanelDetails,
   Divider,
 } from '@material-ui/core';
-import { KeyboardArrowRight, KeyboardArrowDown } from '@material-ui/icons';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { KeyboardArrowRight, KeyboardArrowDown } from '@material-ui/icons';
 import { useHeader } from 'header/headerUtils';
-import { AddNew } from './ProductListAddNew';
 import { ProductList } from 'product/ProductList';
+import { AddNew } from './ProductListAddNew';
 
 export const ToggleList = (props) => {
   const classes = useStyles();
@@ -43,8 +43,11 @@ export const ToggleList = (props) => {
           icon={props.topProductsIcon}
         />
       </Box>
+
       {props.addNew && <AddNew />}
+
       <Divider />
+
       {props.bottomProducts.length > 0 && (
         <ExpansionPanel elevation={0} onChange={handleExpand} style={{ width: '100%' }}>
           <ExpansionPanelSummary className={classes.summary}>

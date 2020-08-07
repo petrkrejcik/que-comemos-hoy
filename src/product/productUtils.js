@@ -1,11 +1,8 @@
 import React from 'react';
-import produce from 'immer';
-// import { useAsyncFn } from 'react-use';
-// import { useHistory } from 'react-router-dom';
 import firebase from 'firebase/app';
-// import { useFirestore } from 'storage/firebase';
+import produce from 'immer';
+import slugify from 'slugify';
 import { productContext } from 'product/ProductProvider';
-// import { useUser } from 'user/userUtils';
 
 // export const useUpdateIngredient = async (product) => {
 //   const db = useFirestore();
@@ -44,6 +41,25 @@ import { productContext } from 'product/ProductProvider';
 //   }, [product, user, history]);
 // };
 
+export const upsert = (db, user, updateFn) => (values) => async () => {
+  const product = updateFn(values);
+  if (product.id) {
+    // update
+    await db.doc(`userGroups/${user.groupId}/ingredients/${product.id}`).update({ ...product, updateDate: new Date() });
+  } else {
+    // insert
+    const id = slugify(values.title, { lower: true });
+    await db
+      .collection(`userGroups/${user.groupId}/ingredients`)
+      .doc(id)
+      .set({ ...product, insertDate: new Date() });
+  }
+};
+
+export const remove = (db, user) => (id) => async () => {
+  await db.doc(`userGroups/${user.groupId}/ingredients/${id}`).delete();
+};
+
 export const updateIngredient = async (db, ingredient, user, data) => {
   if (!ingredient) return;
   const batch = db.batch();
@@ -71,16 +87,6 @@ export const updateIngredient = async (db, ingredient, user, data) => {
     });
   }
   await batch.commit();
-};
-
-export const addIngredient = async (db, title, user) => {
-  if (title.trim() === '') return;
-  await db.collection(`userGroups/${user.groupId}/ingredients`).add({
-    title: title,
-    lists: { [LISTS.shopping]: true },
-    availability: {},
-    insertDate: new Date(),
-  });
 };
 
 export const removeProduct = async (db, productId, user) => {
@@ -117,13 +123,6 @@ export const isFrozen = (product) => !!product.availability[AVAILABILITY.frozen]
 export const isAvailable = (product) => !!product.availability[AVAILABILITY.default];
 
 export const toggleIsOnShoppingList = (product) => {
-  // const copyProduct = { ...product };
-  // if (isOnShoppingList(true)(copyProduct)) {
-  //   delete copyProduct.lists[LISTS.shopping];
-  // } else {
-  //   copyProduct.lists[LISTS.shopping] = true;
-  // }
-  // return copyProduct;
   return produce(product, (draft) => {
     draft.lists.shopping = !product.lists.shopping;
   });
