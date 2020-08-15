@@ -44,7 +44,7 @@ export const ProductBrandDetail = (props) => {
       }}
       active={props.active}
       defaultValues={brand}
-      renderFields={(control) => [
+      renderFields={({ control }) => [
         <Controller as={TextField} name="title" control={control} label="Title" rules={{ required: true }} fullWidth />,
         <Controller as={TextField} name="rating" control={control} label="Rating" fullWidth />,
         <ProductVariantList />,

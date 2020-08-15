@@ -13,6 +13,7 @@
     "firebase": "^7.15.3",
     "gh-pages": "^2.2.0",
     "immer": "^6.0.5",
+    "material-table": "1.67.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-firebase-hooks": "^2.1.1",

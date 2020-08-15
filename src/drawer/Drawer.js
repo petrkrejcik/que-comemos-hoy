@@ -1,5 +1,5 @@
 import React from 'react';
-import { List, ListItem, ListItemText, Divider, SwipeableDrawer } from '@material-ui/core';
+import { List, ListItem, ListItemText, Divider, Drawer as DrawerMui } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
 import { globalStateContext } from 'app/GlobalStateContext';
@@ -20,12 +20,7 @@ export const Drawer = (props) => {
   const [drawerOpened, openDrawer] = drawerState;
 
   return (
-    <SwipeableDrawer
-      open={drawerOpened}
-      onClose={openDrawer(false)}
-      onOpen={openDrawer(true)}
-      className={classes.root}
-    >
+    <DrawerMui open={drawerOpened} onClose={openDrawer(false)} className={classes.root}>
       <List>
         {user && (
           <>
@@ -70,6 +65,6 @@ export const Drawer = (props) => {
         <Divider />
         <ListItem button>{user && <ListItemText primary="Logout" onClick={logout} />}</ListItem>
       </List>
-    </SwipeableDrawer>
+    </DrawerMui>
   );
 };

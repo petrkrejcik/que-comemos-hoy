@@ -21,7 +21,6 @@ export const ProductDetail = (props) => {
   if (!props.active) return null;
 
   const shops = shops2Array(userData?.shops || {});
-
   return (
     <ItemDetail
       id={productId === 'new' ? null : productId}
@@ -38,7 +37,7 @@ export const ProductDetail = (props) => {
       handleRemove={remove(db, user)}
       active={props.active}
       defaultValues={product}
-      renderFields={(control) => [
+      renderFields={({ control }) => [
         <Controller as={TextField} name="title" control={control} label="Title" fullWidth />,
         <Controller as={ItemDetailSelect} name="shop" control={control} label="Shop" options={shops} fullWidth />,
         <Controller as={ItemDetailCheckbox} name="isOnShoppingList" control={control} label="On shopping list" />,

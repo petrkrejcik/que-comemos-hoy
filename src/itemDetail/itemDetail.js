@@ -10,9 +10,8 @@ import { useCrud } from 'itemDetail/itemDetailHooks';
 export const ItemDetail = (props) => {
   const history = useHistory();
   const [saveOptions, setSaveOptions] = React.useState();
-  const { control, handleSubmit, getValues, setValue, reset, formState } = useForm({
-    defaultValues: props.defaultValues,
-  });
+  const form = useForm({ defaultValues: props.defaultValues });
+  const { handleSubmit, getValues, setValue, reset, formState } = form;
   const { dirty } = formState;
   const setHeader = useHeader(props.active);
   // const { globalActions } = React.useContext(globalStateContext);
@@ -29,7 +28,7 @@ export const ItemDetail = (props) => {
   React.useEffect(() => {
     setHeader({
       left: {
-        icon: 'close',
+        icon: 'back',
         action: history.goBack,
       },
       right: [
@@ -58,7 +57,7 @@ export const ItemDetail = (props) => {
 
   return (
     <Grid container spacing={3}>
-      {React.Children.map(props.renderFields(control), (child) => (
+      {React.Children.map(props.renderFields({ ...form, handleSave: handleSubmit(save) }), (child) => (
         <Grid item xs={12} key={child.props.name}>
           {React.cloneElement(child, {
             setSaveOptions: (options) => {

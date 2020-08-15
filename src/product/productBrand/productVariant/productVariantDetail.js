@@ -1,15 +1,15 @@
 import React from 'react';
-import { TextField, Select, MenuItem, Table, TableBody, TableRow, TableCell, TableHead } from '@material-ui/core';
+import { TextField } from '@material-ui/core';
 import produce from 'immer';
+import MaterialTable from 'material-table';
 import { Controller } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 import slugify from 'slugify';
 import { ItemDetail } from 'itemDetail/itemDetail';
-import { ItemDetailSelect } from 'itemDetail/itemDetailFields';
 import { useProduct, useProductVariant } from 'product/productHooks';
-import { upsert, remove } from 'product/productUtils';
+import { upsert } from 'product/productUtils';
 import { useFirestore } from 'storage/firebase';
-import { useUser, shops2Array, useUserData } from 'user/userUtils';
+import { useUser, useUserData } from 'user/userUtils';
 
 export const ProductVariantDetail = (props) => {
   const { brandId } = useParams();
@@ -17,8 +17,23 @@ export const ProductVariantDetail = (props) => {
   const variant = useProductVariant();
   const db = useFirestore();
   const user = useUser();
+  const [userData] = useUserData();
+  const userShops = userData?.shops || {};
 
   if (!props.active) return null;
+
+  const shops = Object.keys(variant.shops)
+    .filter((id) => !!userShops[id])
+    .map((id) => ({
+      id,
+      shop: userShops[id].title,
+      price: variant.shops[id].price,
+    }));
+
+  const userShopsOptions = Object.keys(userShops).reduce((result, id) => {
+    result[id] = userShops[id].title;
+    return result;
+  }, {});
 
   return (
     <ItemDetail
@@ -45,53 +60,45 @@ export const ProductVariantDetail = (props) => {
       }}
       active={props.active}
       defaultValues={{ ...variant, shop: '', price: '' }}
-      renderFields={(control) => [
+      renderFields={({ control, setValue, handleSave, getValues }) => [
         <Controller as={TextField} name="title" control={control} label="Title" rules={{ required: true }} fullWidth />,
-        <Shops control={control} />,
+        <Controller name="shop" control={control} />,
+        <Controller name="price" control={control} />,
+        <MaterialTable
+          title="Shops"
+          columns={[
+            { title: 'Shop', field: 'shop', lookup: userShopsOptions },
+            { title: 'Price', field: 'price', type: 'numeric' },
+          ]}
+          data={shops}
+          options={{
+            search: false,
+            paging: false,
+          }}
+          cellEditable={{
+            onCellEditApproved: async (newValue, oldValue, rowData, columnDef) => {
+              setValue('shop', rowData.id);
+              setValue(columnDef.field, newValue);
+              handleSave();
+            },
+          }}
+          editable={{
+            onRowAdd: async (newData) => {
+              setValue('shop', newData.shop);
+              setValue('price', newData.price);
+              handleSave();
+            },
+            onRowDelete: async ({ tableData }) => {
+              const shopId = shops[tableData.id].id;
+              upsert(db, user, () => {
+                return produce(product, (draft) => {
+                  delete draft.brands[brandId].variants[variant.id].shops[shopId];
+                });
+              })()();
+            },
+          }}
+        />,
       ]}
     />
-  );
-};
-
-const Shops = (props) => {
-  const [userData] = useUserData();
-  const variant = useProductVariant();
-  const shops = userData?.shops || {};
-
-  return (
-    <Table>
-      <TableHead>
-        <TableRow>
-          <TableCell>Shop</TableCell>
-          <TableCell align="right">Price</TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {Object.keys(variant.shops)
-          .filter((id) => !!shops[id])
-          .map((id) => (
-            <TableRow key={id}>
-              <TableCell component="th" scope="row">
-                {shops[id].title}
-              </TableCell>
-              <TableCell align="right">{variant.shops[id].price}</TableCell>
-            </TableRow>
-          ))}
-        <TableRow>
-          <TableCell component="th" scope="row">
-            <Controller
-              as={ItemDetailSelect}
-              name="shop"
-              control={props.control}
-              label="Shop"
-              options={shops2Array(shops)}
-            />
-          </TableCell>
-          <TableCell align="right">
-            <Controller as={TextField} name="price" control={props.control} label="Price" type="number" />
-          </TableCell>
-        </TableRow>
-      </TableBody>
-    </Table>
   );
 };
