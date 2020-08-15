@@ -1,10 +1,10 @@
 import React from 'react';
 import { TextField } from '@material-ui/core';
 import produce from 'immer';
-import MaterialTable from 'material-table';
 import { Controller } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 import slugify from 'slugify';
+import { CrudTable } from 'crudTable/crudTable';
 import { ItemDetail } from 'itemDetail/itemDetail';
 import { useProduct, useProductVariant } from 'product/productHooks';
 import { upsert } from 'product/productUtils';
@@ -64,7 +64,7 @@ export const ProductVariantDetail = (props) => {
         <Controller as={TextField} name="title" control={control} label="Title" rules={{ required: true }} fullWidth />,
         <Controller name="shop" control={control} />,
         <Controller name="price" control={control} />,
-        <MaterialTable
+        <CrudTable
           title="Shops"
           columns={[
             { title: 'Shop', field: 'shop', lookup: userShopsOptions },
