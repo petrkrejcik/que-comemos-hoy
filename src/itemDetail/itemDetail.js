@@ -55,6 +55,7 @@ export const ItemDetail = (props) => {
     return <Loading />;
   }
 
+  // TODO: handleSave by melo dostat values a ty ulozit do DB. Zadny machinace s formem jako ted.
   return (
     <Grid container spacing={3}>
       {React.Children.map(props.renderFields({ ...form, handleSave: handleSubmit(save) }), (child) => (

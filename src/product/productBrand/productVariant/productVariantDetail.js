@@ -1,5 +1,4 @@
 import React from 'react';
-import { TextField } from '@material-ui/core';
 import produce from 'immer';
 import { Controller } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
@@ -59,9 +58,9 @@ export const ProductVariantDetail = (props) => {
         })()();
       }}
       active={props.active}
-      defaultValues={{ ...variant, shop: '', price: '' }}
+      defaultValues={{ ...variant, shop: '', price: '' }} // asi to nemusu mit default hodnoty
       renderFields={({ control, setValue, handleSave, getValues }) => [
-        <Controller as={TextField} name="title" control={control} label="Title" rules={{ required: true }} fullWidth />,
+        <Controller name="title" control={control} />,
         <Controller name="shop" control={control} />,
         <Controller name="price" control={control} />,
         <CrudTable
@@ -71,10 +70,6 @@ export const ProductVariantDetail = (props) => {
             { title: 'Price', field: 'price', type: 'numeric' },
           ]}
           data={shops}
-          options={{
-            search: false,
-            paging: false,
-          }}
           cellEditable={{
             onCellEditApproved: async (newValue, oldValue, rowData, columnDef) => {
               setValue('shop', rowData.id);
