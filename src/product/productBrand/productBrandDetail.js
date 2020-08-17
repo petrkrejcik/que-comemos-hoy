@@ -33,21 +33,24 @@ export const ProductBrandDetail = (props) => {
       handleSave={upsert(db, user, (formValues) => {
         const brandId = brand.id || slugify(formValues.title, { lower: true });
         return produce(product, (draft) => {
-          const { variantTitle, ...brandValues } = formValues;
-          if (!draft.brands[brandId]) draft.brands[brandId] = { ...brand }; // Brand doesn't exist yet
-          Object.assign(draft.brands[brandId], brandValues);
-          if (draft.brands[brandId].rating && typeof draft.brands[brandId].rating === 'string') {
-            draft.brands[brandId].rating = draft.brands[brandId].rating.replace(',', '.');
-            draft.brands[brandId].rating = parseFloat(draft.brands[brandId].rating);
-          }
-          if (variantTitle) {
-            if (formValues.variantId) {
-              draft.brands[brandId].variants[formValues.variantId].title = variantTitle;
-            } else {
-              const variantId = slugify(variantTitle, { lower: true });
-              draft.brands[brandId].variants[variantId] = { ...variant, title: variantTitle };
+          const { variantTitle, variantId, ...brandValues } = formValues;
+          draft.brands[brandId] = produce(draft.brands[brandId] || brand, (brandDraft) => {
+            Object.assign(brandDraft, brandValues);
+            if (brandDraft.rating && typeof brandDraft.rating === 'string') {
+              brandDraft.rating = brandDraft.rating.replace(',', '.');
+              brandDraft.rating = parseFloat(brandDraft.rating);
             }
-          }
+            if (variantTitle) {
+              if (variantId) {
+                brandDraft.variants[formValues.variantId].title = variantTitle;
+              } else {
+                const variantId = slugify(variantTitle, { lower: true });
+                brandDraft.variants[variantId] = produce(variant, (variantDraft) => {
+                  variantDraft.title = variantTitle;
+                });
+              }
+            }
+          });
         });
       })}
       handleRemove={(brandId) => () => {

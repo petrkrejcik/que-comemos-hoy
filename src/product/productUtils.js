@@ -48,7 +48,7 @@ export const upsert = (db, user, updateFn) => (values) => async () => {
     await db.doc(`userGroups/${user.groupId}/ingredients/${product.id}`).update({ ...product, updateDate: new Date() });
   } else {
     // insert
-    const id = slugify(values.title, { lower: true });
+    const id = slugify(product.title, { lower: true });
     await db
       .collection(`userGroups/${user.groupId}/ingredients`)
       .doc(id)

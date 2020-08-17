@@ -1,4 +1,5 @@
 import React from 'react';
+import { TextField } from '@material-ui/core';
 import produce from 'immer';
 import { Controller } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
@@ -24,8 +25,7 @@ export const ProductVariantDetail = (props) => {
   const shops = Object.keys(variant.shops)
     .filter((id) => !!userShops[id])
     .map((id) => ({
-      id,
-      shop: userShops[id].title,
+      shopId: id,
       price: variant.shops[id].price,
     }));
 
@@ -38,15 +38,18 @@ export const ProductVariantDetail = (props) => {
     <ItemDetail
       id={product.id}
       queryKey="products"
-      handleSave={upsert(db, user, (variantValues) => {
-        const variantId = variant.id || slugify(variantValues.title, { lower: true });
+      handleSave={upsert(db, user, (formValues) => {
+        const variantId = variant.id || slugify(formValues.title, { lower: true });
+        const { shopId, price, ...variantValues } = formValues;
         return produce(product, (draft) => {
-          draft.brands[brandId].variants[variantId] = draft.brands[brandId].variants[variantId] || variant;
-          draft.brands[brandId].variants[variantId].title = variantValues.title;
-          if (variantValues.shop) {
-            draft.brands[brandId].variants[variantId].shops[variantValues.shop] = {
-              price: parseFloat(variantValues.price),
-            };
+          draft.brands[brandId].variants[variantId] = produce(
+            draft.brands[brandId].variants[variantId] || variant,
+            (variantDraft) => {
+              Object.assign(variantDraft, variantValues);
+            }
+          );
+          if (shopId) {
+            draft.brands[brandId].variants[variantId].shops[shopId] = { price: parseFloat(price) };
           }
         });
       })}
@@ -58,33 +61,33 @@ export const ProductVariantDetail = (props) => {
         })()();
       }}
       active={props.active}
-      defaultValues={{ ...variant, shop: '', price: '' }} // asi to nemusu mit default hodnoty
+      defaultValues={variant}
       renderFields={({ control, setValue, handleSave, getValues }) => [
-        <Controller name="title" control={control} />,
-        <Controller name="shop" control={control} />,
+        <Controller as={TextField} name="title" control={control} label="Title" rules={{ required: true }} fullWidth />,
+        <Controller name="shopId" control={control} />,
         <Controller name="price" control={control} />,
         <CrudTable
           title="Shops"
           columns={[
-            { title: 'Shop', field: 'shop', lookup: userShopsOptions },
+            { title: 'Shop', field: 'shopId', lookup: userShopsOptions, defaultSort: 'asc' },
             { title: 'Price', field: 'price', type: 'numeric' },
           ]}
           data={shops}
           cellEditable={{
             onCellEditApproved: async (newValue, oldValue, rowData, columnDef) => {
-              setValue('shop', rowData.id);
+              setValue('shopId', rowData.shopId);
               setValue(columnDef.field, newValue);
               handleSave();
             },
           }}
           editable={{
             onRowAdd: async (newData) => {
-              setValue('shop', newData.shop);
+              setValue('shopId', newData.shopId);
               setValue('price', newData.price);
               handleSave();
             },
             onRowDelete: async ({ tableData }) => {
-              const shopId = shops[tableData.id].id;
+              const { shopId } = shops[tableData.id];
               upsert(db, user, () => {
                 return produce(product, (draft) => {
                   delete draft.brands[brandId].variants[variant.id].shops[shopId];

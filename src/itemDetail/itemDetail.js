@@ -9,7 +9,6 @@ import { useCrud } from 'itemDetail/itemDetailHooks';
 
 export const ItemDetail = (props) => {
   const history = useHistory();
-  const [saveOptions, setSaveOptions] = React.useState();
   const form = useForm({ defaultValues: props.defaultValues });
   const { handleSubmit, getValues, setValue, reset, formState } = form;
   const { dirty } = formState;
@@ -17,8 +16,7 @@ export const ItemDetail = (props) => {
   // const { globalActions } = React.useContext(globalStateContext);
   const { refetch: save, isLoading: isSaving } = useCrud(
     `${props.queryKey}Upsert`,
-    props.handleSave(getValues(), props.defaultValues.id),
-    saveOptions
+    props.handleSave(getValues(), props.defaultValues.id)
   );
   const { refetch: remove, isLoading: isRemoving } = useCrud(
     `${props.queryKey}Remove`,
@@ -60,12 +58,7 @@ export const ItemDetail = (props) => {
     <Grid container spacing={3}>
       {React.Children.map(props.renderFields({ ...form, handleSave: handleSubmit(save) }), (child) => (
         <Grid item xs={12} key={child.props.name}>
-          {React.cloneElement(child, {
-            setSaveOptions: (options) => {
-              setSaveOptions(options);
-              handleSubmit(save)();
-            },
-          })}
+          {child}
         </Grid>
       ))}
     </Grid>

@@ -32,7 +32,9 @@ export const ProductAutocomplete = (props) => {
 
   const handleConfirmNew = async () => {
     if (!validateIngredient(title, products)) return;
-    upsert(db, user)({ ...emptyProduct, title })();
+    upsert(db, user, () => {
+      return { ...emptyProduct, title };
+    })()();
     // if (props.edit) {
     //   updateIngredient(db, props.edit, user, { title });
     // } else {
