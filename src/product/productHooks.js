@@ -1,6 +1,7 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { productContext } from 'product/ProductProvider';
+import { sanitizeBrands, sortBrands } from 'product/productUtils';
 
 export const useProduct = () => {
   const { products } = React.useContext(productContext);
@@ -8,10 +9,10 @@ export const useProduct = () => {
 
   // todo: use products as array directly
   const product = products[0].find((p) => p.id === productId) || {};
+  const brands = sanitizeBrands(product.brands);
   return {
     title: '',
     shop: '',
-    brands: {},
     categories: {},
     availability: {
       default: false,
@@ -20,6 +21,10 @@ export const useProduct = () => {
       shopping: true,
     },
     ...product,
+    meta: {
+      brandsByTitle: sortBrands(brands),
+    },
+    brands,
 
     // do not store these values to db
     isOnShoppingList: product.lists ? !!product.lists.shopping : true,
@@ -48,6 +53,8 @@ export const useProductVariant = () => {
   return {
     title: '',
     shops: {},
+    quantity: '',
+    unit: '',
     ...(variantId && { id: variantId }),
     ...variant,
   };

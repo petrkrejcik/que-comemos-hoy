@@ -1,5 +1,6 @@
 import React from 'react';
 import { TextField, Button } from '@material-ui/core';
+import { AddBox } from '@material-ui/icons';
 import produce from 'immer';
 import { Controller } from 'react-hook-form';
 import { useHistory, useParams } from 'react-router-dom';
@@ -69,6 +70,14 @@ export const ProductBrandDetail = (props) => {
         <Controller name="variantTitle" control={control} />,
         <CrudTable
           title="Variants"
+          actions={[
+            {
+              icon: AddBox,
+              onClick: () => history.push(`/products/${section}/${product.id}/brand/${brand.id}/variant`),
+              isFreeAction: true,
+              tooltip: 'Add variant',
+            },
+          ]}
           columns={[
             { title: 'Title', field: 'title' },
             {
@@ -95,10 +104,6 @@ export const ProductBrandDetail = (props) => {
             },
           }}
           editable={{
-            onRowAdd: async (newData) => {
-              setValue('variantTitle', newData.title);
-              handleSave();
-            },
             onRowDelete: async ({ tableData }) => {
               const variantId = variants[tableData.id].id;
               upsert(db, user, () => {

@@ -42,7 +42,8 @@ import { productContext } from 'product/ProductProvider';
 // };
 
 export const upsert = (db, user, updateFn) => (values) => async () => {
-  const product = updateFn(values);
+  const productValues = updateFn(values);
+  const product = sanitizeProduct(productValues);
   if (product.id) {
     // update
     await db.doc(`userGroups/${user.groupId}/ingredients/${product.id}`).update({ ...product, updateDate: new Date() });
@@ -154,4 +155,32 @@ export const useProducts = () => {
 export const SECTIONS = {
   shoppingList: 'shopping-list',
   frozen: 'frozen',
+};
+
+export const sanitizeProduct = (product) => {
+  const { meta, ...productClean } = product;
+  return productClean;
+};
+
+export const sanitizeBrands = (brands = {}) => {
+  return Object.keys(brands).reduce((result, id) => {
+    return {
+      ...result,
+      [id]: {
+        ...brands[id],
+        id,
+      },
+    };
+  }, {});
+};
+
+export const sortBrands = (brands) => {
+  const brandsCopy = [...Object.values(brands || {})];
+  brandsCopy.sort((a, b) => {
+    if (a.title === b.title) return 0;
+    if (a.title < b.title) return -1;
+    return 1;
+  });
+  const ids = brandsCopy.map((brand) => brand.id);
+  return ids;
 };

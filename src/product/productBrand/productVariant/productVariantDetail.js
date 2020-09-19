@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom';
 import slugify from 'slugify';
 import { CrudTable } from 'crudTable/crudTable';
 import { ItemDetail } from 'itemDetail/itemDetail';
+import { ItemDetailSelect } from 'itemDetail/itemDetailFields';
 import { useProduct, useProductVariant } from 'product/productHooks';
 import { upsert } from 'product/productUtils';
 import { useFirestore } from 'storage/firebase';
@@ -39,6 +40,7 @@ export const ProductVariantDetail = (props) => {
       id={product.id}
       queryKey="products"
       handleSave={upsert(db, user, (formValues) => {
+        console.log('🛎 ', 'formValues', formValues);
         const variantId = variant.id || slugify(formValues.title, { lower: true });
         const { shopId, price, ...variantValues } = formValues;
         return produce(product, (draft) => {
@@ -63,7 +65,24 @@ export const ProductVariantDetail = (props) => {
       active={props.active}
       defaultValues={variant}
       renderFields={({ control, setValue, handleSave, getValues }) => [
-        <Controller as={TextField} name="title" control={control} label="Title" rules={{ required: true }} fullWidth />,
+        <Controller
+          as={TextField}
+          name="quantity"
+          control={control}
+          label="Quantity"
+          rules={{ required: true }}
+          fullWidth
+          type="number"
+        />,
+        <Controller as={ItemDetailSelect} name="unit" control={control} label="Unit" options={UNITS} fullWidth />,
+        <Controller
+          as={TextField}
+          name="title"
+          control={control}
+          label="Details"
+          rules={{ required: true }}
+          fullWidth
+        />,
         <Controller name="shopId" control={control} />,
         <Controller name="price" control={control} />,
         <CrudTable
@@ -82,6 +101,7 @@ export const ProductVariantDetail = (props) => {
           }}
           editable={{
             onRowAdd: async (newData) => {
+              console.log('🛎 ', 'newData', newData);
               setValue('shopId', newData.shopId);
               setValue('price', newData.price);
               handleSave();
@@ -100,3 +120,14 @@ export const ProductVariantDetail = (props) => {
     />
   );
 };
+
+const UNITS = [
+  {
+    value: 'ml',
+    title: 'ml',
+  },
+  {
+    value: 'kg',
+    title: 'kg',
+  },
+];

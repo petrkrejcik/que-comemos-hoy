@@ -1,3 +1,17 @@
+- Proc mit tabulky?
+
+- - muzu pridavat inline
+- - muzu editovat inline
+
+clients.openPAgeHash = 98234jk3rj regenera
+clients.saveVisitHash = 98234jk3rj
+
+sin hash
+con hash
+NIF -> localStorage
+despues de entrar redirigir a pantalla con solo un boton Salir
+no hay boton de entrar
+
 # Build
 
 `REACT_APP_ENV=develop yarn build`
@@ -99,6 +113,20 @@ Wishlist
 
 Hooks doc: https://github.com/csfrequency/react-firebase-hooks/tree/7eb49f1624d7c1bfb5ad8083a8702b19bf0e6929/firestore
 Firestore queries: https://medium.com/@aaron_lu1/firebase-cloud-firestore-add-set-update-delete-get-data-6da566513b1b
+
+- Product -> Brand -> Variant -> Shop
+- Product: pivo
+  - Brand: Vol Damm
+    - Rating 4
+    - Variants
+      - 33 ml plech
+      - 33 ml sklo
+      - 1 l pet
+- Product: meloun
+  - Brand: Don Jose
+    - Rating 4
+    - Variants
+      - 1 kg
 
 ```json
 {
