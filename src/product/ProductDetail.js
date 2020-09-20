@@ -8,7 +8,7 @@ import { CrudTable } from 'crudTable/crudTable';
 import { ItemDetail } from 'itemDetail/itemDetail';
 import { ItemDetailCheckbox, ItemDetailSelect } from 'itemDetail/itemDetailFields';
 import { useProduct } from 'product/productHooks';
-import { upsert, remove } from 'product/productUtils';
+import { upsert, remove, findLowestPrice } from 'product/productUtils';
 import { useFirestore } from 'storage/firebase';
 import { useUser, shops2Array, useUserData } from 'user/userUtils';
 
@@ -23,12 +23,21 @@ export const ProductDetail = (props) => {
 
   if (!props.active) return null;
 
-  const shops = shops2Array(userData?.shops || {});
-  const brands = product.meta.brandsByTitle.map((id) => ({
-    id,
-    title: product.brands[id].title,
-    rating: product.brands[id].rating,
-  }));
+  const userShops = userData?.shops || {};
+  const shops = shops2Array(userShops);
+  const brands = product.meta.brandsByTitle.map((id) => {
+    const lowestPrice = findLowestPrice(product.brands[id]);
+    const cheapiestVariantTitle = [lowestPrice.variant.quantity, lowestPrice.variant.unit].join(' ');
+    const cheapiestShop = userShops[lowestPrice.shop.id] || {};
+    const cheapiestShopTitle = cheapiestShop.title || '';
+    const cheapiestShopPrice = lowestPrice.shop.price || '';
+    return {
+      id,
+      title: product.brands[id].title,
+      rating: product.brands[id].rating,
+      lowestPrice: [cheapiestVariantTitle, cheapiestShopTitle, cheapiestShopPrice].filter(Boolean).join(' / '),
+    };
+  });
   return (
     <ItemDetail
       id={productId === 'new' ? null : productId}
@@ -63,6 +72,7 @@ export const ProductDetail = (props) => {
           columns={[
             { title: 'Brand', field: 'title' },
             { title: 'Rating', field: 'rating' },
+            { title: 'Lowest price', field: 'lowestPrice' },
             {
               title: '',
               editable: 'never',

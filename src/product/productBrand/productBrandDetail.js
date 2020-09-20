@@ -25,6 +25,7 @@ export const ProductBrandDetail = (props) => {
 
   const variants = Object.keys(brand.variants).map((id) => ({
     id,
+    quantity: [brand.variants[id].quantity, brand.variants[id].unit].join(' '),
     title: brand.variants[id].title,
   }));
 
@@ -79,6 +80,7 @@ export const ProductBrandDetail = (props) => {
             },
           ]}
           columns={[
+            { title: 'Quantity', field: 'quantity' },
             { title: 'Title', field: 'title' },
             {
               title: 'Shops',

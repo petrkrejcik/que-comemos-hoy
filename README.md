@@ -162,7 +162,7 @@ Firestore queries: https://medium.com/@aaron_lu1/firebase-cloud-firestore-add-se
               }
             }
           },
-          "variants": {
+          "-variants": {
             "voldamm33": {
               "title": "Voll Damm 33 ml",
               "+quantity": "33",

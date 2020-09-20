@@ -174,6 +174,31 @@ export const sanitizeBrands = (brands = {}) => {
   }, {});
 };
 
+export const sanitizeVariants = (variants = {}) => {
+  return Object.keys(variants).reduce((result, id) => {
+    return {
+      ...result,
+      [id]: {
+        shops: {},
+        ...variants[id],
+        id,
+      },
+    };
+  }, {});
+};
+
+export const sanitizeShops = (shops = {}) => {
+  return Object.keys(shops).reduce((result, id) => {
+    return {
+      ...result,
+      [id]: {
+        ...shops[id],
+        id,
+      },
+    };
+  }, {});
+};
+
 export const sortBrands = (brands) => {
   const brandsCopy = [...Object.values(brands || {})];
   brandsCopy.sort((a, b) => {
@@ -183,4 +208,28 @@ export const sortBrands = (brands) => {
   });
   const ids = brandsCopy.map((brand) => brand.id);
   return ids;
+};
+
+export const findLowestPrice = (brand) => {
+  return Object.values(sanitizeVariants(brand.variants)).reduce(
+    (result, variant) => {
+      if (!variant.quantity) return result;
+      if (!variant.unit) return result;
+      const coeficient = 100 / variant.quantity;
+      const cheapiestShop = Object.values(sanitizeShops(variant.shops)).reduce((cheapiestShop, shop) => {
+        if (shop.price * coeficient < cheapiestShop.price * coeficient) {
+          return shop;
+        }
+        return cheapiestShop;
+      });
+      if (!result.shop.price || cheapiestShop.price * coeficient < result.shop.price * coeficient) {
+        return {
+          variant: variant,
+          shop: cheapiestShop,
+        };
+      }
+      return result;
+    },
+    { shop: {}, variant: {} }
+  );
 };

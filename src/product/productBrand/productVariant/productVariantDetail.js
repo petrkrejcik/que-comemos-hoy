@@ -40,7 +40,6 @@ export const ProductVariantDetail = (props) => {
       id={product.id}
       queryKey="products"
       handleSave={upsert(db, user, (formValues) => {
-        console.log('🛎 ', 'formValues', formValues);
         const variantId = variant.id || slugify(formValues.title, { lower: true });
         const { shopId, price, ...variantValues } = formValues;
         return produce(product, (draft) => {
@@ -95,13 +94,13 @@ export const ProductVariantDetail = (props) => {
           cellEditable={{
             onCellEditApproved: async (newValue, oldValue, rowData, columnDef) => {
               setValue('shopId', rowData.shopId);
+              setValue('price', rowData.price);
               setValue(columnDef.field, newValue);
               handleSave();
             },
           }}
           editable={{
             onRowAdd: async (newData) => {
-              console.log('🛎 ', 'newData', newData);
               setValue('shopId', newData.shopId);
               setValue('price', newData.price);
               handleSave();
